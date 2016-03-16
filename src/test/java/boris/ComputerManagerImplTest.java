@@ -95,22 +95,22 @@ public class ComputerManagerImplTest {
     public void testGetAllComponents() throws Exception {
 
         Computer c1 = new Computer(3, 2000, 300);
-        Computer component1 = manager.createComputer(c1);
+        Computer computer1 = manager.createComputer(c1);
 
         List<Computer> list = manager.getAllComputers();
 
         assertThat("list is not null", list, is(not(equalTo(null))));
-        assertThat("list has one component", list.size(), is(equalTo(1)));
+        assertThat("list has one computer", list.size(), is(equalTo(1)));
 
         Computer c2 = new Computer(5, 1500, 200);
-        Computer component2 = manager.createComputer(c2);
+        Computer computer2 = manager.createComputer(c2);
 
         list = manager.getAllComputers();
 
-        assertThat("list has two components", list.size(), is(equalTo(2)));
+        assertThat("list has two computers", list.size(), is(equalTo(2)));
 
-        manager.removeComputer(component1);
-        manager.removeComputer(component2);
+        manager.removeComputer(computer1);
+        manager.removeComputer(computer2);
 
         list = manager.getAllComputers();
 

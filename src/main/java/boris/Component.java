@@ -11,6 +11,8 @@ public class Component {
     private final int price;
     private final int energy;
 
+    // TODO add slot 'free: boolean'
+
     public Component(String name, int heat, int price, int energy) {
         this.id = null;
         this.name = name;
