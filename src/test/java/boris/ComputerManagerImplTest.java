@@ -92,7 +92,7 @@ public class ComputerManagerImplTest {
     }
 
     @Test
-    public void testGetAllComponents() throws Exception {
+    public void testGetAllComputers() throws Exception {
 
         Computer c1 = new Computer(3, 2000, 300);
         Computer computer1 = manager.createComputer(c1);
