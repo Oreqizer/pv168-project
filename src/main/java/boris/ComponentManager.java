@@ -9,9 +9,9 @@ public interface ComponentManager {
     
     public void createComponent(Component pc);
 
-    public void removeComponent(Long id);
+    public void removeComponent(long id);
 
-    public Component getComponent(Long id);
+    public Component getComponent(long id);
 
     public List<Component> getFreeComponents();
     

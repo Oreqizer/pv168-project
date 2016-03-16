@@ -5,13 +5,13 @@ package boris;
  */
 public interface BuildManager {
 
-    public void addComputer(Long id);
+    public void addComputer(long id);
 
-    public void removeComputer(Long id);
+    public void removeComputer(long id);
 
-    public void addComponent(Long id);
+    public void addComponent(long id);
 
-    public void removeComponent(Long id);
+    public void removeComponent(long id);
 
     public void verifyBuild();
 
