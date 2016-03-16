@@ -1,7 +1,7 @@
 package ondro;
 
 /**
- * Created by oreqizer on 16/03/16.
+ * Created by zeman on 16/03/16.
  */
 public class Component {
 

@@ -1,29 +1,43 @@
 package java.ondro;
 
+import ondro.ComputerManagerImpl;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Created by zeman on 16-Mar-16.
+ * Created by zeman on 16/03/16.
  */
 public class ComputerManagerImplTest {
 
-    @Test
-    public void testCreateComponent() throws Exception {
+    private ComputerManagerImpl manager;
 
+    @Before
+    public void setUp() throws Exception {
+        manager = new ComputerManagerImpl();
     }
 
     @Test
-    public void testRemoveComponent() throws Exception {
-
+    public void testCreateComputer() throws Exception {
+        // TODO
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateComputerNull() throws Exception {
+        // TODO
     }
 
     @Test
-    public void testGetComponent() throws Exception {
-
+    public void testRemoveComputer() throws Exception {
+        // TODO
+    }
+    
+    @Test
+    public void testGetComputer() throws Exception {
+        // TODO
     }
 
     @Test
-    public void testGetFreeComponents() throws Exception {
-
+    public void testGetFreeComputers() throws Exception {
+        // TODO
     }
 }

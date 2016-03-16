@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Created by zeman on 16-Mar-16.
+ * Created by zeman on 16/03/16.
  */
 public class BuildManagerImplTest {
 
@@ -15,48 +15,50 @@ public class BuildManagerImplTest {
     public void setUp() throws Exception {
         manager = new BuildManagerImpl();
     }
+
     @Test
     public void testAddComputer() throws Exception {
-
+        // TODO
     }
 
     @Test
     public void testRemoveComputer() throws Exception {
-
+        // TODO
     }
 
     @Test
     public void testAddComponent() throws Exception {
-
+        // TODO
     }
 
     @Test
     public void testRemoveComponent() throws Exception {
-
+        // TODO
     }
 
     @Test
     public void testVerifyBuild() throws Exception {
-
+        // TODO
     }
 
     @Test
     public void testGetHeat() throws Exception {
-
+        // TODO
     }
 
     @Test
     public void testGetEnergy() throws Exception {
-
+        // TODO
     }
 
     @Test
     public void testGetPrice() throws Exception {
-
+        // TODO
     }
 
     @Test
     public void testGetFreeSlots() throws Exception {
-
+        // TODO
     }
+
 }
