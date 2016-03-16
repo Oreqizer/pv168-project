@@ -13,6 +13,6 @@ public interface ComputerManager {
 
     public Computer getComputer(Long id);
 
-    public List<Computer> getFreeComputers();
+    public List<Computer> getAllComputers();
 
 }

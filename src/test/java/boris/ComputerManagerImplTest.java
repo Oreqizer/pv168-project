@@ -3,6 +3,8 @@ package boris;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -25,12 +27,12 @@ public class ComputerManagerImplTest {
         Computer computer = manager.createComputer(pure);
 
         assertThat("pure has null id", pure.getId(), is(equalTo(null)));
-        assertThat("Computer has an id", pure.getId(), is(not(equalTo(null))));
+        assertThat("computer has an id", pure.getId(), is(not(equalTo(null))));
 
         Computer result = manager.getComputer(computer.getId());
 
-        assertThat("Computers match", result, is(equalTo(computer)));
-        assertThat("Computers don't match", result, is(not(sameInstance(pure))));
+        assertThat("computers match", result, is(equalTo(computer)));
+        assertThat("computers don't match", result, is(not(sameInstance(pure))));
 
     }
 
@@ -38,6 +40,14 @@ public class ComputerManagerImplTest {
     public void testCreateComputerNull() throws Exception {
 
         manager.createComputer(null);
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateComputerFail() throws Exception {
+
+        Computer computer = new Computer(-3, 2000, 300);
+        manager.createComputer(computer);
 
     }
 
@@ -66,8 +76,7 @@ public class ComputerManagerImplTest {
         Computer c1 = new Computer(3, 2000, 300);
 
         manager.createComputer(c1);
-
-        manager.createComputer(null);
+        manager.removeComputer(null);
 
     }
 
@@ -75,11 +84,37 @@ public class ComputerManagerImplTest {
     public void testGetComputer() throws Exception {
 
         Computer c1 = new Computer(3, 2000, 300);
-
         Computer computer1 = manager.createComputer(c1);
 
         assertNotNull(manager.getComputer(computer1.getId()));
         assertNull(manager.getComputer(computer1.getId() + 5));
+
+    }
+
+    @Test
+    public void testGetAllComponents() throws Exception {
+
+        Computer c1 = new Computer(3, 2000, 300);
+        Computer component1 = manager.createComputer(c1);
+
+        List<Computer> list = manager.getAllComputers();
+
+        assertThat("list is not null", list, is(not(equalTo(null))));
+        assertThat("list has one component", list.size(), is(equalTo(1)));
+
+        Computer c2 = new Computer(5, 1500, 200);
+        Computer component2 = manager.createComputer(c2);
+
+        list = manager.getAllComputers();
+
+        assertThat("list has two components", list.size(), is(equalTo(2)));
+
+        manager.removeComputer(component1);
+        manager.removeComputer(component2);
+
+        list = manager.getAllComputers();
+
+        assertThat("list is empty", list.size(), is(equalTo(0)));
 
     }
 }

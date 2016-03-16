@@ -1,5 +1,7 @@
 package boris;
 
+import java.util.List;
+
 /**
  * Created by oreqizer on 16/03/16.
  */
@@ -66,5 +68,12 @@ public interface BuildManager {
      * @return free slots
      */
     public int getFreeSlots(Build build);
+
+    /**
+     * lists all current builds
+     *
+     * @return list of all builds
+     */
+    public List<Build> getAllBuilds();
 
 }

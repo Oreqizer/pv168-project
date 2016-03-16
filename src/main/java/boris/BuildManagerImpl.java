@@ -1,5 +1,7 @@
 package boris;
 
+import java.util.List;
+
 /**
  * Created by oreqizer on 16/03/16.
  */
@@ -35,5 +37,9 @@ public class BuildManagerImpl implements BuildManager {
 
     public int getFreeSlots(Build build) {
         return 0;
+    }
+
+    public List<Build> getAllBuilds() {
+        return null;
     }
 }

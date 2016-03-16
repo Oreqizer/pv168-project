@@ -3,6 +3,8 @@ package boris;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -40,6 +42,13 @@ public class ComponentManagerImplTest {
         manager.createComponent(null);
         
     }
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateComponentFail() throws Exception {
+
+        Component component = new Component("card", 100, 200, -100);
+        manager.createComponent(component);
+
+    }
 
     @Test
     public void testRemoveComponent() throws Exception {
@@ -66,8 +75,7 @@ public class ComponentManagerImplTest {
         Component c1 = new Component("card", 100, 200, 100);
 
         manager.createComponent(c1);
-
-        manager.createComponent(null);
+        manager.removeComponent(null);
 
     }
 
@@ -75,11 +83,37 @@ public class ComponentManagerImplTest {
     public void testGetComponent() throws Exception {
 
         Component c1 = new Component("card", 100, 200, 100);
-
         Component component1 = manager.createComponent(c1);
 
         assertNotNull(manager.getComponent(component1.getId()));
         assertNull(manager.getComponent(component1.getId() + 5));
+
+    }
+
+    @Test
+    public void testGetAllComponents() throws Exception {
+
+        Component c1 = new Component("card", 100, 200, 100);
+        Component component1 = manager.createComponent(c1);
+
+        List<Component> list = manager.getAllComponents();
+
+        assertThat("list is not null", list, is(not(equalTo(null))));
+        assertThat("list has one component", list.size(), is(equalTo(1)));
+
+        Component c2 = new Component("pcu", 100, 300, 100);
+        Component component2 = manager.createComponent(c2);
+
+        list = manager.getAllComponents();
+
+        assertThat("list has two components", list.size(), is(equalTo(2)));
+        
+        manager.removeComponent(component1);
+        manager.removeComponent(component2);
+
+        list = manager.getAllComponents();
+
+        assertThat("list is empty", list.size(), is(equalTo(0)));
 
     }
 
