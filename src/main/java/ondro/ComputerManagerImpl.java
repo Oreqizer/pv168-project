@@ -19,7 +19,7 @@ public class ComputerManagerImpl implements ComputerManager {
         return null;
     }
 
-    public List<Computer> getFreeComputers() {
+    public List<Computer> getAllComputers() {
         return null;
     }
 

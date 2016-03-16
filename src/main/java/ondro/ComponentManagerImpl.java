@@ -35,7 +35,7 @@ public class ComponentManagerImpl implements ComponentManager {
         return null;
     }
 
-    public List<Component> getFreeComponents() {
+    public List<Component> getAllComponents() {
         return null;
     }
 

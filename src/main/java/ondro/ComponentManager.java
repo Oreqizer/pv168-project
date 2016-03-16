@@ -13,6 +13,6 @@ public interface ComponentManager {
 
     public Component getComponent(Long id);
 
-    public List<Component> getFreeComponents();
+    public List<Component> getAllComponents();
     
 }
