@@ -11,7 +11,7 @@ public class ComputerManagerImpl implements ComputerManager {
         return null;
     }
 
-    public void removeComputer(Long id) {
+    public void removeComputer(Computer pc) {
 
     }
 
