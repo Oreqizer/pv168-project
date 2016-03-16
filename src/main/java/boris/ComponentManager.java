@@ -7,11 +7,11 @@ import java.util.List;
  */
 public interface ComponentManager {
     
-    public void createComponent(Component pc);
+    public Component createComponent(Component pc);
 
-    public void removeComponent(long id);
+    public void removeComponent(Component pc);
 
-    public Component getComponent(long id);
+    public Component getComponent(Long id);
 
     public List<Component> getFreeComponents();
     

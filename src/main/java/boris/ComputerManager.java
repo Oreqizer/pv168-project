@@ -7,11 +7,11 @@ import java.util.List;
  */
 public interface ComputerManager {
 
-    public void createComputer(Computer pc);
+    public Computer createComputer(Computer pc);
 
-    public void removeComputer(long id);
+    public void removeComputer(Long id);
 
-    public Computer getComputer(long id);
+    public Computer getComputer(Long id);
 
     public List<Computer> getFreeComputers();
 

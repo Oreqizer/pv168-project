@@ -5,22 +5,22 @@ package boris;
  */
 public interface BuildManager {
 
-    public void addComputer(long id);
+    public Build addComputer(Long id);
 
-    public void removeComputer(long id);
+    public void removeComputer(Long id);
 
-    public void addComponent(long id);
+    public Build addComponent(Long id);
 
-    public void removeComponent(long id);
+    public void removeComponent(Long id);
 
-    public void verifyBuild();
+    public boolean verifyBuild();
 
-    public void getHeat();
+    public int getHeat();
 
-    public void getEnergy();
+    public int getEnergy();
 
-    public void getPrice();
+    public int getPrice();
 
-    public void getFreeSlots();
+    public int getFreeSlots();
 
 }

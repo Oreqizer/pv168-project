@@ -5,19 +5,19 @@ package boris;
  */
 public class Computer {
 
-    private final long id;
+    private final Long id;
     private final int slots;
     private final int cooling;
     private final int price;
 
-    public Computer(long id, int slots, int cooling, int price) {
-        this.id = id;
+    public Computer(int slots, int cooling, int price) {
+        this.id = null;
         this.slots = slots;
         this.cooling = cooling;
         this.price = price;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

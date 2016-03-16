@@ -7,17 +7,17 @@ import java.util.List;
  */
 public final class Build {
 
-    private final long id;
+    private final Long id;
     private final Computer pc;
     private final List<Component> components;
 
-    public Build(long id, Computer pc, List<Component> components) {
-        this.id = id;
+    public Build(Computer pc, List<Component> components) {
+        this.id = null;
         this.pc = pc;
         this.components = components;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
