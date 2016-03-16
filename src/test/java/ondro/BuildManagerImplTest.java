@@ -1,5 +1,7 @@
 package java.ondro;
 
+import ondro.BuildManagerImpl;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -7,6 +9,12 @@ import org.junit.Test;
  */
 public class BuildManagerImplTest {
 
+    private BuildManagerImpl manager;
+
+    @Before
+    public void setUp() throws Exception {
+        manager = new BuildManagerImpl();
+    }
     @Test
     public void testAddComputer() throws Exception {
 

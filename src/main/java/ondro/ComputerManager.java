@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface ComputerManager {
 
-    public void createComputer(Computer pc);
+    public Computer createComputer(Computer pc);
 
     public void removeComputer(Long id);
 

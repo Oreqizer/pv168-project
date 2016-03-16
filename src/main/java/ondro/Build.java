@@ -1,51 +1,32 @@
 package ondro;
 
+import java.util.List;
+
 /**
  * Created by oreqizer on 16/03/16.
  */
-public class Build implements BuildManager {
-    @Override
-    public void addComputer(Long id) {
+public final class Build {
 
+    private final Long id;
+    private final Computer pc;
+    private final List<Component> components;
+
+    public Build(Computer pc, List<Component> components) {
+        this.id = null;
+        this.pc = pc;
+        this.components = components;
     }
 
-    @Override
-    public void removeComputer(Long id) {
-
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public void addComponent(Long id) {
-
+    public Computer getPc() {
+        return pc;
     }
 
-    @Override
-    public void removeComponent(Long id) {
-
+    public List<Component> getComponents() {
+        return components;
     }
 
-    @Override
-    public void verifyBuild() {
-
-    }
-
-    @Override
-    public void getHeat() {
-
-    }
-
-    @Override
-    public void getEnergy() {
-
-    }
-
-    @Override
-    public void getPrice() {
-
-    }
-
-    @Override
-    public void getFreeSlots() {
-
-    }
 }

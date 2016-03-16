@@ -3,26 +3,24 @@ package ondro;
 import java.util.List;
 
 /**
- * Created by zeman on 16-Mar-16.
+ * Created by oreqizer on 16/03/16.
  */
-public class ComputerManagerImpl implements ComponentManager {
-    @Override
-    public void createComponent(Component pc) {
+public class ComputerManagerImpl implements ComputerManager {
 
-    }
-
-    @Override
-    public void removeComponent(Long id) {
-
-    }
-
-    @Override
-    public Component getComponent(Long id) {
+    public Computer createComputer(Computer pc) {
         return null;
     }
 
-    @Override
-    public List<Component> getFreeComponents() {
+    public void removeComputer(Long id) {
+
+    }
+
+    public Computer getComputer(Long id) {
         return null;
     }
+
+    public List<Computer> getFreeComputers() {
+        return null;
+    }
+
 }

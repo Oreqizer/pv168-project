@@ -3,26 +3,40 @@ package ondro;
 import java.util.List;
 
 /**
- * Created by zeman on 16-Mar-16.
+ * Created by oreqizer on 16/03/16.
  */
 public class ComponentManagerImpl implements ComponentManager {
-    @Override
-    public void createComponent(Component pc) {
+
+    public Component createComponent(Component pc) {
+        if (pc == null) {
+            throw new IllegalArgumentException("pc should not be null");
+        }
+
+        if (pc.getId() != null) {
+            throw new IllegalArgumentException("id should be null");
+        }
+
+        if (pc.getName().equals("")) {
+            throw new IllegalArgumentException("name cannot be empty");
+        }
+
+        if (pc.getPrice() < 0) {
+            throw new IllegalArgumentException("price can't be negative");
+        }
+
+        return null;
+    }
+
+    public void removeComponent(Component pc) {
 
     }
 
-    @Override
-    public void removeComponent(Long id) {
-
-    }
-
-    @Override
     public Component getComponent(Long id) {
         return null;
     }
 
-    @Override
     public List<Component> getFreeComponents() {
         return null;
     }
+
 }

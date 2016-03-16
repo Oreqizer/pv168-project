@@ -1,28 +1,36 @@
 package ondro;
 
-import java.util.List;
-
 /**
  * Created by oreqizer on 16/03/16.
  */
-public class Computer implements ComponentManager{
-    @Override
-    public void createComponent(Component pc) {
+public class Computer {
 
+    private final Long id;
+    private final int slots;
+    private final int cooling;
+    private final int price;
+
+    public Computer(int slots, int cooling, int price) {
+        this.id = null;
+        this.slots = slots;
+        this.cooling = cooling;
+        this.price = price;
     }
 
-    @Override
-    public void removeComponent(Long id) {
-
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public Component getComponent(Long id) {
-        return null;
+    public int getSlots() {
+        return slots;
     }
 
-    @Override
-    public List<Component> getFreeComponents() {
-        return null;
+    public int getCooling() {
+        return cooling;
     }
+
+    public int getPrice() {
+        return price;
+    }
+
 }
