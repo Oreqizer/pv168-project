@@ -7,9 +7,9 @@ import java.util.List;
  */
 public interface ComponentManager {
     
-    public void createComponent(Component pc);
+    public Component createComponent(Component pc);
 
-    public void removeComponent(Long id);
+    public void removeComponent(Component pc);
 
     public Component getComponent(Long id);
 
