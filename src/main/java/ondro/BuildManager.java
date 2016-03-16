@@ -5,22 +5,22 @@ package ondro;
  */
 public interface BuildManager {
 
-    public Build addComputer(Long id);
+    public Build addBuild(Computer computer);
 
-    public void removeComputer(Long id);
+    public void removeBuild(Build buildId);
 
-    public Build addComponent(Long id);
+    public Build addComponent(Component component,Build build);
 
-    public void removeComponent(Long id);
+    public void removeComponent(Long id,Build buildId);
 
-    public boolean verifyBuild();
+    public boolean verifyBuild(Build buildId);
 
-    public int getHeat();
+    public int getHeat(Build buildId);
 
-    public int getEnergy();
+    public int getEnergy(Build buildId);
 
-    public int getPrice();
+    public int getPrice(Build buildId);
 
-    public int getFreeSlots();
+    public int getFreeSlots(Build buildId);
 
 }

@@ -5,40 +5,49 @@ package ondro;
  */
 public class BuildManagerImpl implements BuildManager {
 
-    public Build addComputer(Long id) {
+
+    @Override
+    public Build addBuild(Computer computer) {
         return null;
     }
 
-    public void removeComputer(Long id) {
+    @Override
+    public void removeBuild(Build buildId) {
 
     }
 
-    public Build addComponent(Long id) {
+    @Override
+    public Build addComponent(Component component, Build build) {
         return null;
     }
 
-    public void removeComponent(Long id) {
+    @Override
+    public void removeComponent(Long id, Build buildId) {
 
     }
 
-    public boolean verifyBuild() {
+    @Override
+    public boolean verifyBuild(Build buildId) {
         return false;
     }
 
-    public int getHeat() {
+    @Override
+    public int getHeat(Build buildId) {
         return 0;
     }
 
-    public int getEnergy() {
+    @Override
+    public int getEnergy(Build buildId) {
         return 0;
     }
 
-    public int getPrice() {
+    @Override
+    public int getPrice(Build buildId) {
         return 0;
     }
 
-    public int getFreeSlots() {
+    @Override
+    public int getFreeSlots(Build buildId) {
         return 0;
     }
-
 }

@@ -7,27 +7,27 @@ import java.util.List;
  */
 public class ComponentManagerImpl implements ComponentManager {
 
-    public Component createComponent(Component pc) {
-        if (pc == null) {
+    public Component createComponent(Component component) {
+        if (component == null) {
             throw new IllegalArgumentException("pc should not be null");
         }
 
-        if (pc.getId() != null) {
+        if (component.getId() != null) {
             throw new IllegalArgumentException("id should be null");
         }
 
-        if (pc.getName().equals("")) {
+        if (component.getName().equals("")) {
             throw new IllegalArgumentException("name cannot be empty");
         }
 
-        if (pc.getPrice() < 0) {
+        if (component.getPrice() < 0) {
             throw new IllegalArgumentException("price can't be negative");
         }
 
         return null;
     }
 
-    public void removeComponent(Component pc) {
+    public void removeComponent(Component component) {
 
     }
 
