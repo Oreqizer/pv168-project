@@ -9,10 +9,10 @@ public interface ComputerManager {
 
     public Computer createComputer(Computer pc);
 
-    public void removeComputer(Long id);
+    public void removeComputer(Computer pc);
 
     public Computer getComputer(Long id);
 
-    public List<Computer> getFreeComputers();
+    public List<Computer> getAllComputers();
 
 }

@@ -1,44 +1,45 @@
 package boris;
 
+import java.util.List;
+
 /**
  * Created by oreqizer on 16/03/16.
  */
 public class BuildManagerImpl implements BuildManager {
 
-    public Build addComputer(Long id) {
+    public Build createBuild(Build build) {
         return null;
     }
 
-    public void removeComputer(Long id) {
+    public void updateBuild(Build build) {
 
     }
 
-    public Build addComponent(Long id) {
-        return null;
-    }
-
-    public void removeComponent(Long id) {
+    public void removeBuild(Build build) {
 
     }
 
-    public boolean verifyBuild() {
+    public boolean verifyBuild(Build build) {
         return false;
     }
 
-    public int getHeat() {
+    public int getHeat(Build build) {
         return 0;
     }
 
-    public int getEnergy() {
+    public int getEnergy(Build build) {
         return 0;
     }
 
-    public int getPrice() {
+    public int getPrice(Build build) {
         return 0;
     }
 
-    public int getFreeSlots() {
+    public int getFreeSlots(Build build) {
         return 0;
     }
 
+    public List<Build> getAllBuilds() {
+        return null;
+    }
 }

@@ -1,26 +1,79 @@
 package boris;
 
+import java.util.List;
+
 /**
  * Created by oreqizer on 16/03/16.
  */
 public interface BuildManager {
 
-    public Build addComputer(Long id);
+    /**
+     * creates a new build
+     *
+     * @param build build to create
+     * @return new build with id filled
+     */
+    public Build createBuild(Build build);
 
-    public void removeComputer(Long id);
+    /**
+     * updates an existing build
+     *
+     * @param build build to update
+     */
+    public void updateBuild(Build build);
 
-    public Build addComponent(Long id);
+    /**
+     * removes a build
+     *
+     * @param build build to remove
+     */
+    public void removeBuild(Build build);
 
-    public void removeComponent(Long id);
+    /**
+     * verifies if a build is valid
+     *
+     * @param build build to verify
+     * @return validity of the build
+     */
+    public boolean verifyBuild(Build build);
 
-    public boolean verifyBuild();
+    /**
+     * computes total heat of the build
+     *
+     * @param build build to compute
+     * @return total heat
+     */
+    public int getHeat(Build build);
 
-    public int getHeat();
+    /**
+     * computes total energy of the build
+     *
+     * @param build build to compute
+     * @return total energy
+     */
+    public int getEnergy(Build build);
 
-    public int getEnergy();
+    /**
+     * computes total price of the build
+     *
+     * @param build build to compute
+     * @return total price
+     */
+    public int getPrice(Build build);
 
-    public int getPrice();
+    /**
+     * returns number of free slots
+     *
+     * @param build build to check
+     * @return free slots
+     */
+    public int getFreeSlots(Build build);
 
-    public int getFreeSlots();
+    /**
+     * lists all current builds
+     *
+     * @return list of all builds
+     */
+    public List<Build> getAllBuilds();
 
 }
