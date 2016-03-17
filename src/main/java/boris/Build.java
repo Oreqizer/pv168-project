@@ -17,6 +17,12 @@ public final class Build {
         this.components = components;
     }
 
+    public Build(Long id, Computer pc, List<Component> components) {
+        this.id = id;
+        this.pc = pc;
+        this.components = components;
+    }
+
     public Long getId() {
         return id;
     }
@@ -27,6 +33,18 @@ public final class Build {
 
     public List<Component> getComponents() {
         return components;
+    }
+
+    public Build setId(Long id) {
+        return new Build(id, pc, components);
+    }
+
+    public Build setComputer(Computer pc) {
+        return new Build(id, pc, components);
+    }
+
+    public Build setComponents(List<Component> components) {
+        return new Build(id, pc, components);
     }
 
 }

@@ -51,6 +51,48 @@ public class ComponentManagerImplTest {
     }
 
     @Test
+    public void testUpdateComponent() throws Exception {
+
+        Component c = new Component("card", 100, 200, 100);
+        Component component = manager.createComponent(c);
+
+        component = component
+                .setFree(false)
+                .setHeat(150)
+                .setPrice(250)
+                .setEnergy(150);
+
+        manager.updateComponent(component);
+
+        assertThat("component is not free", component.isFree(), is(equalTo(false)));
+        assertThat("component's name changed", component.getName(), is(equalTo("card")));
+        assertThat("component's heat changed", component.getHeat(), is(equalTo(150)));
+        assertThat("component's price changed", component.getPrice(), is(equalTo(250)));
+        assertThat("component's energy changed", component.getEnergy(), is(equalTo(150)));
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateComponentNull() throws Exception {
+
+        Component c = new Component("card", 100, 200, 100);
+
+        manager.createComponent(c);
+        manager.updateComponent(null);
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateComponentNoId() throws Exception {
+
+        Component c = new Component("card", 100, 200, 100);
+
+        manager.createComponent(c);
+        manager.updateComponent(c);
+
+    }
+
+    @Test
     public void testRemoveComponent() throws Exception {
         
         Component c1 = new Component("card", 100, 200, 100);
@@ -76,6 +118,16 @@ public class ComponentManagerImplTest {
 
         manager.createComponent(c1);
         manager.removeComponent(null);
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRemoveComponentNoId() throws Exception {
+
+        Component c1 = new Component("card", 100, 200, 100);
+
+        manager.createComponent(c1);
+        manager.removeComponent(c1);
 
     }
 
@@ -116,5 +168,4 @@ public class ComponentManagerImplTest {
         assertThat("list is empty", list.size(), is(equalTo(0)));
 
     }
-
 }

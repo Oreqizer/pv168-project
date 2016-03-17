@@ -9,6 +9,8 @@ public interface ComponentManager {
     
     public Component createComponent(Component component);
 
+    public void updateComponent(Component component);
+
     public void removeComponent(Component component);
 
     public Component getComponent(Long id);

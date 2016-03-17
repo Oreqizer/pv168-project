@@ -31,6 +31,10 @@ public class ComputerManagerImpl implements ComputerManager {
         return null;
     }
 
+    public void updateComputer(Computer pc) {
+
+    }
+
     public void removeComputer(Computer pc) {
 
     }

@@ -9,6 +9,8 @@ public interface ComputerManager {
 
     public Computer createComputer(Computer pc);
 
+    public void updateComputer(Computer pc);
+
     public void removeComputer(Computer pc);
 
     public Computer getComputer(Long id);

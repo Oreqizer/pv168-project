@@ -27,6 +27,10 @@ public class ComponentManagerImpl implements ComponentManager {
         return null;
     }
 
+    public void updateComponent(Component component) {
+
+    }
+
     public void removeComponent(Component component) {
 
     }

@@ -52,6 +52,47 @@ public class ComputerManagerImplTest {
     }
 
     @Test
+    public void testUpdateComputer() throws Exception {
+
+        Computer c = new Computer(3, 2000, 300);
+        Computer computer = manager.createComputer(c);
+
+        computer = computer
+                .setFree(false)
+                .setSlots(4)
+                .setCooling(2500)
+                .setPrice(350);
+
+        manager.updateComputer(computer);
+
+        assertThat("computer is not free", computer.isFree(), is(equalTo(false)));
+        assertThat("computer's slots changed", computer.getSlots(), is(equalTo(4)));
+        assertThat("computer's cooling changed", computer.getCooling(), is(equalTo(2500)));
+        assertThat("computer's price changed", computer.getPrice(), is(equalTo(350)));
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateComputerNull() throws Exception {
+
+        Computer c = new Computer(3, 2000, 300);
+
+        manager.createComputer(c);
+        manager.updateComputer(null);
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUpdateComputerNoId() throws Exception {
+
+        Computer c = new Computer(3, 2000, 300);
+
+        manager.createComputer(c);
+        manager.updateComputer(c);
+
+    }
+
+    @Test
     public void testRemoveComputer() throws Exception {
 
         Computer c1 = new Computer(3, 2000, 300);
@@ -77,6 +118,16 @@ public class ComputerManagerImplTest {
 
         manager.createComputer(c1);
         manager.removeComputer(null);
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRemoveComputerNoId() throws Exception {
+
+        Computer c1 = new Computer(3, 2000, 300);
+
+        manager.createComputer(c1);
+        manager.removeComputer(c1);
 
     }
 
