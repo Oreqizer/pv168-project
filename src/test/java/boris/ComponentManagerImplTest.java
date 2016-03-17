@@ -64,12 +64,13 @@ public class ComponentManagerImplTest {
                 .setEnergy(150);
 
         manager.updateComponent(component);
+        Component updated = manager.getComponent(component.getId());
 
-        assertThat("component is not free", component.isFree(), is(equalTo(false)));
-        assertThat("component's name changed", component.getName(), is(equalTo("card")));
-        assertThat("component's heat changed", component.getHeat(), is(equalTo(150)));
-        assertThat("component's price changed", component.getPrice(), is(equalTo(250)));
-        assertThat("component's energy changed", component.getEnergy(), is(equalTo(150)));
+        assertThat("component is not free", updated.isFree(), is(equalTo(false)));
+        assertThat("component's name changed", updated.getName(), is(equalTo("card")));
+        assertThat("component's heat changed", updated.getHeat(), is(equalTo(150)));
+        assertThat("component's price changed", updated.getPrice(), is(equalTo(250)));
+        assertThat("component's energy changed", updated.getEnergy(), is(equalTo(150)));
 
     }
 

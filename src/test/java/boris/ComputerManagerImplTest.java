@@ -64,11 +64,12 @@ public class ComputerManagerImplTest {
                 .setPrice(350);
 
         manager.updateComputer(computer);
+        Computer updated = manager.getComputer(computer.getId());
 
-        assertThat("computer is not free", computer.isFree(), is(equalTo(false)));
-        assertThat("computer's slots changed", computer.getSlots(), is(equalTo(4)));
-        assertThat("computer's cooling changed", computer.getCooling(), is(equalTo(2500)));
-        assertThat("computer's price changed", computer.getPrice(), is(equalTo(350)));
+        assertThat("computer is not free", updated.isFree(), is(equalTo(false)));
+        assertThat("computer's slots changed", updated.getSlots(), is(equalTo(4)));
+        assertThat("computer's cooling changed", updated.getCooling(), is(equalTo(2500)));
+        assertThat("computer's price changed", updated.getPrice(), is(equalTo(350)));
 
     }
 
