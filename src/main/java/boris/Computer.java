@@ -22,8 +22,8 @@ public class Computer {
     public Computer(
             Long id, boolean free, int slots, int cooling, int price
     ) {
-        this.id = null;
-        this.free = true;
+        this.id = id;
+        this.free = free;
         this.slots = slots;
         this.cooling = cooling;
         this.price = price;
