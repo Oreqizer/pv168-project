@@ -42,6 +42,7 @@ public class ComponentManagerImplTest {
         manager.createComponent(null);
         
     }
+
     @Test(expected = IllegalArgumentException.class)
     public void testCreateComponentFail() throws Exception {
 
