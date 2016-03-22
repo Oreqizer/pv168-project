@@ -1,4 +1,4 @@
-package boris;
+package boris.configurator.backend;
 
 import java.util.List;
 

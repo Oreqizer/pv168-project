@@ -1,4 +1,4 @@
-package boris;
+package boris.configurator.backend;
 
 import java.util.List;
 
@@ -45,6 +45,27 @@ public final class Build {
 
     public Build setComponents(List<Component> components) {
         return new Build(id, pc, components);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Build build = (Build) o;
+
+        if (id != null ? !id.equals(build.id) : build.id != null) return false;
+        if (pc != null ? !pc.equals(build.pc) : build.pc != null) return false;
+        return components != null ? components.equals(build.components) : build.components == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (pc != null ? pc.hashCode() : 0);
+        result = 31 * result + (components != null ? components.hashCode() : 0);
+        return result;
     }
 
 }

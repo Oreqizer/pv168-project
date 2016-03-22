@@ -1,4 +1,4 @@
-package boris;
+package boris.configurator.backend;
 
 /**
  * Created by oreqizer on 16/03/16.
@@ -78,6 +78,33 @@ public class Component {
 
     public Component setEnergy(int energy) {
         return new Component(id, free, name, heat, price, energy);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Component component = (Component) o;
+
+        if (free != component.free) return false;
+        if (heat != component.heat) return false;
+        if (price != component.price) return false;
+        if (energy != component.energy) return false;
+        if (id != null ? !id.equals(component.id) : component.id != null) return false;
+        return name != null ? name.equals(component.name) : component.name == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (free ? 1 : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + heat;
+        result = 31 * result + price;
+        result = 31 * result + energy;
+        return result;
     }
 
 }
