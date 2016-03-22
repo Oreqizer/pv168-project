@@ -15,14 +15,17 @@ public final class BuildManagerImpl implements BuildManager {
     }
 
     public Build createBuild(Build build) {
+        checkDataSource();
         return null;
     }
 
     public void updateBuild(Build build) {
+        checkDataSource();
 
     }
 
     public void removeBuild(Build build) {
+        checkDataSource();
 
     }
 
@@ -47,6 +50,7 @@ public final class BuildManagerImpl implements BuildManager {
     }
 
     public List<Build> getAllBuilds() {
+        checkDataSource();
         return null;
     }
 

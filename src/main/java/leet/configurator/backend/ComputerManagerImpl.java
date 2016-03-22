@@ -15,24 +15,29 @@ public final class ComputerManagerImpl implements ComputerManager {
     }
 
     public Computer createComputer(Computer pc) {
+        checkDataSource();
         validate(pc);
 
         return null;
     }
 
     public void updateComputer(Computer pc) {
+        checkDataSource();
         validate(pc);
     }
 
     public void removeComputer(Computer pc) {
+        checkDataSource();
 
     }
 
     public Computer getComputer(Long id) {
+        checkDataSource();
         return null;
     }
 
     public List<Computer> getAllComputers() {
+        checkDataSource();
         return null;
     }
 

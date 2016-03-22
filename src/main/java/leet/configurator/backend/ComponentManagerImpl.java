@@ -15,25 +15,30 @@ public final class ComponentManagerImpl implements ComponentManager {
     }
 
     public Component createComponent(Component component) {
+        checkDataSource();
         validate(component);
 
         return null;
     }
 
     public void updateComponent(Component component) {
+        checkDataSource();
         validate(component);
 
     }
 
     public void removeComponent(Component component) {
+        checkDataSource();
 
     }
 
     public Component getComponent(Long id) {
+        checkDataSource();
         return null;
     }
 
     public List<Component> getAllComponents() {
+        checkDataSource();
         return null;
     }
 
