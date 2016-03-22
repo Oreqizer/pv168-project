@@ -1,11 +1,18 @@
 package leet.configurator.backend;
 
+import javax.activation.DataSource;
 import java.util.List;
 
 /**
  * Created by oreqizer on 16/03/16.
  */
-public class BuildManagerImpl implements BuildManager {
+public final class BuildManagerImpl implements BuildManager {
+
+    private DataSource dataSource;
+
+    public BuildManagerImpl(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public Build createBuild(Build build) {
         return null;

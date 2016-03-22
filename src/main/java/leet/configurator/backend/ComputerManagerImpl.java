@@ -1,13 +1,42 @@
 package leet.configurator.backend;
 
+import javax.activation.DataSource;
 import java.util.List;
 
 /**
  * Created by oreqizer on 16/03/16.
  */
-public class ComputerManagerImpl implements ComputerManager {
+public final class ComputerManagerImpl implements ComputerManager {
+
+    private DataSource dataSource;
+
+    public ComputerManagerImpl(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public Computer createComputer(Computer pc) {
+        validate(pc);
+
+        return null;
+    }
+
+    public void updateComputer(Computer pc) {
+        validate(pc);
+    }
+
+    public void removeComputer(Computer pc) {
+
+    }
+
+    public Computer getComputer(Long id) {
+        return null;
+    }
+
+    public List<Computer> getAllComputers() {
+        return null;
+    }
+
+    private void validate(Computer pc) {
         if (pc == null) {
             throw new IllegalArgumentException("pc should not be null");
         }
@@ -27,24 +56,6 @@ public class ComputerManagerImpl implements ComputerManager {
         if (pc.getPrice() < 0) {
             throw new IllegalArgumentException("price can't be negative");
         }
-        
-        return null;
-    }
-
-    public void updateComputer(Computer pc) {
-
-    }
-
-    public void removeComputer(Computer pc) {
-
-    }
-
-    public Computer getComputer(Long id) {
-        return null;
-    }
-
-    public List<Computer> getAllComputers() {
-        return null;
     }
 
 }
