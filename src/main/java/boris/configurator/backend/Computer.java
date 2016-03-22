@@ -69,4 +69,29 @@ public class Computer {
         return new Computer(id, free, slots, cooling, price);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Computer computer = (Computer) o;
+
+        if (free != computer.free) return false;
+        if (slots != computer.slots) return false;
+        if (cooling != computer.cooling) return false;
+        if (price != computer.price) return false;
+        return id != null ? id.equals(computer.id) : computer.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (free ? 1 : 0);
+        result = 31 * result + slots;
+        result = 31 * result + cooling;
+        result = 31 * result + price;
+        return result;
+    }
+
 }
