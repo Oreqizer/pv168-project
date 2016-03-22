@@ -1,4 +1,4 @@
-package boris;
+package boris.configurator.backend;
 
 import org.junit.Before;
 import org.junit.Test;
