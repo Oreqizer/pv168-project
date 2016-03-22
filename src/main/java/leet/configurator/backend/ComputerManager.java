@@ -1,4 +1,4 @@
-package boris.configurator.backend;
+package leet.configurator.backend;
 
 import java.util.List;
 

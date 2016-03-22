@@ -1,4 +1,4 @@
-package boris.configurator.backend;
+package leet.configurator.backend;
 
 /**
  * Created by oreqizer on 16/03/16.

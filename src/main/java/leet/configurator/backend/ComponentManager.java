@@ -1,13 +1,15 @@
-package ondro;
+package leet.configurator.backend;
 
 import java.util.List;
 
 /**
- * Created by zeman on 16/03/16.
+ * Created by oreqizer on 16/03/16.
  */
 public interface ComponentManager {
     
     public Component createComponent(Component component);
+
+    public void updateComponent(Component component);
 
     public void removeComponent(Component component);
 

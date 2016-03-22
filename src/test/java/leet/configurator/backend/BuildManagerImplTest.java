@@ -1,11 +1,10 @@
-package java.ondro;
+package leet.configurator.backend;
 
-import ondro.BuildManagerImpl;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Created by zeman on 16/03/16.
+ * Created by oreqizer on 16/03/16.
  */
 public class BuildManagerImplTest {
 
