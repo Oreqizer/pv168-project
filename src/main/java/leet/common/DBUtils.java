@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 /**
  * Created by oreqizer on 22/03/16.
  */
-public final class DBUtils {
+public abstract class DBUtils {
 
     private static final Logger logger = Logger.getLogger(
             DBUtils.class.getName()
