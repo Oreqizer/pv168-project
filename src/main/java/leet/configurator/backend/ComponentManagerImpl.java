@@ -1,6 +1,11 @@
 package leet.configurator.backend;
 
+import leet.common.DBUtils;
+
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -37,8 +42,23 @@ public final class ComponentManagerImpl implements ComponentManager {
         return null;
     }
 
-    public List<Component> getAllComponents() {
+    public List<Computer> getAllComputers() {
         checkDataSource();
+
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+
+            conn = dataSource.getConnection();
+            st = conn.prepareStatement("SELECT * FROM COMPUTERS");
+            return executeQueryForMultipleComputers(st); // TODO
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtils.closeQuietly(conn, st);
+        }
+
         return null;
     }
 
