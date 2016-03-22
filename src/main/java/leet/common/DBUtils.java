@@ -132,6 +132,8 @@ public final class DBUtils {
                 conn.prepareStatement(st).executeUpdate();
             }
 
+        } catch (NullPointerException ex) {
+            logger.log(Level.SEVERE, "Failed executing SQL statements", ex);
         } finally {
             closeQuietly(conn);
         }
@@ -154,7 +156,7 @@ public final class DBUtils {
             );
 
         } catch (IOException ex) {
-            logger.log(Level.SEVERE, "Failed reading SQL statements");
+            logger.log(Level.SEVERE, "Failed reading SQL statements", ex);
         }
 
         return null;
