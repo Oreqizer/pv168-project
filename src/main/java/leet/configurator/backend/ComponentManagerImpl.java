@@ -8,7 +8,7 @@ import java.util.List;
  */
 public final class ComponentManagerImpl implements ComponentManager {
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public ComponentManagerImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -55,6 +55,12 @@ public final class ComponentManagerImpl implements ComponentManager {
             throw new IllegalArgumentException("price can't be negative");
         }
 
+    }
+
+    private void checkDataSource() {
+        if (dataSource == null) {
+            throw new IllegalStateException("DataSource is not set");
+        }
     }
 
 }

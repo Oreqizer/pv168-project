@@ -8,7 +8,7 @@ import java.util.List;
  */
 public final class ComputerManagerImpl implements ComputerManager {
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public ComputerManagerImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -37,6 +37,7 @@ public final class ComputerManagerImpl implements ComputerManager {
     }
 
     private void validate(Computer pc) {
+
         if (pc == null) {
             throw new IllegalArgumentException("pc should not be null");
         }
@@ -55,6 +56,13 @@ public final class ComputerManagerImpl implements ComputerManager {
 
         if (pc.getPrice() < 0) {
             throw new IllegalArgumentException("price can't be negative");
+        }
+
+    }
+
+    private void checkDataSource() {
+        if (dataSource == null) {
+            throw new IllegalStateException("DataSource is not set");
         }
     }
 

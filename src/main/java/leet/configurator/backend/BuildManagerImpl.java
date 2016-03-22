@@ -8,7 +8,7 @@ import java.util.List;
  */
 public final class BuildManagerImpl implements BuildManager {
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
 
     public BuildManagerImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -49,4 +49,11 @@ public final class BuildManagerImpl implements BuildManager {
     public List<Build> getAllBuilds() {
         return null;
     }
+
+    private void checkDataSource() {
+        if (dataSource == null) {
+            throw new IllegalStateException("DataSource is not set");
+        }
+    }
+
 }
