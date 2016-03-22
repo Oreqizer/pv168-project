@@ -1,7 +1,6 @@
 package leet.common;
 
 import javax.sql.DataSource;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -17,7 +16,7 @@ import java.util.logging.Logger;
 /**
  * Created by oreqizer on 22/03/16.
  */
-public class DBUtils {
+public final class DBUtils {
 
     private static final Logger logger = Logger.getLogger(
             DBUtils.class.getName()
@@ -106,7 +105,7 @@ public class DBUtils {
         try {
 
             executeSqlScript(ds, scriptUrl);
-            logger.warning("Tables created");
+            logger.fine("Tables created");
 
         } catch (SQLException ex) {
             if (!"X0Y32".equals(ex.getSQLState())) {
@@ -155,8 +154,10 @@ public class DBUtils {
             );
 
         } catch (IOException ex) {
-            System.out.println(ex);
+            logger.log(Level.SEVERE, "Failed reading SQL statements");
         }
+
+        return null;
     }
 
 }
