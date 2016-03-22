@@ -1,6 +1,6 @@
 package leet.configurator.backend;
 
-import javax.activation.DataSource;
+import javax.sql.DataSource;
 import java.util.List;
 
 /**
