@@ -36,8 +36,6 @@ public class ComputerManagerImplTest {
         Long pcId = computer.getId();
 
         assertThat("computer has null id", computer.getId(), is(not(equalTo(null))));
-
-
         Computer result = manager.getComputer(pcId);
 
         assertThat("loaded pc differs from the saved one", result, is(equalTo(computer)));

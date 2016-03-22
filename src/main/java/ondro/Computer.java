@@ -16,6 +16,12 @@ public class Computer {
         this.cooling = cooling;
         this.price = price;
     }
+    public Computer(Long id,int slots, int cooling, int price) {
+        this.id = id;
+        this.slots = slots;
+        this.cooling = cooling;
+        this.price = price;
+    }
 
     public Long getId() {
         return id;
@@ -31,6 +37,22 @@ public class Computer {
 
     public int getPrice() {
         return price;
+    }
+
+    public Computer setId(Long id){
+        return new Computer(id,slots,cooling,price);
+    }
+
+    public Computer setSlots(int slots){
+        return new Computer(id,slots,cooling,price);
+    }
+
+    public Computer setCooling(int cooling){
+        return new Computer(id,slots,cooling,price);
+    }
+
+    public Computer setPrice(int price){
+        return new Computer(id,slots,cooling,price);
     }
 
 }

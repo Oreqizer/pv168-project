@@ -62,6 +62,28 @@ public class ComponentManagerImplTest {
         assertNotNull(manager.getComponent(component1.getId()));
 
     }
+    @Test
+    public void createComponentWithWrongValues() {
+        Component component = new Component("ddsd",5,3,6);
+
+        component.setId(1L);
+        try {
+            manager.createComponent(component);
+            fail("should refuse assigned id");
+        } catch (IllegalArgumentException ex) {
+            //OK
+        }
+
+        component = new Component("ddsd",5,-1,6);
+        try {
+            manager.createComponent(component);
+            fail("negative price not detected");
+        } catch (IllegalArgumentException ex) {
+            //OK
+        }
+
+    }
+
 
     @Test
     public void testGetComponent() throws Exception {
@@ -75,6 +97,35 @@ public class ComponentManagerImplTest {
 
         assertNotNull(manager.getComponent(component.getId()));
         assertNotNull(manager.getComponent(component1.getId()));
+
+    }
+
+    @Test
+    public void testDeleteComponentWithWrongAttributes(){
+        Component component = new Component("dsds",20,3,65);
+
+        try {
+            manager.removeComponent(null);
+            fail();
+        } catch (IllegalArgumentException ex) {
+
+        }
+
+        try {
+            component.setId(null);
+            manager.removeComponent(component);
+            fail();
+        } catch (IllegalArgumentException ex) {
+
+        }
+
+        try {
+            component.setId(1L);
+            manager.removeComponent(component);
+            fail();
+        } catch (IllegalArgumentException ex) {
+
+        }
 
     }
 

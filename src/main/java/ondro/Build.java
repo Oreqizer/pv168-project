@@ -8,12 +8,18 @@ import java.util.List;
 public final class Build {
 
     private final Long id;
-    private final Computer pc;
+    private final Computer computer;
     private final List<Component> components;
 
-    public Build(Computer pc, List<Component> components) {
+    public Build(Computer computer, List<Component> components) {
         this.id = null;
-        this.pc = pc;
+        this.computer = computer;
+        this.components = components;
+    }
+
+    public Build(Long id,Computer computer, List<Component> components) {
+        this.id = id;
+        this.computer = computer;
         this.components = components;
     }
 
@@ -21,12 +27,24 @@ public final class Build {
         return id;
     }
 
-    public Computer getPc() {
-        return pc;
+    public Computer getComputer() {
+        return computer;
     }
 
     public List<Component> getComponents() {
         return components;
+    }
+
+    public Build setId(Long id){
+        return new Build(id, computer,components);
+    }
+
+    public Build setComputer(Computer computer){
+        return new Build(computer,components);
+    }
+
+    public Build setComponents(List<Component> components){
+        return new Build(computer,components);
     }
 
 }
