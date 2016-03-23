@@ -33,8 +33,6 @@ public final class ComputerManagerImpl implements ComputerManager {
             throw new IllegalArgumentException("id of a new pc should be null");
         }
 
-        Computer updatedPc = null;
-
         Connection conn = null;
         PreparedStatement st = null;
         try {
@@ -55,7 +53,7 @@ public final class ComputerManagerImpl implements ComputerManager {
 
             Long id = DBUtils.getId(st.getGeneratedKeys());
             conn.commit();
-            updatedPc = pc.setId(id);
+            return pc.setId(id);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,7 +62,7 @@ public final class ComputerManagerImpl implements ComputerManager {
             DBUtils.closeQuietly(conn, st);
         }
 
-        return updatedPc;
+        return null;
 
     }
 
@@ -74,7 +72,7 @@ public final class ComputerManagerImpl implements ComputerManager {
         validate(pc);
 
         if (pc.getId() == null) {
-            throw new EntityException("computer id is null");
+            throw new IllegalArgumentException("computer id is null");
         }
 
         Connection conn = null;
@@ -89,7 +87,7 @@ public final class ComputerManagerImpl implements ComputerManager {
 
             st.setInt(1, pc.getSlots());
             st.setInt(2, pc.getCooling());
-            st.setInt(3, pc.getCooling());
+            st.setInt(3, pc.getPrice());
             st.setLong(4, pc.getId());
 
             int count = st.executeUpdate();
@@ -114,7 +112,7 @@ public final class ComputerManagerImpl implements ComputerManager {
         }
 
         if (pc.getId() == null) {
-            throw new EntityException("computer id is null");
+            throw new IllegalArgumentException("computer id is null");
         }
 
         Connection conn = null;
@@ -205,7 +203,8 @@ public final class ComputerManagerImpl implements ComputerManager {
             Computer result = rowToComputer(rs);
             if (rs.next()) {
                 throw new DBException(
-                        "Internal integrity error: more computers with the same id found!");
+                        "Internal integrity error: more computers with the same id found!"
+                );
             }
             return result;
         }

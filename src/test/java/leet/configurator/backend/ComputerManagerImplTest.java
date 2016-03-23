@@ -48,7 +48,7 @@ public class ComputerManagerImplTest {
         Computer computer = manager.createComputer(pure);
 
         assertThat("pure has null id", pure.getId(), is(equalTo(null)));
-        assertThat("computer has an id", pure.getId(), is(not(equalTo(null))));
+        assertThat("computer has an id", computer.getId(), is(not(equalTo(null))));
 
         Computer result = manager.getComputer(computer.getId());
 
@@ -83,12 +83,8 @@ public class ComputerManagerImplTest {
                 .setCooling(2500)
                 .setPrice(350);
 
-        System.out.println(computer);
-
         manager.updateComputer(computer);
         Computer updated = manager.getComputer(computer.getId());
-
-        System.out.println(updated);
 
         assertThat("computer's slots changed", updated.getSlots(), is(equalTo(4)));
         assertThat("computer's cooling changed", updated.getCooling(), is(equalTo(2500)));
