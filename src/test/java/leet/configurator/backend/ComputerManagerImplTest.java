@@ -1,7 +1,7 @@
 package leet.configurator.backend;
 
-
 import leet.common.DBUtils;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
