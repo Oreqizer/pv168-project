@@ -158,8 +158,7 @@ public final class ComputerManagerImpl implements ComputerManager {
 
             return executeQueryForSingleComputer(st);
 
-        } catch (SQLException |DBException ex) {
-        } catch (SQLException | DBException ex) {
+        }  catch (SQLException | DBException ex) {
             ex.printStackTrace();
         } finally {
             DBUtils.closeQuietly(conn, st);
