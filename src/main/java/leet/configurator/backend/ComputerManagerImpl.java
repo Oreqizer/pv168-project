@@ -74,7 +74,7 @@ public final class ComputerManagerImpl implements ComputerManager {
 
 
         if (pc.getId() == null) {
-            throw new EntityException("grave id is null");
+            throw new EntityException("computer id is null");
         }
         Connection conn = null;
         PreparedStatement st = null;
@@ -104,10 +104,10 @@ public final class ComputerManagerImpl implements ComputerManager {
     public void removeComputer(Computer pc) throws EntityException, DBException {
         checkDataSource();
         if (pc == null) {
-            throw new IllegalArgumentException("grave is null");
+            throw new IllegalArgumentException("computer is null");
         }
         if (pc.getId() == null) {
-            throw new EntityException("grave id is null");
+            throw new EntityException("computer id is null");
         }
         Connection conn = null;
         PreparedStatement st = null;
@@ -179,7 +179,7 @@ public final class ComputerManagerImpl implements ComputerManager {
             Computer result = rowToComputer(rs);
             if (rs.next()) {
                 throw new DBException(
-                        "Internal integrity error: more graves with the same id found!");
+                        "Internal integrity error: more computers with the same id found!");
             }
             return result;
         } else {
