@@ -3,7 +3,6 @@ package leet.configurator.backend;
 import leet.common.DBException;
 import leet.common.DBUtils;
 import leet.common.EntityException;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,8 +59,8 @@ public final class ComputerManagerImpl implements ComputerManager {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-               DBUtils.doRollbackQuietly(conn);
-               DBUtils.closeQuietly(conn, st);
+            DBUtils.doRollbackQuietly(conn);
+            DBUtils.closeQuietly(conn, st);
         }
 
         return updatedPc;
@@ -159,9 +158,9 @@ public final class ComputerManagerImpl implements ComputerManager {
 
             return executeQueryForSingleComputer(st);
 
-        } catch (SQLException |DBException ex) {
+        }  catch (SQLException | DBException ex) {
             ex.printStackTrace();
-        }  finally {
+        } finally {
             DBUtils.closeQuietly(conn, st);
         }
         return null;
