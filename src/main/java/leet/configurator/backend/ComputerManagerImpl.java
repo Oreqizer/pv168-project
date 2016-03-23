@@ -197,7 +197,7 @@ public final class ComputerManagerImpl implements ComputerManager {
 
     }
 
-    static Computer executeQueryForSingleComputer(PreparedStatement st) throws SQLException, DBException {
+    private static Computer executeQueryForSingleComputer(PreparedStatement st) throws SQLException, DBException {
 
         ResultSet rs = st.executeQuery();
 

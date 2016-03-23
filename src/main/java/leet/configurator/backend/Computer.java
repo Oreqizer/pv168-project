@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by oreqizer on 16/03/16.
  */
-public class Computer {
+public final class Computer {
 
     private final Long id;
     private final List<Component> components;
@@ -40,6 +40,10 @@ public class Computer {
         return slots;
     }
 
+    public List<Component> getComponents() {
+        return components;
+    }
+
     public int getCooling() {
         return cooling;
     }
@@ -52,7 +56,7 @@ public class Computer {
         return new Computer(id, components, slots, cooling, price);
     }
     
-    public Computer setFree(List<Component> components) {
+    public Computer setComponents(List<Component> components) {
         return new Computer(id, components, slots, cooling, price);
     }
     
@@ -66,6 +70,17 @@ public class Computer {
     
     public Computer setPrice(int price) {
         return new Computer(id, components, slots, cooling, price);
+    }
+
+    @Override
+    public String toString() {
+        return "Computer{" +
+                "id=" + id +
+                ", components=" + components +
+                ", slots=" + slots +
+                ", cooling=" + cooling +
+                ", price=" + price +
+                '}';
     }
 
     @Override

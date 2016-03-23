@@ -24,7 +24,7 @@ public class ComputerManagerImplTest {
 
     private static DataSource getDataSource() throws SQLException {
         EmbeddedDataSource ds = new EmbeddedDataSource();
-        ds.setDatabaseName("memory:gravemgr-test");
+        ds.setDatabaseName("memory:computermgr-test");
         ds.setCreateDatabase("create");
         return ds;
     }
@@ -83,8 +83,12 @@ public class ComputerManagerImplTest {
                 .setCooling(2500)
                 .setPrice(350);
 
+        System.out.println(computer);
+
         manager.updateComputer(computer);
         Computer updated = manager.getComputer(computer.getId());
+
+        System.out.println(updated);
 
         assertThat("computer's slots changed", updated.getSlots(), is(equalTo(4)));
         assertThat("computer's cooling changed", updated.getCooling(), is(equalTo(2500)));

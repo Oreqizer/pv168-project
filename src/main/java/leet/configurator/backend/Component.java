@@ -3,7 +3,7 @@ package leet.configurator.backend;
 /**
  * Created by oreqizer on 16/03/16.
  */
-public class Component {
+public final class Component {
 
     private final Long id;
     private final boolean free;
