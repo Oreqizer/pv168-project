@@ -81,6 +81,23 @@ public final class ComputerManagerImpl implements ComputerManager {
     @Nullable
     public Computer getComputer(Long id) {
         checkDataSource();
+        if (id == null) {
+            throw new IllegalArgumentException("id is null");
+        }
+
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+            conn = dataSource.getConnection();
+            st = conn.prepareStatement(
+                    "SELECT ID SLOTS, COOLING, PRICE FROM COMPUTERS WHERE ID = ?");
+            st.setLong(1, id);
+            return executeQueryForSingleComputer(st);
+        } catch (SQLException |DBException ex) {
+            ex.printStackTrace();
+        }  finally {
+            DBUtils.closeQuietly(conn, st);
+        }
         return null;
     }
 
@@ -103,6 +120,20 @@ public final class ComputerManagerImpl implements ComputerManager {
         }
 
         return null;
+    }
+
+    static Computer executeQueryForSingleComputer(PreparedStatement st) throws SQLException, DBException {
+        ResultSet rs = st.executeQuery();
+        if (rs.next()) {
+            Computer result = rowToComputer(rs);
+            if (rs.next()) {
+                throw new DBException(
+                        "Internal integrity error: more graves with the same id found!");
+            }
+            return result;
+        } else {
+            return null;
+        }
     }
 
     private static List<Computer> executeQueryForMultipleComputers(PreparedStatement st) throws SQLException {
