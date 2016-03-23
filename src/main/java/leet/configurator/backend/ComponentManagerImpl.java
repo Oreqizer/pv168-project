@@ -55,7 +55,23 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     @Contract(" -> !null")
     public List<Component> getAllComponents() {
-        return new ArrayList<>();
+        checkDataSource();
+
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+
+            conn = dataSource.getConnection();
+            st = conn.prepareStatement("SELECT * FROM COMPONENTS");
+            return executeQueryForMultipleComponents(st);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtils.closeQuietly(conn, st);
+        }
+
+        return null;
     }
 
     private static List<Component> executeQueryForMultipleComponents(PreparedStatement st) throws SQLException {
