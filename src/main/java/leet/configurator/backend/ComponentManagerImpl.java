@@ -25,6 +25,10 @@ public final class ComponentManagerImpl implements ComponentManager {
         checkDataSource();
         validate(component);
 
+        if (component.getId() != null) {
+            throw new IllegalArgumentException("id of a new component should be null");
+        }
+
         return null;
     }
 
@@ -52,10 +56,6 @@ public final class ComponentManagerImpl implements ComponentManager {
 
         if (component == null) {
             throw new IllegalArgumentException("pc should not be null");
-        }
-
-        if (component.getId() != null) {
-            throw new IllegalArgumentException("id should be null");
         }
 
         if (component.getName().equals("")) {

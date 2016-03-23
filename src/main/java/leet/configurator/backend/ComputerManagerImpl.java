@@ -4,6 +4,7 @@ import leet.common.DBException;
 import leet.common.DBUtils;
 import leet.common.EntityException;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
@@ -27,6 +28,10 @@ public final class ComputerManagerImpl implements ComputerManager {
 
         checkDataSource();
         validate(pc);
+
+        if (pc.getId() != null) {
+            throw new IllegalArgumentException("id of a new pc should be null");
+        }
 
         Computer updatedPc = null;
 
@@ -109,6 +114,7 @@ public final class ComputerManagerImpl implements ComputerManager {
         return result;
     }
 
+    @Contract("_ -> !null")
     private static Computer rowToComputer(ResultSet rs) throws SQLException {
         return new Computer(
                 rs.getLong("ID"),
@@ -119,14 +125,11 @@ public final class ComputerManagerImpl implements ComputerManager {
         );
     }
 
+    @Contract("null -> fail")
     private void validate(Computer pc) {
 
         if (pc == null) {
             throw new IllegalArgumentException("pc should not be null");
-        }
-
-        if (pc.getId() != null) {
-            throw new IllegalArgumentException("id should be null");
         }
 
         if (pc.getSlots() <= 0) {
