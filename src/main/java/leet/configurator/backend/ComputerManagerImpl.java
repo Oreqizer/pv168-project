@@ -1,6 +1,12 @@
 package leet.configurator.backend;
 
+import leet.common.DBException;
+import leet.common.DBUtils;
+import leet.common.EntityException;
+
 import javax.sql.DataSource;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,11 +20,44 @@ public final class ComputerManagerImpl implements ComputerManager {
         this.dataSource = dataSource;
     }
 
-    public Computer createComputer(Computer pc) {
+    public Computer createComputer(Computer pc) throws DBException, EntityException {
+
         checkDataSource();
         validate(pc);
 
-        return null;
+        Computer updatedPc = null;
+
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            st = conn.prepareStatement(
+                    "INSERT INTO COMPUTERS (SLOTS,COOLING,PRICE) VALUES (?,?,?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+
+            st.setInt(1, pc.getSlots());
+            st.setInt(2, pc.getCooling());
+            st.setInt(3, pc.getPrice());
+
+            int count = st.executeUpdate();
+            DBUtils.checkUpdatesCount(count, pc, true);
+
+            Long id = DBUtils.getId(st.getGeneratedKeys());
+            conn.commit();
+            updatedPc = pc.setId(id);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+               DBUtils.doRollbackQuietly(conn);
+               DBUtils.closeQuietly(conn, st);
+        }
+
+        return updatedPc;
+
     }
 
     public void updateComputer(Computer pc) {
@@ -38,7 +77,41 @@ public final class ComputerManagerImpl implements ComputerManager {
 
     public List<Computer> getAllComputers() {
         checkDataSource();
+
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+
+            conn = dataSource.getConnection();
+            st = conn.prepareStatement("SELECT * FROM COMPUTERS");
+            return executeQueryForMultipleComputers(st);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtils.closeQuietly(conn, st);
+        }
+
         return null;
+    }
+
+    private static List<Computer> executeQueryForMultipleComputers(PreparedStatement st) throws SQLException {
+        ResultSet rs = st.executeQuery();
+        List<Computer> result = new ArrayList<>();
+        while (rs.next()) {
+            result.add(rowToComputer(rs));
+        }
+        return result;
+    }
+
+    private static Computer rowToComputer(ResultSet rs) throws SQLException {
+        return new Computer(
+                rs.getLong("ID"),
+                rs.getLong("BUILDID") != 0,
+                rs.getInt("SLOTS"),
+                rs.getInt("COOLING"),
+                rs.getInt("PRICE")
+        );
     }
 
     private void validate(Computer pc) {

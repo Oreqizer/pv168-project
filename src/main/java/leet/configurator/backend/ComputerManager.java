@@ -1,5 +1,8 @@
 package leet.configurator.backend;
 
+import leet.common.DBException;
+import leet.common.EntityException;
+
 import java.util.List;
 
 /**
@@ -7,11 +10,11 @@ import java.util.List;
  */
 public interface ComputerManager {
 
-    public Computer createComputer(Computer pc);
+    public Computer createComputer(Computer pc) throws DBException, EntityException;
 
-    public void updateComputer(Computer pc);
+    public void updateComputer(Computer pc) throws DBException, EntityException;
 
-    public void removeComputer(Computer pc);
+    public void removeComputer(Computer pc) throws DBException, EntityException;
 
     public Computer getComputer(Long id);
 

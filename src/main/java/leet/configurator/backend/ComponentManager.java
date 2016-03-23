@@ -1,5 +1,8 @@
 package leet.configurator.backend;
 
+import leet.common.DBException;
+import leet.common.EntityException;
+
 import java.util.List;
 
 /**
@@ -7,11 +10,11 @@ import java.util.List;
  */
 public interface ComponentManager {
     
-    public Component createComponent(Component component);
+    public Component createComponent(Component component) throws DBException, EntityException;
 
-    public void updateComponent(Component component);
+    public void updateComponent(Component component) throws DBException, EntityException;
 
-    public void removeComponent(Component component);
+    public void removeComponent(Component component) throws DBException, EntityException;
 
     public Component getComponent(Long id);
 

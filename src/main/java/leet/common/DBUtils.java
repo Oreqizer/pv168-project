@@ -94,6 +94,31 @@ public abstract class DBUtils {
     }
 
     /**
+     * Check if updates count is one. Otherwise appropriate exception is thrown.
+     *
+     * @param count updates count.
+     * @param entity updated entity (for includig to error message)
+     * @param insert flag if performed operation was insert
+     * @throws EntityException when updates count is zero, so updated entity does not exist
+     * @throws DBException when updates count is unexpected number
+     */
+    public static void checkUpdatesCount(
+            int count,
+            Object entity,
+            boolean insert
+    ) throws EntityException, DBException {
+
+        if (!insert && count == 0) {
+            throw new EntityException("Entity " + entity + " does not exist in the db");
+        }
+
+        if (count != 1) {
+            throw new DBException("Internal integrity error: Unexpected rows count in database affected: " + count);
+        }
+
+    }
+
+    /**
      * Try to execute script for creating tables. If tables already exist,
      * appropriate exception is catched and ignored.
      *
