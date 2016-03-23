@@ -119,29 +119,6 @@ public abstract class DBUtils {
     }
 
     /**
-     * Try to execute script for creating tables. If tables already exist,
-     * appropriate exception is catched and ignored.
-     *
-     * @param ds dataSource
-     * @param scriptUrl url of script for creating tables
-     * @throws SQLException when operation fails
-     */
-    public static void tryCreateTables(DataSource ds, URL scriptUrl) throws SQLException {
-        try {
-
-            executeSqlScript(ds, scriptUrl);
-            logger.fine("Tables created");
-
-        } catch (SQLException ex) {
-            if (!"X0Y32".equals(ex.getSQLState())) {
-                // This code represents "Table/View/... already exists"
-                // This code is Derby specific!
-                throw ex;
-            }
-        }
-    }
-
-    /**
      * Executes SQL script.
      *
      * @param ds datasource
