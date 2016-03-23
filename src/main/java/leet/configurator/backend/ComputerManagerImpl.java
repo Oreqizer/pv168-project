@@ -69,6 +69,7 @@ public final class ComputerManagerImpl implements ComputerManager {
     }
 
     public void updateComputer(Computer pc) throws EntityException, DBException {
+
         checkDataSource();
         validate(pc);
 
@@ -101,9 +102,11 @@ public final class ComputerManagerImpl implements ComputerManager {
             DBUtils.doRollbackQuietly(conn);
             DBUtils.closeQuietly(conn, st);
         }
+
     }
 
     public void removeComputer(Computer pc) throws EntityException, DBException {
+
         checkDataSource();
 
         if (pc == null) {
@@ -136,10 +139,12 @@ public final class ComputerManagerImpl implements ComputerManager {
             DBUtils.doRollbackQuietly(conn);
             DBUtils.closeQuietly(conn, st);
         }
+
     }
 
     @Nullable
     public Computer getComputer(Long id) {
+
         checkDataSource();
 
         if (id == null) {
@@ -164,11 +169,14 @@ public final class ComputerManagerImpl implements ComputerManager {
         }  finally {
             DBUtils.closeQuietly(conn, st);
         }
+
         return null;
+
     }
 
     @Nullable
     public List<Computer> getAllComputers() {
+
         checkDataSource();
 
         Connection conn = null;
@@ -185,10 +193,12 @@ public final class ComputerManagerImpl implements ComputerManager {
             DBUtils.closeQuietly(conn, st);
         }
 
-        return null;
+        return new ArrayList<>();
+
     }
 
     static Computer executeQueryForSingleComputer(PreparedStatement st) throws SQLException, DBException {
+
         ResultSet rs = st.executeQuery();
 
         if (rs.next()) {
@@ -198,19 +208,23 @@ public final class ComputerManagerImpl implements ComputerManager {
                         "Internal integrity error: more computers with the same id found!");
             }
             return result;
-        } else {
-            return null;
         }
+
+        return null;
+
     }
 
     private static List<Computer> executeQueryForMultipleComputers(PreparedStatement st) throws SQLException {
+
         ResultSet rs = st.executeQuery();
 
         List<Computer> result = new ArrayList<>();
         while (rs.next()) {
             result.add(rowToComputer(rs));
         }
+
         return result;
+
     }
 
     @Contract("_ -> !null")

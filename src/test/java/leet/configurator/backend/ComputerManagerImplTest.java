@@ -1,12 +1,18 @@
 package leet.configurator.backend;
 
+
+import leet.common.DBUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import org.apache.derby.jdbc.EmbeddedDataSource;
 
 /**
  * Created by oreqizer on 16/03/16.
@@ -14,10 +20,25 @@ import static org.junit.Assert.*;
 public class ComputerManagerImplTest {
 
     private ComputerManagerImpl manager;
+    private DataSource ds;
+
+    private static DataSource getDataSource() throws SQLException {
+        EmbeddedDataSource ds = new EmbeddedDataSource();
+        ds.setDatabaseName("memory:gravemgr-test");
+        ds.setCreateDatabase("create");
+        return ds;
+    }
 
     @Before
     public void setUp() throws Exception {
-        manager = new ComputerManagerImpl();
+        ds = getDataSource();
+        DBUtils.executeSqlScript(ds, DBUtils.class.getResource("createTables.sql"));
+        manager = new ComputerManagerImpl(ds);
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        DBUtils.executeSqlScript(ds, DBUtils.class.getResource("dropTables.sql"));
     }
 
     @Test
@@ -58,7 +79,6 @@ public class ComputerManagerImplTest {
         Computer computer = manager.createComputer(c);
 
         computer = computer
-                .setFree(false)
                 .setSlots(4)
                 .setCooling(2500)
                 .setPrice(350);
@@ -66,7 +86,6 @@ public class ComputerManagerImplTest {
         manager.updateComputer(computer);
         Computer updated = manager.getComputer(computer.getId());
 
-        assertThat("computer is not free", updated.isFree(), is(equalTo(false)));
         assertThat("computer's slots changed", updated.getSlots(), is(equalTo(4)));
         assertThat("computer's cooling changed", updated.getCooling(), is(equalTo(2500)));
         assertThat("computer's price changed", updated.getPrice(), is(equalTo(350)));

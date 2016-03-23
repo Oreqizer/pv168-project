@@ -1,8 +1,13 @@
 package leet.configurator.backend;
 
+import leet.common.DBUtils;
+import org.apache.derby.jdbc.EmbeddedDataSource;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -14,10 +19,25 @@ import static org.junit.Assert.*;
 public class ComponentManagerImplTest {
 
     private ComponentManagerImpl manager;
+    private DataSource ds;
+
+    private static DataSource getDataSource() throws SQLException {
+        EmbeddedDataSource ds = new EmbeddedDataSource();
+        ds.setDatabaseName("memory:gravemgr-test");
+        ds.setCreateDatabase("create");
+        return ds;
+    }
 
     @Before
     public void setUp() throws Exception {
-        manager = new ComponentManagerImpl();
+        ds = getDataSource();
+        DBUtils.executeSqlScript(ds, DBUtils.class.getResource("createTables.sql"));
+        manager = new ComponentManagerImpl(ds);
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        DBUtils.executeSqlScript(ds, DBUtils.class.getResource("dropTables.sql"));
     }
 
     @Test
