@@ -1,7 +1,9 @@
 package leet.configurator.backend;
 
 import leet.common.DBUtils;
+
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -22,6 +24,7 @@ public final class ComponentManagerImpl implements ComponentManager {
         this.dataSource = dataSource;
     }
 
+    @Nullable
     public Component createComponent(Component component) {
         checkDataSource();
         validate(component);
@@ -44,11 +47,13 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     }
 
+    @Nullable
     public Component getComponent(Long id) {
         checkDataSource();
         return null;
     }
 
+    @Contract(" -> !null")
     public List<Component> getAllComponents() {
         return new ArrayList<>();
     }
@@ -74,6 +79,7 @@ public final class ComponentManagerImpl implements ComponentManager {
         );
     }
 
+    @Contract("null -> fail")
     private void validate(Component component) {
 
         if (component == null) {
