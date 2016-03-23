@@ -33,23 +33,25 @@ public final class ComponentManagerImpl implements ComponentManager {
             throw new IllegalArgumentException("id of a new component should be null");
         }
 
+        // TODO
         return null;
     }
 
     public void updateComponent(Component component) {
         checkDataSource();
         validate(component);
-
+        // TODO
     }
 
     public void removeComponent(Component component) {
         checkDataSource();
-
+        // TODO
     }
 
     @Nullable
     public Component getComponent(Long id) {
         checkDataSource();
+        // TODO
         return null;
     }
 
@@ -76,6 +78,7 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     private static List<Component> executeQueryForMultipleComponents(PreparedStatement st) throws SQLException {
         ResultSet rs = st.executeQuery();
+
         List<Component> result = new ArrayList<>();
         while (rs.next()) {
             result.add(rowToComponent(rs));

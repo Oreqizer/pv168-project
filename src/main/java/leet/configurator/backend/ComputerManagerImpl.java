@@ -42,7 +42,7 @@ public final class ComputerManagerImpl implements ComputerManager {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             st = conn.prepareStatement(
-                    "INSERT INTO COMPUTERS (SLOTS,COOLING,PRICE) VALUES (?,?,?)",
+                    "INSERT INTO COMPUTERS (SLOTS, COOLING, PRICE) VALUES (?,?,?)",
                     Statement.RETURN_GENERATED_KEYS
             );
 
@@ -72,27 +72,29 @@ public final class ComputerManagerImpl implements ComputerManager {
         checkDataSource();
         validate(pc);
 
-
         if (pc.getId() == null) {
             throw new EntityException("computer id is null");
         }
+
         Connection conn = null;
         PreparedStatement st = null;
         try {
+
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             st = conn.prepareStatement(
-                    "UPDATE COMPUTERS SET SLOTS = ?, COOLING = ?, PRICE = ? WHERE ID = ?");
+                    "UPDATE COMPUTERS SET SLOTS = ?, COOLING = ?, PRICE = ? WHERE ID = ?"
+            );
+
             st.setInt(1, pc.getSlots());
             st.setInt(2, pc.getCooling());
             st.setInt(3, pc.getCooling());
             st.setLong(4, pc.getId());
 
-            // st.setLong(4, pc.getId()); neviem co robi to cislo
-
             int count = st.executeUpdate();
             DBUtils.checkUpdatesCount(count, pc, false);
             conn.commit();
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
@@ -103,24 +105,31 @@ public final class ComputerManagerImpl implements ComputerManager {
 
     public void removeComputer(Computer pc) throws EntityException, DBException {
         checkDataSource();
+
         if (pc == null) {
             throw new IllegalArgumentException("computer is null");
         }
+
         if (pc.getId() == null) {
             throw new EntityException("computer id is null");
         }
+
         Connection conn = null;
         PreparedStatement st = null;
         try {
+
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             st = conn.prepareStatement(
-                    "DELETE FROM COMPUTER WHERE ID = ?");
+                    "DELETE FROM COMPUTERS WHERE ID = ?"
+            );
+
             st.setLong(1, pc.getId());
 
             int count = st.executeUpdate();
             DBUtils.checkUpdatesCount(count, pc, false);
             conn.commit();
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {
@@ -132,6 +141,7 @@ public final class ComputerManagerImpl implements ComputerManager {
     @Nullable
     public Computer getComputer(Long id) {
         checkDataSource();
+
         if (id == null) {
             throw new IllegalArgumentException("id is null");
         }
@@ -139,11 +149,16 @@ public final class ComputerManagerImpl implements ComputerManager {
         Connection conn = null;
         PreparedStatement st = null;
         try {
+
             conn = dataSource.getConnection();
             st = conn.prepareStatement(
-                    "SELECT ID, SLOTS, COOLING, PRICE FROM COMPUTERS WHERE ID = ?");
+                    "SELECT * FROM COMPUTERS WHERE ID = ?"
+            );
+
             st.setLong(1, id);
+
             return executeQueryForSingleComputer(st);
+
         } catch (SQLException |DBException ex) {
             ex.printStackTrace();
         }  finally {
@@ -175,6 +190,7 @@ public final class ComputerManagerImpl implements ComputerManager {
 
     static Computer executeQueryForSingleComputer(PreparedStatement st) throws SQLException, DBException {
         ResultSet rs = st.executeQuery();
+
         if (rs.next()) {
             Computer result = rowToComputer(rs);
             if (rs.next()) {
@@ -189,6 +205,7 @@ public final class ComputerManagerImpl implements ComputerManager {
 
     private static List<Computer> executeQueryForMultipleComputers(PreparedStatement st) throws SQLException {
         ResultSet rs = st.executeQuery();
+
         List<Computer> result = new ArrayList<>();
         while (rs.next()) {
             result.add(rowToComputer(rs));
