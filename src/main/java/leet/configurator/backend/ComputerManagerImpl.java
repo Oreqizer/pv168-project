@@ -115,7 +115,7 @@ public final class ComputerManagerImpl implements ComputerManager {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             st = conn.prepareStatement(
-                    "DELETE FROM Grave WHERE id = ?");
+                    "DELETE FROM COMPUTER WHERE ID = ?");
             st.setLong(1, pc.getId());
 
             int count = st.executeUpdate();
