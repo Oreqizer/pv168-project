@@ -68,14 +68,65 @@ public final class ComputerManagerImpl implements ComputerManager {
 
     }
 
-    public void updateComputer(Computer pc) {
+    public void updateComputer(Computer pc) throws EntityException, DBException {
         checkDataSource();
         validate(pc);
+
+
+        if (pc.getId() == null) {
+            throw new EntityException("grave id is null");
+        }
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            st = conn.prepareStatement(
+                    "UPDATE COMPUTERS SET SLOTS = ?, COOLING = ?, PRICE = ? WHERE ID = ?");
+            st.setInt(1, pc.getSlots());
+            st.setInt(2, pc.getCooling());
+            st.setInt(3, pc.getCooling());
+            st.setLong(4, pc.getId());
+
+            // st.setLong(4, pc.getId()); neviem co robi to cislo
+
+            int count = st.executeUpdate();
+            DBUtils.checkUpdatesCount(count, pc, false);
+            conn.commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            DBUtils.doRollbackQuietly(conn);
+            DBUtils.closeQuietly(conn, st);
+        }
     }
 
-    public void removeComputer(Computer pc) {
+    public void removeComputer(Computer pc) throws EntityException, DBException {
         checkDataSource();
+        if (pc == null) {
+            throw new IllegalArgumentException("grave is null");
+        }
+        if (pc.getId() == null) {
+            throw new EntityException("grave id is null");
+        }
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            st = conn.prepareStatement(
+                    "DELETE FROM Grave WHERE id = ?");
+            st.setLong(1, pc.getId());
 
+            int count = st.executeUpdate();
+            DBUtils.checkUpdatesCount(count, pc, false);
+            conn.commit();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            DBUtils.doRollbackQuietly(conn);
+            DBUtils.closeQuietly(conn, st);
+        }
     }
 
     @Nullable
@@ -90,7 +141,7 @@ public final class ComputerManagerImpl implements ComputerManager {
         try {
             conn = dataSource.getConnection();
             st = conn.prepareStatement(
-                    "SELECT ID SLOTS, COOLING, PRICE FROM COMPUTERS WHERE ID = ?");
+                    "SELECT ID, SLOTS, COOLING, PRICE FROM COMPUTERS WHERE ID = ?");
             st.setLong(1, id);
             return executeQueryForSingleComputer(st);
         } catch (SQLException |DBException ex) {
