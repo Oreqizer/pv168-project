@@ -1,6 +1,7 @@
 package leet.configurator.backend;
 
 import leet.common.DBUtils;
+import org.jetbrains.annotations.Contract;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -49,7 +50,28 @@ public final class ComponentManagerImpl implements ComponentManager {
     }
 
     public List<Component> getAllComponents() {
-        return null;
+        return new ArrayList<>();
+    }
+
+    private static List<Component> executeQueryForMultipleComponents(PreparedStatement st) throws SQLException {
+        ResultSet rs = st.executeQuery();
+        List<Component> result = new ArrayList<>();
+        while (rs.next()) {
+            result.add(rowToComponent(rs));
+        }
+        return result;
+    }
+
+    @Contract("_ -> !null")
+    private static Component rowToComponent(ResultSet rs) throws SQLException {
+        return new Component(
+                rs.getLong("ID"),
+                rs.getLong("PCNAME") != 0,
+                rs.getString("NAME"),
+                rs.getInt("HEAT"),
+                rs.getInt("PRICE"),
+                rs.getInt("ENERGY")
+        );
     }
 
     private void validate(Component component) {

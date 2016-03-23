@@ -117,12 +117,10 @@ public final class ComputerManagerImpl implements ComputerManager {
     @Contract("_ -> !null")
     private static Computer rowToComputer(ResultSet rs) throws SQLException {
         return new Computer(
-                rs.getLong("ID"),
-                rs.getLong("BUILDID") != 0,
                 rs.getInt("SLOTS"),
                 rs.getInt("COOLING"),
                 rs.getInt("PRICE")
-        );
+        ).setId(rs.getLong("ID"));
     }
 
     @Contract("null -> fail")
