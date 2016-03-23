@@ -4,6 +4,8 @@ import leet.common.DBException;
 import leet.common.DBUtils;
 import leet.common.EntityException;
 
+import org.jetbrains.annotations.Nullable;
+
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public final class ComputerManagerImpl implements ComputerManager {
         this.dataSource = dataSource;
     }
 
+    @Nullable
     public Computer createComputer(Computer pc) throws DBException, EntityException {
 
         checkDataSource();
@@ -70,11 +73,13 @@ public final class ComputerManagerImpl implements ComputerManager {
 
     }
 
+    @Nullable
     public Computer getComputer(Long id) {
         checkDataSource();
         return null;
     }
 
+    @Nullable
     public List<Computer> getAllComputers() {
         checkDataSource();
 
