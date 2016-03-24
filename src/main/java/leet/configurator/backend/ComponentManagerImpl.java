@@ -1,15 +1,14 @@
 package leet.configurator.backend;
 
+import leet.common.DBException;
 import leet.common.DBUtils;
 
+import leet.common.EntityException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public final class ComponentManagerImpl implements ComponentManager {
     }
 
     @Nullable
-    public Component createComponent(Component component) {
+    public Component createComponent(Component component) throws DBException, EntityException {
         checkDataSource();
         validate(component);
 
@@ -33,7 +32,35 @@ public final class ComponentManagerImpl implements ComponentManager {
             throw new IllegalArgumentException("id of a new component should be null");
         }
 
-        // TODO
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            st = conn.prepareStatement(
+                    "INSERT INTO COMPONENTS (NAME, HEAT, PRICE , ENERGY) VALUES (?,?,?,?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+
+            st.setString(1, component.getName());
+            st.setInt(2, component.getHeat());
+            st.setInt(3, component.getPrice());
+            st.setInt(4, component.getHeat());
+            int count = st.executeUpdate();
+            DBUtils.checkUpdatesCount(count, component, true);
+
+            Long id = DBUtils.getId(st.getGeneratedKeys());
+            conn.commit();
+            return component.setId(id);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtils.doRollbackQuietly(conn);
+            DBUtils.closeQuietly(conn, st);
+        }
+
         return null;
     }
 
