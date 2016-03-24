@@ -23,7 +23,7 @@ public class ComponentManagerImplTest {
 
     private static DataSource getDataSource() throws SQLException {
         EmbeddedDataSource ds = new EmbeddedDataSource();
-        ds.setDatabaseName("memory:gravemgr-test");
+        ds.setDatabaseName("memory:componentmgr-test");
         ds.setCreateDatabase("create");
         return ds;
     }
