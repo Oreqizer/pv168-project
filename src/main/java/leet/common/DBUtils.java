@@ -150,6 +150,10 @@ public abstract class DBUtils {
     private static List<String> readSqlStatements(URL url) {
         try {
 
+            if (url.toString().contains("C:")) { // toto je Ondrej
+                url = new URL(url.toString().substring(5));
+            }
+
             Path path = Paths.get(url.getPath());
             return new ArrayList<>(
                     Arrays.asList(String
