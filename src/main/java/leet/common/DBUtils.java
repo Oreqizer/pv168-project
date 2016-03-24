@@ -151,7 +151,7 @@ public abstract class DBUtils {
         try {
 
             if (url.toString().contains("C:")) { // toto je Ondrej
-                url = new URL(url.toString().substring(5));
+                url = new URL("file:" + url.toString().substring(6));
             }
 
             Path path = Paths.get(url.getPath());
