@@ -6,7 +6,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,10 +28,10 @@ public abstract class DBUtils {
     /**
      * Closes connection and logs possible error.
      *
-     * @param conn connection to close
-     * @param statements  statements to close
+     * @param conn       connection to close
+     * @param statements statements to close
      */
-    public static void closeQuietly(Connection conn, Statement ...statements) {
+    public static void closeQuietly(Connection conn, Statement... statements) {
         for (Statement st : statements) {
             if (st != null) {
                 try {
@@ -96,11 +99,11 @@ public abstract class DBUtils {
     /**
      * Check if updates count is one. Otherwise appropriate exception is thrown.
      *
-     * @param count updates count.
+     * @param count  updates count.
      * @param entity updated entity (for includig to error message)
      * @param insert flag if performed operation was insert
      * @throws EntityException when updates count is zero, so updated entity does not exist
-     * @throws DBException when updates count is unexpected number
+     * @throws DBException     when updates count is unexpected number
      */
     public static void checkUpdatesCount(
             int count,
@@ -121,7 +124,7 @@ public abstract class DBUtils {
     /**
      * Executes SQL script.
      *
-     * @param ds datasource
+     * @param ds        datasource
      * @param scriptUrl url of sql script to be executed
      * @throws SQLException when operation fails
      */
@@ -151,7 +154,7 @@ public abstract class DBUtils {
         try {
 
             if (url.toString().contains("C:")) { // toto je Ondrej
-                url = new URL(url.toString().substring(5));
+                url = new URL("file:" + url.toString().substring(6));
             }
 
             Path path = Paths.get(url.getPath());
