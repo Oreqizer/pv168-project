@@ -61,12 +61,12 @@ public final class ComponentManagerImpl implements ComponentManager {
             DBUtils.doRollbackQuietly(conn);
             DBUtils.closeQuietly(conn, st);
         }
-        
+
         return null;
     }
 
     public void updateComponent(Component component) throws EntityException, DBException {
-        
+
         checkDataSource();
         validate(component);
 
@@ -103,7 +103,7 @@ public final class ComponentManagerImpl implements ComponentManager {
     }
 
     public void removeComponent(Component component) throws EntityException, DBException {
-        
+
         checkDataSource();
 
         if (component == null) {
@@ -136,7 +136,7 @@ public final class ComponentManagerImpl implements ComponentManager {
             DBUtils.doRollbackQuietly(conn);
             DBUtils.closeQuietly(conn, st);
         }
-        
+
     }
 
     @Nullable
@@ -190,6 +190,76 @@ public final class ComponentManagerImpl implements ComponentManager {
         }
 
         return new ArrayList<>();
+    }
+
+    @Override
+    public void addComponentToComputer(Component component, Long id) throws DBException, EntityException {
+        checkDataSource();
+        validate(component);
+
+        if (component.getId() == null) {
+            throw new IllegalArgumentException("component id is null");
+        }
+
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            st = conn.prepareStatement(
+                    "UPDATE COMPONENTS SET PC=? WHERE ID = ?"
+            );
+
+            st.setLong(1, id);
+            st.setLong(2, component.getId());
+
+
+            int count = st.executeUpdate();
+            DBUtils.checkUpdatesCount(count, component, false);
+            conn.commit();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            DBUtils.doRollbackQuietly(conn);
+            DBUtils.closeQuietly(conn, st);
+        }
+    }
+
+    @Override
+    public void removeComponentFromComputer(Component component) throws DBException, EntityException {
+        checkDataSource();
+        validate(component);
+
+        if (component.getId() == null) {
+            throw new IllegalArgumentException("component id is null");
+        }
+
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            st = conn.prepareStatement(
+                    "UPDATE COMPONENTS SET PC=? WHERE ID = ?"
+            );
+
+            st.setLong(1, -1);
+            st.setLong(2, component.getId());
+
+
+            int count = st.executeUpdate();
+            DBUtils.checkUpdatesCount(count, component, false);
+            conn.commit();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            DBUtils.doRollbackQuietly(conn);
+            DBUtils.closeQuietly(conn, st);
+        }
     }
 
     private static Component executeQueryForSingleComponent(PreparedStatement st) throws SQLException, DBException {
