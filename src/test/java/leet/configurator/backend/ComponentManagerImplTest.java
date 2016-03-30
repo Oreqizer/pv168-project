@@ -200,4 +200,53 @@ public class ComponentManagerImplTest {
         assertThat("list is empty", list.size(), is(equalTo(0)));
 
     }
+
+    @Test
+    public void testAddComponentToComputer()throws Exception{
+        Component c = new Component("card", 100, 200, 100);
+        Component component = manager.createComponent(c);
+
+        Computer pc = new Computer(1,2,3);
+
+        ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
+        Computer pc2=pcmgr.createComputer(pc);
+
+        component= manager.addComponentToComputer(component,pc2);
+
+
+        Component component2= manager.getComponent(component.getId());
+
+
+        assertThat("component's pc changed", component2.isFree(), is(equalTo(false)));
+        assertThat("pc has component", pc2.getComponents().contains(component2), is(equalTo(true)));
+
+
+    }
+
+    @Test
+    public void testRemoveComponentFromComputer()throws Exception{
+        Component c = new Component("card", 100, 200, 100);
+        Component component = manager.createComponent(c);
+
+        Computer pc = new Computer(1,2,3);
+
+        ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
+        Computer pc2=pcmgr.createComputer(pc);
+
+        component= component.setFree(false);
+        pc.getComponents().add(component);
+
+
+
+        component= manager.removeComponentFromComputer(component,pc2);
+
+
+        Component component2= manager.getComponent(component.getId());
+
+
+        assertThat("component's pc changed", component2.isFree(), is(equalTo(true)));
+        assertThat("pc has component", pc2.getComponents().contains(component2), is(equalTo(false)));
+
+
+    }
 }
