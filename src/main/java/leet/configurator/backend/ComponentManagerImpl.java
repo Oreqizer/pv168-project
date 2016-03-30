@@ -1,15 +1,14 @@
 package leet.configurator.backend;
 
+import leet.common.DBException;
 import leet.common.DBUtils;
 
+import leet.common.EntityException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public final class ComponentManagerImpl implements ComponentManager {
     }
 
     @Nullable
-    public Component createComponent(Component component) {
+    public Component createComponent(Component component) throws EntityException, DBException {
         checkDataSource();
         validate(component);
 
@@ -33,26 +32,143 @@ public final class ComponentManagerImpl implements ComponentManager {
             throw new IllegalArgumentException("id of a new component should be null");
         }
 
-        // TODO
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            st = conn.prepareStatement(
+                    "INSERT INTO COMPONENTS (NAME, HEAT, ENERGY, PRICE) VALUES (?,?,?,?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+
+            st.setString(1, component.getName());
+            st.setInt(2, component.getHeat());
+            st.setInt(3, component.getEnergy());
+            st.setInt(4, component.getPrice());
+
+            int count = st.executeUpdate();
+            DBUtils.checkUpdatesCount(count, component, true);
+
+            Long id = DBUtils.getId(st.getGeneratedKeys());
+            conn.commit();
+            return component.setId(id);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtils.doRollbackQuietly(conn);
+            DBUtils.closeQuietly(conn, st);
+        }
+        
         return null;
     }
 
-    public void updateComponent(Component component) {
+    public void updateComponent(Component component) throws EntityException, DBException {
+        
         checkDataSource();
         validate(component);
-        // TODO
+
+        if (component.getId() == null) {
+            throw new IllegalArgumentException("component id is null");
+        }
+
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            st = conn.prepareStatement(
+                    "UPDATE COMPONENTS SET NAME = ?, HEAT = ?, ENERGY = ?, PRICE = ? WHERE ID = ?"
+            );
+
+            st.setString(1, component.getName());
+            st.setInt(2, component.getHeat());
+            st.setInt(3, component.getEnergy());
+            st.setInt(4, component.getPrice());
+            st.setLong(5, component.getId());
+
+            int count = st.executeUpdate();
+            DBUtils.checkUpdatesCount(count, component, false);
+            conn.commit();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            DBUtils.doRollbackQuietly(conn);
+            DBUtils.closeQuietly(conn, st);
+        }
     }
 
-    public void removeComponent(Component component) {
+    public void removeComponent(Component component) throws EntityException, DBException {
+        
         checkDataSource();
-        // TODO
+
+        if (component == null) {
+            throw new IllegalArgumentException("component is null");
+        }
+
+        if (component.getId() == null) {
+            throw new IllegalArgumentException("component id is null");
+        }
+
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            st = conn.prepareStatement(
+                    "DELETE FROM COMPONENTS WHERE ID = ?"
+            );
+
+            st.setLong(1, component.getId());
+
+            int count = st.executeUpdate();
+            DBUtils.checkUpdatesCount(count, component, false);
+            conn.commit();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            DBUtils.doRollbackQuietly(conn);
+            DBUtils.closeQuietly(conn, st);
+        }
+        
     }
 
     @Nullable
     public Component getComponent(Long id) {
+
         checkDataSource();
-        // TODO
+
+        if (id == null) {
+            throw new IllegalArgumentException("id is null");
+        }
+
+        Connection conn = null;
+        PreparedStatement st = null;
+        try {
+
+            conn = dataSource.getConnection();
+            st = conn.prepareStatement(
+                    "SELECT * FROM COMPONENTS WHERE ID = ?"
+            );
+
+            st.setLong(1, id);
+
+            return executeQueryForSingleComponent(st);
+
+        } catch (SQLException|DBException ex) {
+            ex.printStackTrace();
+        }  finally {
+            DBUtils.closeQuietly(conn, st);
+        }
+
         return null;
+
     }
 
     @Contract(" -> !null")
@@ -73,7 +189,25 @@ public final class ComponentManagerImpl implements ComponentManager {
             DBUtils.closeQuietly(conn, st);
         }
 
+        return new ArrayList<>();
+    }
+
+    private static Component executeQueryForSingleComponent(PreparedStatement st) throws SQLException, DBException {
+
+        ResultSet rs = st.executeQuery();
+
+        if (rs.next()) {
+            Component result = rowToComponent(rs);
+            if (rs.next()) {
+                throw new DBException(
+                        "Internal integrity error: more computers with the same id found!"
+                );
+            }
+            return result;
+        }
+
         return null;
+
     }
 
     private static List<Component> executeQueryForMultipleComponents(PreparedStatement st) throws SQLException {
@@ -90,7 +224,7 @@ public final class ComponentManagerImpl implements ComponentManager {
     private static Component rowToComponent(ResultSet rs) throws SQLException {
         return new Component(
                 rs.getLong("ID"),
-                rs.getLong("PCNAME") != 0,
+                rs.getLong("PC") == 0,
                 rs.getString("NAME"),
                 rs.getInt("HEAT"),
                 rs.getInt("PRICE"),

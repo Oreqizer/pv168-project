@@ -48,9 +48,12 @@ public class ComponentManagerImplTest {
         Component component = manager.createComponent(pure);
 
         assertThat("pure has null id", pure.getId(), is(equalTo(null)));
-        assertThat("component has an id", pure.getId(), is(not(equalTo(null))));
+        assertThat("component has an id", component.getId(), is(not(equalTo(null))));
 
         Component result = manager.getComponent(component.getId());
+
+        System.out.println(component.toString());
+        System.out.println(result.toString());
 
         assertThat("components match", result, is(equalTo(component)));
         assertThat("components don't match", result, is(not(sameInstance(pure))));
@@ -67,7 +70,15 @@ public class ComponentManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testCreateComponentFail() throws Exception {
 
-        Component component = new Component("card", 100, 200, -100);
+        Component component = new Component("card", 100, -200, 100);
+        manager.createComponent(component);
+
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateComponentFail2() throws Exception {
+
+        Component component = new Component("", 100, 200, 100);
         manager.createComponent(component);
 
     }
@@ -79,7 +90,6 @@ public class ComponentManagerImplTest {
         Component component = manager.createComponent(c);
 
         component = component
-                .setFree(false)
                 .setHeat(150)
                 .setPrice(250)
                 .setEnergy(150);
@@ -87,7 +97,6 @@ public class ComponentManagerImplTest {
         manager.updateComponent(component);
         Component updated = manager.getComponent(component.getId());
 
-        assertThat("component is not free", updated.isFree(), is(equalTo(false)));
         assertThat("component's name changed", updated.getName(), is(equalTo("card")));
         assertThat("component's heat changed", updated.getHeat(), is(equalTo(150)));
         assertThat("component's price changed", updated.getPrice(), is(equalTo(250)));

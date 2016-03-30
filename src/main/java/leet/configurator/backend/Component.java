@@ -81,6 +81,18 @@ public final class Component {
     }
 
     @Override
+    public String toString() {
+        return "Component{" +
+                "id=" + id +
+                ", free=" + free +
+                ", name='" + name + '\'' +
+                ", heat=" + heat +
+                ", price=" + price +
+                ", energy=" + energy +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
