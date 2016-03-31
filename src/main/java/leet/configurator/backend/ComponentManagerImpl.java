@@ -256,7 +256,7 @@ public final class ComponentManagerImpl implements ComponentManager {
 
             //0 alebo -1 alebo co
             //nejde setnut na 0,-1,atd
-            st.setLong(1,-1 );
+            st.setNull(1, Types.LONGNVARCHAR);
             st.setLong(2, component.getId());
 
 
