@@ -19,5 +19,8 @@ public interface ComponentManager {
     public Component getComponent(Long id);
 
     public List<Component> getAllComponents();
-    
+
+    public Component addComponentToComputer(Component component,Computer pc) throws DBException, EntityException;
+
+    public Component removeComponentFromComputer(Component component,Computer pc) throws DBException, EntityException;
 }
