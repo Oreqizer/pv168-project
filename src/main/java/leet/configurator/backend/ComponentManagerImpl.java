@@ -219,12 +219,8 @@ public final class ComponentManagerImpl implements ComponentManager {
             st.setLong(1, pc.getId());
             st.setLong(2, component.getId());
 
-
-
             component= component.setFree(false);
             pc.getComponents().add(component);
-
-
 
             int count = st.executeUpdate();
             DBUtils.checkUpdatesCount(count, component, false);
