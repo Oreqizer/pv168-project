@@ -194,13 +194,17 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     @Override
     public Component addComponentToComputer(Component component, Computer pc) throws DBException, EntityException {
+
         checkDataSource();
         validate(component);
 
         if (component.getId() == null) {
             throw new IllegalArgumentException("component id is null");
         }
-        //if (!component.isFree)
+
+        if (!component.isFree()) {
+            throw new IllegalArgumentException("component is not free");
+        }
 
         Connection conn = null;
         PreparedStatement st = null;
@@ -209,7 +213,7 @@ public final class ComponentManagerImpl implements ComponentManager {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             st = conn.prepareStatement(
-                    "UPDATE COMPONENTS SET PC=? WHERE ID = ?"
+                    "UPDATE COMPONENTS SET PC = ? WHERE ID = ?"
             );
 
             st.setLong(1, pc.getId());
@@ -232,11 +236,14 @@ public final class ComponentManagerImpl implements ComponentManager {
             DBUtils.doRollbackQuietly(conn);
             DBUtils.closeQuietly(conn, st);
         }
+
         return component;
+
     }
 
     @Override
     public Component removeComponentFromComputer(Component component , Computer pc) throws DBException, EntityException {
+
         checkDataSource();
         validate(component);
 
@@ -251,19 +258,14 @@ public final class ComponentManagerImpl implements ComponentManager {
             conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             st = conn.prepareStatement(
-                    "UPDATE COMPONENTS SET PC=? WHERE ID = ?"
+                    "UPDATE COMPONENTS SET PC = ? WHERE ID = ?"
             );
 
-            //0 alebo -1 alebo co
-            //nejde setnut na 0,-1,atd
-            st.setNull(1, Types.LONGNVARCHAR);
+            st.setNull(1, Types.BIGINT);
             st.setLong(2, component.getId());
 
-
-
             pc.getComponents().remove(component);
-            component= component.setFree(true);
-
+            component = component.setFree(true);
 
             int count = st.executeUpdate();
             DBUtils.checkUpdatesCount(count, component, false);
@@ -275,6 +277,7 @@ public final class ComponentManagerImpl implements ComponentManager {
             DBUtils.doRollbackQuietly(conn);
             DBUtils.closeQuietly(conn, st);
         }
+
         return component;
     }
 

@@ -52,9 +52,6 @@ public class ComponentManagerImplTest {
 
         Component result = manager.getComponent(component.getId());
 
-        System.out.println(component.toString());
-        System.out.println(result.toString());
-
         assertThat("components match", result, is(equalTo(component)));
         assertThat("components don't match", result, is(not(sameInstance(pure))));
         
