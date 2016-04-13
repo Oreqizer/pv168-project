@@ -81,6 +81,9 @@ public final class ComponentManagerImpl implements ComponentManager {
     public void removeComponent(Component component) {
         checkJdbc();
         validate(component);
+        if(component.getId()==null){
+            throw new IllegalArgumentException("component id is null");
+        }
         jdbc.update("DELETE FROM COMPONENTS WHERE ID=?", component.getId());
 
     }
