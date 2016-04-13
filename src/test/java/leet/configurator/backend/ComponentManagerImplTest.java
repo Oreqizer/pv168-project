@@ -48,7 +48,7 @@ public class ComponentManagerImplTest {
 
         assertThat("pure has null id", pure.getId(), is(equalTo(null)));
 
-        manager.createComponent(pure);
+        pure = manager.createComponent(pure);
 
         assertThat("component has an id", pure.getId(), is(not(equalTo(null))));
 
