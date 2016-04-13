@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
  */
 public class ComponentManagerImplTest {
 
-    private ComponentManagerImpl manager;
+    private ComponentManager manager;
     private DataSource ds;
 
     private static DataSource getDataSource() throws SQLException {
@@ -45,16 +45,18 @@ public class ComponentManagerImplTest {
     public void testCreateComponent() throws Exception {
         
         Component pure = new Component("card", 100, 200, 100);
-        Component component = manager.createComponent(pure);
 
         assertThat("pure has null id", pure.getId(), is(equalTo(null)));
-        assertThat("component has an id", component.getId(), is(not(equalTo(null))));
 
-        Component result = manager.getComponent(component.getId());
+        manager.createComponent(pure);
 
-        assertThat("components match", result, is(equalTo(component)));
+        assertThat("component has an id", pure.getId(), is(not(equalTo(null))));
+
+        Component result = manager.getComponent(pure.getId());
+
+        assertThat("components match", result, is(equalTo(pure)));
         assertThat("components don't match", result, is(not(sameInstance(pure))));
-        
+
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -83,8 +85,8 @@ public class ComponentManagerImplTest {
     @Test
     public void testUpdateComponent() throws Exception {
 
-        Component c = new Component("card", 100, 200, 100);
-        Component component = manager.createComponent(c);
+        Component component = new Component("card", 100, 200, 100);
+        manager.createComponent(component);
 
         component = component
                 .setHeat(150)
@@ -124,11 +126,11 @@ public class ComponentManagerImplTest {
     @Test
     public void testRemoveComponent() throws Exception {
         
-        Component c1 = new Component("card", 100, 200, 100);
-        Component c2 = new Component("pcu", 100, 300, 100);
+        Component component1 = new Component("card", 100, 200, 100);
+        Component component2 = new Component("pcu", 100, 300, 100);
 
-        Component component1 = manager.createComponent(c1);
-        Component component2 = manager.createComponent(c2);
+         manager.createComponent(component1);
+         manager.createComponent(component2);
 
         assertNotNull(manager.getComponent(component1.getId()));
         assertNotNull(manager.getComponent(component2.getId()));
@@ -137,7 +139,7 @@ public class ComponentManagerImplTest {
 
         assertNull(manager.getComponent(component1.getId()));
         assertNotNull(manager.getComponent(component2.getId()));
-        
+
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -163,33 +165,33 @@ public class ComponentManagerImplTest {
     @Test
     public void testGetComponent() throws Exception {
 
-        Component c1 = new Component("card", 100, 200, 100);
-        Component component1 = manager.createComponent(c1);
+        Component component = new Component("card", 100, 200, 100);
+        manager.createComponent(component);
 
-        assertNotNull(manager.getComponent(component1.getId()));
-        assertNull(manager.getComponent(component1.getId() + 5));
+        assertNotNull(manager.getComponent(component.getId()));
+        assertNull(manager.getComponent(component.getId() + 5));
 
     }
 
     @Test
     public void testGetAllComponents() throws Exception {
 
-        Component c1 = new Component("card", 100, 200, 100);
-        Component component1 = manager.createComponent(c1);
+        Component component = new Component("card", 100, 200, 100);
+         manager.createComponent(component);
 
         List<Component> list = manager.getAllComponents();
 
         assertThat("list is not null", list, is(not(equalTo(null))));
         assertThat("list has one component", list.size(), is(equalTo(1)));
 
-        Component c2 = new Component("pcu", 100, 300, 100);
-        Component component2 = manager.createComponent(c2);
+        Component component2 = new Component("pcu", 100, 300, 100);
+         manager.createComponent(component2);
 
         list = manager.getAllComponents();
 
         assertThat("list has two components", list.size(), is(equalTo(2)));
         
-        manager.removeComponent(component1);
+        manager.removeComponent(component);
         manager.removeComponent(component2);
 
         list = manager.getAllComponents();
@@ -201,8 +203,8 @@ public class ComponentManagerImplTest {
     @Test
     public void testAddComponentToComputer() throws Exception {
 
-        Component c = new Component("card", 100, 200, 100);
-        Component component = manager.createComponent(c);
+        Component component = new Component("card", 100, 200, 100);
+        manager.createComponent(component);
 
         Computer pc = new Computer(3, 2000, 300);
 
@@ -213,7 +215,7 @@ public class ComponentManagerImplTest {
 
         Component component2 = manager.getComponent(component.getId());
 
-        assertThat("component's pc changed", component2.isFree(), is(equalTo(false)));
+        assertThat("component's pc changed", component2.getPid(), is(equalTo(pc.getId())));
         assertThat("pc has component", pc2.getComponents().contains(component2), is(equalTo(true)));
 
     }
@@ -221,22 +223,22 @@ public class ComponentManagerImplTest {
     @Test
     public void testRemoveComponentFromComputer() throws Exception {
 
-        Component c = new Component("card", 100, 200, 100);
-        Component component = manager.createComponent(c);
+        Component component = new Component("card", 100, 200, 100);
+        manager.createComponent(component);
 
         Computer pc = new Computer(3, 2000, 300);
 
         ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
         Computer pc2 = pcmgr.createComputer(pc);
 
-        component = component.setFree(false);
+        component = component.setPid(pc2.getId());
         pc.getComponents().add(component);
 
-        component = manager.removeComponentFromComputer(component, pc2);
+        component = manager.removeComponentFromComputer(component);
 
         Component component2 = manager.getComponent(component.getId());
 
-        assertThat("component's pc changed", component2.isFree(), is(equalTo(true)));
+        assertThat("component's pc changed", component2.getPid(), is(equalTo(true)));
         assertThat("pc has component", pc2.getComponents().contains(component2), is(equalTo(false)));
 
     }

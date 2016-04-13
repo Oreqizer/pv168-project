@@ -6,7 +6,7 @@ package leet.configurator.backend;
 public final class Component {
 
     private final Long id;
-    private final boolean free;
+    private final Long pid;
     private final String name;
     private final int heat;
     private final int price;
@@ -14,26 +14,27 @@ public final class Component {
 
     public Component(String name, int heat, int price, int energy) {
         this.id = null;
-        this.free = true;
+        this.pid = null;
         this.name = name;
         this.heat = heat;
         this.price = price;
         this.energy = energy;
     }
+
 
     public Component(
-            Long id, boolean free, String name, int heat, int price, int energy
-    ) {
+            Long id, long pid, String name, int heat,
+            int price, int energy) {
         this.id = id;
-        this.free = free;
+        this.pid = pid;
         this.name = name;
         this.heat = heat;
         this.price = price;
         this.energy = energy;
     }
 
-    public boolean isFree() {
-        return free;
+    public Long getPid() {
+        return pid;
     }
 
     public Long getId() {
@@ -57,34 +58,34 @@ public final class Component {
     }
 
     public Component setId(Long id) {
-        return new Component(id, free, name, heat, price, energy);
+        return new Component(id, pid, name, heat, price, energy);
     }
 
-    public Component setFree(boolean free) {
-        return new Component(id, free, name, heat, price, energy);
+    public Component setPid(Long pid) {
+        return new Component(id, pid, name, heat, price, energy);
     }
 
     public Component setName(String name) {
-        return new Component(id, free, name, heat, price, energy);
+        return new Component(id, pid, name, heat, price, energy);
     }
 
     public Component setHeat(int heat) {
-        return new Component(id, free, name, heat, price, energy);
+        return new Component(id, pid, name, heat, price, energy);
     }
 
     public Component setPrice(int price) {
-        return new Component(id, free, name, heat, price, energy);
+        return new Component(id, pid, name, heat, price, energy);
     }
 
     public Component setEnergy(int energy) {
-        return new Component(id, free, name, heat, price, energy);
+        return new Component(id, pid, name, heat, price, energy);
     }
 
     @Override
     public String toString() {
         return "Component{" +
                 "id=" + id +
-                ", free=" + free +
+                ", pid=" + pid +
                 ", name='" + name + '\'' +
                 ", heat=" + heat +
                 ", price=" + price +
@@ -99,7 +100,7 @@ public final class Component {
 
         Component component = (Component) o;
 
-        if (free != component.free) return false;
+        if (pid != component.pid) return false;
         if (heat != component.heat) return false;
         if (price != component.price) return false;
         if (energy != component.energy) return false;
@@ -111,7 +112,7 @@ public final class Component {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (free ? 1 : 0);
+        result = 31 * result +  (pid !=null ? id.hashCode() :0)  ;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + heat;
         result = 31 * result + price;
