@@ -23,8 +23,8 @@ public final class Component {
 
 
     public Component(
-            Long id, long pid, String name, int heat,
-            int price, int energy) {
+            Long id, Long pid, String name, int heat, int price, int energy
+    ) {
         this.id = id;
         this.pid = pid;
         this.name = name;

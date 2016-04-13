@@ -32,11 +32,11 @@ public final class ComponentManagerImpl implements ComponentManager {
                 .usingGeneratedKeyColumns("ID");
 
         SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("PC", component.getPid()) // TODO set null
                 .addValue("NAME", component.getName())
                 .addValue("HEAT", component.getHeat())
                 .addValue("PRICE", component.getPrice())
-                .addValue("ENERGY", component.getEnergy())
-                .addValue("PC",component.getPid());
+                .addValue("ENERGY", component.getEnergy());
 
         Number id = insertComponent.executeAndReturnKey(parameters);
         return component.setId(id.longValue());
