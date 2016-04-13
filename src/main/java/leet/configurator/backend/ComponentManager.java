@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface ComponentManager {
     
-    public void createComponent(Component component) throws DBException, EntityException;
+    public Component createComponent(Component component) throws DBException, EntityException;
 
     public void updateComponent(Component component) throws DBException, EntityException;
 

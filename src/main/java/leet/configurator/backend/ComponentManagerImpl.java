@@ -25,7 +25,7 @@ public final class ComponentManagerImpl implements ComponentManager {
     }
 
     @Nullable
-    public void createComponent(Component component){
+    public Component createComponent(Component component){
         SimpleJdbcInsert insertComponent = new SimpleJdbcInsert(jdbc)
                 .withTableName("COMPONENTS").usingGeneratedKeyColumns("ID");
 
@@ -37,7 +37,7 @@ public final class ComponentManagerImpl implements ComponentManager {
                 .addValue("PC",component.getPid());
 
         Number id = insertComponent.executeAndReturnKey(parameters);
-        component.setId(id.longValue());
+        return component.setId(id.longValue());
 
     }
 
