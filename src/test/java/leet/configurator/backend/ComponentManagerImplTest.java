@@ -2,7 +2,6 @@ package leet.configurator.backend;
 
 import leet.common.DBUtils;
 import org.apache.derby.jdbc.EmbeddedDataSource;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +42,7 @@ public class ComponentManagerImplTest {
 
     @Test
     public void testCreateComponent() throws Exception {
-        
+
         Component pure = new Component("card", 100, 200, 100);
 
         assertThat("pure has null id", pure.getId(), is(equalTo(null)));
@@ -61,9 +60,9 @@ public class ComponentManagerImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateComponentNull() throws Exception {
-        
+
         manager.createComponent(null);
-        
+
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -125,7 +124,7 @@ public class ComponentManagerImplTest {
 
     @Test
     public void testRemoveComponent() throws Exception {
-        
+
         Component component1 = new Component("card", 100, 200, 100);
         Component component2 = new Component("pcu", 100, 300, 100);
 
@@ -170,7 +169,7 @@ public class ComponentManagerImplTest {
         component = manager.createComponent(component);
 
         assertNotNull(manager.getComponent(component.getId()));
-    //    assertNull(manager.getComponent(component.getId() + 5));
+        //    assertNull(manager.getComponent(component.getId() + 5));
 
     }
 
@@ -191,7 +190,7 @@ public class ComponentManagerImplTest {
         list = manager.getAllComponents();
 
         assertThat("list has two components", list.size(), is(equalTo(2)));
-        
+
         manager.removeComponent(component);
         manager.removeComponent(component2);
 
