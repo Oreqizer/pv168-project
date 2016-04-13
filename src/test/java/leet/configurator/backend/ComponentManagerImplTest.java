@@ -86,7 +86,7 @@ public class ComponentManagerImplTest {
     public void testUpdateComponent() throws Exception {
 
         Component component = new Component("card", 100, 200, 100);
-        manager.createComponent(component);
+        component = manager.createComponent(component);
 
         component = component
                 .setHeat(150)
@@ -108,7 +108,7 @@ public class ComponentManagerImplTest {
 
         Component c = new Component("card", 100, 200, 100);
 
-        manager.createComponent(c);
+        c = manager.createComponent(c);
         manager.updateComponent(null);
 
     }
@@ -118,7 +118,7 @@ public class ComponentManagerImplTest {
 
         Component c = new Component("card", 100, 200, 100);
 
-        manager.createComponent(c);
+        c = manager.createComponent(c);
         manager.updateComponent(c);
 
     }
@@ -129,8 +129,8 @@ public class ComponentManagerImplTest {
         Component component1 = new Component("card", 100, 200, 100);
         Component component2 = new Component("pcu", 100, 300, 100);
 
-         manager.createComponent(component1);
-         manager.createComponent(component2);
+        component1 = manager.createComponent(component1);
+        component2 = manager.createComponent(component2);
 
         assertNotNull(manager.getComponent(component1.getId()));
         assertNotNull(manager.getComponent(component2.getId()));
@@ -166,7 +166,7 @@ public class ComponentManagerImplTest {
     public void testGetComponent() throws Exception {
 
         Component component = new Component("card", 100, 200, 100);
-        manager.createComponent(component);
+        component = manager.createComponent(component);
 
         assertNotNull(manager.getComponent(component.getId()));
         assertNull(manager.getComponent(component.getId() + 5));

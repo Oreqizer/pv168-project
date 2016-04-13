@@ -46,8 +46,9 @@ public final class ComponentManagerImpl implements ComponentManager {
     public void updateComponent(Component component) {
 
         jdbc.update(
-                "UPDATE COMPONENTS set NAME=?,HEAT=?,PRICE=?,ENERGY=? where ID=?",
+                "UPDATE COMPONENTS set NAME=?,PC=?,HEAT=?,PRICE=?,ENERGY=? where ID=?",
                 component.getName(),
+                component.getPid(),
                 component.getHeat(),
                 component.getPrice(),
                 component.getEnergy(),
@@ -59,7 +60,7 @@ public final class ComponentManagerImpl implements ComponentManager {
     private RowMapper<Component> componentMapper = (rs, rowNum) ->
         new Component(
                 rs.getLong("ID"),
-                rs.getLong("PC"),
+                rs.getLong("PC") == 0 ? null :rs.getLong("PC"),
                 rs.getString("NAME"),
                 rs.getInt("HEAT"),
                 rs.getInt("PRICE"),
