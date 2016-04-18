@@ -207,16 +207,15 @@ public class ComponentManagerImplTest {
         component = manager.createComponent(component);
 
         Computer pc = new Computer(3, 2000, 300);
-
         ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
-        Computer pc2 = pcmgr.createComputer(pc);
+        pc = pcmgr.createComputer(pc);
 
-        component = manager.addComponentToComputer(component, pc2);
+        component = manager.addComponentToComputer(component, pc);
 
         Component component2 = manager.getComponent(component.getId());
 
         assertThat("component's pc changed", component2.getPid(), is(equalTo(pc.getId())));
-        assertThat("pc has component", pc2.getComponents().contains(component2), is(equalTo(true)));
+        assertThat("pc has component", pc.getComponents().contains(component2), is(equalTo(true)));
 
     }
 
@@ -229,17 +228,20 @@ public class ComponentManagerImplTest {
         Computer pc = new Computer(3, 2000, 300);
 
         ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
-        Computer pc2 = pcmgr.createComputer(pc);
+        pc = pcmgr.createComputer(pc);
 
-        component = component.setPid(pc2.getId());
-        pc.getComponents().add(component);
+        component = manager.addComponentToComputer(component,pc);
 
-        component = manager.removeComponentFromComputer(component);
+        Component c2 = manager.getComponent(component.getId());
 
-        Component component2 = manager.getComponent(component.getId());
+        assertThat("component's pc is there", c2.getPid(), is(equalTo(pc.getId())));
 
-        assertThat("component's pc changed", component2.getPid(), is(equalTo(true)));
-        assertThat("pc has component", pc2.getComponents().contains(component2), is(equalTo(false)));
+        component = manager.removeComponentFromComputer(component, pc);
+
+        c2 = manager.getComponent(component.getId());
+
+        assertThat("component's pc changed", c2.getPid(), is(equalTo(null)));
+        assertThat("pc has component", pc.getComponents().contains(c2), is(equalTo(false)));
 
     }
 }

@@ -2,6 +2,7 @@ package leet.configurator.backend;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.List;
-
-import static java.sql.JDBCType.NULL;
 
 /**
  * Created by oreqizer on 16/03/16.
@@ -94,11 +93,15 @@ public final class ComponentManagerImpl implements ComponentManager {
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null");
         }
-        return jdbc.queryForObject(
-                "SELECT * FROM COMPONENTS WHERE ID=?",
-                componentMapper,
-                id
-        );
+        try {
+            return jdbc.queryForObject(
+                    "SELECT * FROM COMPONENTS WHERE id=?"
+                    , componentMapper, id);
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
+
+
 
     }
 
@@ -127,32 +130,40 @@ public final class ComponentManagerImpl implements ComponentManager {
         if (component.getPid() != null) {
             throw new IllegalArgumentException("component id is null");
         }
-
+        component = component.setPid(pc.getId());
+        pc.getComponents().add(component);
         jdbc.update(
                 "UPDATE COMPONENTS set PC=? where ID=?",
                 component.getPid(),
                 component.getId()
         );
 
-        pc.getComponents().add(component);
-        return component.setPid(pc.getId());
+        return component;
 
     }
 
     @Override
-    public Component removeComponentFromComputer(Component component) {
+    public Component removeComponentFromComputer(Component component, Computer pc) {
         checkJdbc();
         validate(component);
+        if (pc == null) {
+            throw new IllegalArgumentException("pc is null");
+        }
+        if (pc.getComponents() == null) {
+            throw new IllegalArgumentException("pc components is null");
+        }
         if (component.getId() == null) {
             throw new IllegalArgumentException("component id is null");
         }
 
         jdbc.update(
                 "UPDATE COMPONENTS set PC=? where ID=?",
-                NULL, component.getId()
+                null, component.getId()
         );
+        pc.getComponents().remove(component);
+        component = component.setPid(null);
 
-        return component.setPid(null);
+        return component;
 
     }
 
