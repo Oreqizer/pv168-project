@@ -38,7 +38,7 @@ public final class ComponentManagerImpl implements ComponentManager {
                 .usingGeneratedKeyColumns("ID");
 
         SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("PC", component.getPid()) // TODO set null
+                .addValue("PC", component.getPid())
                 .addValue("NAME", component.getName())
                 .addValue("HEAT", component.getHeat())
                 .addValue("PRICE", component.getPrice())
@@ -67,15 +67,7 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     }
 
-    private RowMapper<Component> componentMapper = (rs, rowNum) ->
-            new Component(
-                    rs.getLong("ID"),
-                    rs.getLong("PC") == 0 ? null : rs.getLong("PC"),
-                    rs.getString("NAME"),
-                    rs.getInt("HEAT"),
-                    rs.getInt("PRICE"),
-                    rs.getInt("ENERGY")
-            );
+
 
     public void removeComponent(Component component) {
         checkJdbc();
@@ -100,15 +92,12 @@ public final class ComponentManagerImpl implements ComponentManager {
         }catch (EmptyResultDataAccessException e){
             return null;
         }
-
-
-
     }
 
     @Transactional
     @Override
     public List<Component> getAllComponents() {
-
+        checkJdbc();
         return jdbc.query("SELECT * FROM COMPONENTS", componentMapper);
 
     }
@@ -167,6 +156,15 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     }
 
+    private RowMapper<Component> componentMapper = (rs, rowNum) ->
+            new Component(
+                    rs.getLong("ID"),
+                    rs.getLong("PC") == 0 ? null : rs.getLong("PC"),
+                    rs.getString("NAME"),
+                    rs.getInt("HEAT"),
+                    rs.getInt("PRICE"),
+                    rs.getInt("ENERGY")
+            );
     @Contract("null -> fail")
     private void validate(Component component) {
         if (component == null) {
