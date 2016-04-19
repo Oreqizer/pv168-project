@@ -28,14 +28,12 @@ public final class ComputerManagerImpl implements ComputerManager {
 
     @Nullable
     public Computer createComputer(Computer pc) throws DBException, EntityException {
-
         checkJdbc();
         validate(pc);
 
         if (pc.getId() != null) {
             throw new IllegalArgumentException("id of a new pc should be null");
         }
-
         SimpleJdbcInsert insertComponent = new SimpleJdbcInsert(jdbc)
                 .withTableName("COMPUTERS")
                 .usingGeneratedKeyColumns("ID");
@@ -43,21 +41,17 @@ public final class ComputerManagerImpl implements ComputerManager {
                 .addValue("SLOTS", pc.getSlots())
                 .addValue("COOLING", pc.getCooling())
                 .addValue("PRICE", pc.getPrice());
-
         Number id = insertComponent.executeAndReturnKey(parameters);
         return pc.setId(id.longValue());
-
     }
 
     public void updateComputer(Computer pc) throws EntityException, DBException {
-
         checkJdbc();
         validate(pc);
 
         if (pc.getId() == null) {
             throw new IllegalArgumentException("computer id is null");
         }
-
         jdbc.update(
                 "UPDATE COMPUTERS set SLOTS=?,COOLING=?,PRICE=? where ID=?",
                 pc.getSlots(),
@@ -65,24 +59,20 @@ public final class ComputerManagerImpl implements ComputerManager {
                 pc.getPrice(),
                 pc.getId()
         );
-
     }
 
     public void removeComputer(Computer pc) throws EntityException, DBException {
-
         checkJdbc();
         validate(pc);
+
         if (pc.getId() == null) {
             throw new IllegalArgumentException("computer id is null");
         }
-
         jdbc.update("DELETE FROM COMPUTERS WHERE ID=?", pc.getId());
-
     }
 
     @Nullable
     public Computer getComputer(Long id) {
-
         checkJdbc();
         if (id == null) {
             throw new IllegalArgumentException("id is null");
@@ -91,7 +81,7 @@ public final class ComputerManagerImpl implements ComputerManager {
             return jdbc.queryForObject(
                     "SELECT * FROM COMPUTERS WHERE id=?"
                     , computerMapper, id);
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
@@ -99,9 +89,7 @@ public final class ComputerManagerImpl implements ComputerManager {
     @Transactional
     @Nullable
     public List<Computer> getAllComputers() {
-
         return jdbc.query("SELECT * FROM COMPUTERS", computerMapper);
-
     }
 
     private RowMapper<Computer> computerMapper = (rs, rowNum) ->
@@ -117,19 +105,15 @@ public final class ComputerManagerImpl implements ComputerManager {
         if (pc == null) {
             throw new IllegalArgumentException("pc should not be null");
         }
-
         if (pc.getSlots() <= 0) {
             throw new IllegalArgumentException("cannot have 0 or less slots");
         }
-
         if (pc.getCooling() < 0) {
             throw new IllegalArgumentException("cooling can't be negative");
         }
-
         if (pc.getPrice() < 0) {
             throw new IllegalArgumentException("price can't be negative");
         }
-
     }
 
     private void checkJdbc() {
