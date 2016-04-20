@@ -28,6 +28,12 @@
         </c:forEach>
     </table>
 
+    <c:if test="${not empty error}">
+        <div style="background-color: indianred; padding: 10px">
+            <c:out value="${error}"/>
+        </div>
+    </c:if>
+
     <h2>Enter a computer</h2>
     <form action="${pageContext.request.contextPath}/computers/add" method="post">
         <table>
