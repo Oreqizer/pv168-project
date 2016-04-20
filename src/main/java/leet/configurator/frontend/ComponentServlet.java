@@ -17,7 +17,7 @@ import java.io.IOException;
 public class ComponentServlet extends HttpServlet {
 
     private static final String LIST_JSP = "/list.jsp";
-    public static final String URL_MAPPING = "/computers";
+    public static final String URL_MAPPING = "/components";
 
     private final static Logger log = LoggerFactory.getLogger(ComponentServlet.class);
 
