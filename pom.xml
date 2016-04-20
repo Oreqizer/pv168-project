@@ -15,6 +15,9 @@
     </properties>
 
     <build>
+        <!-- what to do when only "mvn" is run -->
+        <defaultGoal>tomcat7:run</defaultGoal>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -23,7 +26,22 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
-                </plugin>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <!--  embedded tomcat -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
         </plugins>
     </build>
 
@@ -67,6 +85,14 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
             <version>2.0.1</version>
+        </dependency>
+
+        <!-- Frontend -->
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-api</artifactId>
+            <version>8.0.33</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
