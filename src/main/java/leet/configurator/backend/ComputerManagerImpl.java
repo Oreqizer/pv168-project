@@ -1,15 +1,18 @@
 package leet.configurator.backend;
 
 import leet.common.DBException;
-import leet.common.DBUtils;
 import leet.common.EntityException;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,223 +20,84 @@ import java.util.List;
  */
 public final class ComputerManagerImpl implements ComputerManager {
 
-    private final DataSource dataSource;
+    private final JdbcTemplate jdbc;
 
     public ComputerManagerImpl(DataSource dataSource) {
-        this.dataSource = dataSource;
+        this.jdbc = new JdbcTemplate(dataSource);
     }
 
     @Nullable
     public Computer createComputer(Computer pc) throws DBException, EntityException {
-
-        checkDataSource();
+        checkJdbc();
         validate(pc);
 
         if (pc.getId() != null) {
             throw new IllegalArgumentException("id of a new pc should be null");
         }
-
-        Connection conn = null;
-        PreparedStatement st = null;
-        try {
-
-            conn = dataSource.getConnection();
-            conn.setAutoCommit(false);
-            st = conn.prepareStatement(
-                    "INSERT INTO COMPUTERS (SLOTS, COOLING, PRICE) VALUES (?,?,?)",
-                    Statement.RETURN_GENERATED_KEYS
-            );
-
-            st.setInt(1, pc.getSlots());
-            st.setInt(2, pc.getCooling());
-            st.setInt(3, pc.getPrice());
-
-            int count = st.executeUpdate();
-            DBUtils.checkUpdatesCount(count, pc, true);
-
-            Long id = DBUtils.getId(st.getGeneratedKeys());
-            conn.commit();
-            return pc.setId(id);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            DBUtils.doRollbackQuietly(conn);
-            DBUtils.closeQuietly(conn, st);
-        }
-
-        return null;
-
+        SimpleJdbcInsert insertComponent = new SimpleJdbcInsert(jdbc)
+                .withTableName("COMPUTERS")
+                .usingGeneratedKeyColumns("ID");
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("SLOTS", pc.getSlots())
+                .addValue("COOLING", pc.getCooling())
+                .addValue("PRICE", pc.getPrice());
+        Number id = insertComponent.executeAndReturnKey(parameters);
+        return pc.setId(id.longValue());
     }
 
     public void updateComputer(Computer pc) throws EntityException, DBException {
-
-        checkDataSource();
+        checkJdbc();
         validate(pc);
 
         if (pc.getId() == null) {
             throw new IllegalArgumentException("computer id is null");
         }
-
-        Connection conn = null;
-        PreparedStatement st = null;
-        try {
-
-            conn = dataSource.getConnection();
-            conn.setAutoCommit(false);
-            st = conn.prepareStatement(
-                    "UPDATE COMPUTERS SET SLOTS = ?, COOLING = ?, PRICE = ? WHERE ID = ?"
-            );
-
-            st.setInt(1, pc.getSlots());
-            st.setInt(2, pc.getCooling());
-            st.setInt(3, pc.getPrice());
-            st.setLong(4, pc.getId());
-
-            int count = st.executeUpdate();
-            DBUtils.checkUpdatesCount(count, pc, false);
-            conn.commit();
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            DBUtils.doRollbackQuietly(conn);
-            DBUtils.closeQuietly(conn, st);
-        }
-
+        jdbc.update(
+                "UPDATE COMPUTERS set SLOTS=?,COOLING=?,PRICE=? where ID=?",
+                pc.getSlots(),
+                pc.getCooling(),
+                pc.getPrice(),
+                pc.getId()
+        );
     }
 
     public void removeComputer(Computer pc) throws EntityException, DBException {
-
-        checkDataSource();
-
-        if (pc == null) {
-            throw new IllegalArgumentException("computer is null");
-        }
+        checkJdbc();
+        validate(pc);
 
         if (pc.getId() == null) {
             throw new IllegalArgumentException("computer id is null");
         }
-
-        Connection conn = null;
-        PreparedStatement st = null;
-        try {
-
-            conn = dataSource.getConnection();
-            conn.setAutoCommit(false);
-            st = conn.prepareStatement(
-                    "DELETE FROM COMPUTERS WHERE ID = ?"
-            );
-
-            st.setLong(1, pc.getId());
-
-            int count = st.executeUpdate();
-            DBUtils.checkUpdatesCount(count, pc, false);
-            conn.commit();
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            DBUtils.doRollbackQuietly(conn);
-            DBUtils.closeQuietly(conn, st);
-        }
-
+        jdbc.update("DELETE FROM COMPUTERS WHERE ID=?", pc.getId());
     }
 
     @Nullable
     public Computer getComputer(Long id) {
-
-        checkDataSource();
-
+        checkJdbc();
         if (id == null) {
             throw new IllegalArgumentException("id is null");
         }
-
-        Connection conn = null;
-        PreparedStatement st = null;
         try {
-
-            conn = dataSource.getConnection();
-            st = conn.prepareStatement(
-                    "SELECT * FROM COMPUTERS WHERE ID = ?"
-            );
-
-            st.setLong(1, id);
-
-            return executeQueryForSingleComputer(st);
-
-        } catch (SQLException|DBException ex) {
-            ex.printStackTrace();
-        }  finally {
-            DBUtils.closeQuietly(conn, st);
+            return jdbc.queryForObject(
+                    "SELECT * FROM COMPUTERS WHERE id=?"
+                    , computerMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         }
-
-        return null;
-
     }
 
+    @Transactional
     @Nullable
     public List<Computer> getAllComputers() {
-
-        checkDataSource();
-
-        Connection conn = null;
-        PreparedStatement st = null;
-        try {
-
-            conn = dataSource.getConnection();
-            st = conn.prepareStatement("SELECT * FROM COMPUTERS");
-            return executeQueryForMultipleComputers(st);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            DBUtils.closeQuietly(conn, st);
-        }
-
-        return new ArrayList<>();
-
+        return jdbc.query("SELECT * FROM COMPUTERS", computerMapper);
     }
 
-    private static Computer executeQueryForSingleComputer(PreparedStatement st) throws SQLException, DBException {
-
-        ResultSet rs = st.executeQuery();
-
-        if (rs.next()) {
-            Computer result = rowToComputer(rs);
-            if (rs.next()) {
-                throw new DBException(
-                        "Internal integrity error: more computers with the same id found!"
-                );
-            }
-            return result;
-        }
-
-        return null;
-
-    }
-
-    private static List<Computer> executeQueryForMultipleComputers(PreparedStatement st) throws SQLException {
-
-        ResultSet rs = st.executeQuery();
-
-        List<Computer> result = new ArrayList<>();
-        while (rs.next()) {
-            result.add(rowToComputer(rs));
-        }
-
-        return result;
-
-    }
-
-    @Contract("_ -> !null")
-    private static Computer rowToComputer(ResultSet rs) throws SQLException {
-        return new Computer(
-                rs.getInt("SLOTS"),
-                rs.getInt("COOLING"),
-                rs.getInt("PRICE")
-        ).setId(rs.getLong("ID"));
-    }
+    private RowMapper<Computer> computerMapper = (rs, rowNum) ->
+            new Computer(
+                    rs.getInt("SLOTS"),
+                    rs.getInt("COOLING"),
+                    rs.getInt("PRICE")
+            ).setId(rs.getLong("ID"));
 
     @Contract("null -> fail")
     private void validate(Computer pc) {
@@ -241,24 +105,20 @@ public final class ComputerManagerImpl implements ComputerManager {
         if (pc == null) {
             throw new IllegalArgumentException("pc should not be null");
         }
-
         if (pc.getSlots() <= 0) {
             throw new IllegalArgumentException("cannot have 0 or less slots");
         }
-
         if (pc.getCooling() < 0) {
             throw new IllegalArgumentException("cooling can't be negative");
         }
-
         if (pc.getPrice() < 0) {
             throw new IllegalArgumentException("price can't be negative");
         }
-
     }
 
-    private void checkDataSource() {
-        if (dataSource == null) {
-            throw new IllegalStateException("DataSource is not set");
+    private void checkJdbc() {
+        if (jdbc == null) {
+            throw new IllegalStateException("jdbc is not set");
         }
     }
 

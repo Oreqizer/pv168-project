@@ -22,5 +22,5 @@ public interface ComponentManager {
 
     public Component addComponentToComputer(Component component,Computer pc) throws DBException, EntityException;
 
-    public Component removeComponentFromComputer(Component component) throws DBException, EntityException;
+    public Component removeComponentFromComputer(Component component ,Computer pc) throws DBException, EntityException;
 }

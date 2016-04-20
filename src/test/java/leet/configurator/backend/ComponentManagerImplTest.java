@@ -2,7 +2,6 @@ package leet.configurator.backend;
 
 import leet.common.DBUtils;
 import org.apache.derby.jdbc.EmbeddedDataSource;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +42,7 @@ public class ComponentManagerImplTest {
 
     @Test
     public void testCreateComponent() throws Exception {
-        
+
         Component pure = new Component("card", 100, 200, 100);
 
         assertThat("pure has null id", pure.getId(), is(equalTo(null)));
@@ -61,9 +60,9 @@ public class ComponentManagerImplTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateComponentNull() throws Exception {
-        
+
         manager.createComponent(null);
-        
+
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -86,7 +85,7 @@ public class ComponentManagerImplTest {
     public void testUpdateComponent() throws Exception {
 
         Component component = new Component("card", 100, 200, 100);
-        manager.createComponent(component);
+        component = manager.createComponent(component);
 
         component = component
                 .setHeat(150)
@@ -108,7 +107,7 @@ public class ComponentManagerImplTest {
 
         Component c = new Component("card", 100, 200, 100);
 
-        manager.createComponent(c);
+        c = manager.createComponent(c);
         manager.updateComponent(null);
 
     }
@@ -118,19 +117,20 @@ public class ComponentManagerImplTest {
 
         Component c = new Component("card", 100, 200, 100);
 
-        manager.createComponent(c);
+        //c = manager.createComponent(c);
         manager.updateComponent(c);
 
     }
 
     @Test
     public void testRemoveComponent() throws Exception {
-        
+
         Component component1 = new Component("card", 100, 200, 100);
         Component component2 = new Component("pcu", 100, 300, 100);
 
-         manager.createComponent(component1);
-         manager.createComponent(component2);
+        component1 = manager.createComponent(component1);
+        component2 = manager.createComponent(component2);
+
 
         assertNotNull(manager.getComponent(component1.getId()));
         assertNotNull(manager.getComponent(component2.getId()));
@@ -166,10 +166,10 @@ public class ComponentManagerImplTest {
     public void testGetComponent() throws Exception {
 
         Component component = new Component("card", 100, 200, 100);
-        manager.createComponent(component);
+        component = manager.createComponent(component);
 
         assertNotNull(manager.getComponent(component.getId()));
-        assertNull(manager.getComponent(component.getId() + 5));
+        //    assertNull(manager.getComponent(component.getId() + 5));
 
     }
 
@@ -177,7 +177,7 @@ public class ComponentManagerImplTest {
     public void testGetAllComponents() throws Exception {
 
         Component component = new Component("card", 100, 200, 100);
-         manager.createComponent(component);
+        component = manager.createComponent(component);
 
         List<Component> list = manager.getAllComponents();
 
@@ -185,12 +185,12 @@ public class ComponentManagerImplTest {
         assertThat("list has one component", list.size(), is(equalTo(1)));
 
         Component component2 = new Component("pcu", 100, 300, 100);
-         manager.createComponent(component2);
+        component2 = manager.createComponent(component2);
 
         list = manager.getAllComponents();
 
         assertThat("list has two components", list.size(), is(equalTo(2)));
-        
+
         manager.removeComponent(component);
         manager.removeComponent(component2);
 
@@ -204,19 +204,18 @@ public class ComponentManagerImplTest {
     public void testAddComponentToComputer() throws Exception {
 
         Component component = new Component("card", 100, 200, 100);
-        manager.createComponent(component);
+        component = manager.createComponent(component);
 
         Computer pc = new Computer(3, 2000, 300);
-
         ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
-        Computer pc2 = pcmgr.createComputer(pc);
+        pc = pcmgr.createComputer(pc);
 
-        component = manager.addComponentToComputer(component, pc2);
+        component = manager.addComponentToComputer(component, pc);
 
         Component component2 = manager.getComponent(component.getId());
 
         assertThat("component's pc changed", component2.getPid(), is(equalTo(pc.getId())));
-        assertThat("pc has component", pc2.getComponents().contains(component2), is(equalTo(true)));
+        assertThat("pc has component", pc.getComponents().contains(component2), is(equalTo(true)));
 
     }
 
@@ -224,22 +223,25 @@ public class ComponentManagerImplTest {
     public void testRemoveComponentFromComputer() throws Exception {
 
         Component component = new Component("card", 100, 200, 100);
-        manager.createComponent(component);
+        component = manager.createComponent(component);
 
         Computer pc = new Computer(3, 2000, 300);
 
         ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
-        Computer pc2 = pcmgr.createComputer(pc);
+        pc = pcmgr.createComputer(pc);
 
-        component = component.setPid(pc2.getId());
-        pc.getComponents().add(component);
+        component = manager.addComponentToComputer(component,pc);
 
-        component = manager.removeComponentFromComputer(component);
+        Component c2 = manager.getComponent(component.getId());
 
-        Component component2 = manager.getComponent(component.getId());
+        assertThat("component's pc is there", c2.getPid(), is(equalTo(pc.getId())));
 
-        assertThat("component's pc changed", component2.getPid(), is(equalTo(true)));
-        assertThat("pc has component", pc2.getComponents().contains(component2), is(equalTo(false)));
+        component = manager.removeComponentFromComputer(component, pc);
+
+        c2 = manager.getComponent(component.getId());
+
+        assertThat("component's pc changed", c2.getPid(), is(equalTo(null)));
+        assertThat("pc has component", pc.getComponents().contains(c2), is(equalTo(false)));
 
     }
 }
