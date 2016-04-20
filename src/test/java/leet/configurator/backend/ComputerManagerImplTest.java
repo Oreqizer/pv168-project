@@ -124,7 +124,7 @@ public class ComputerManagerImplTest {
         assertNotNull(manager.getComputer(computer1.getId()));
         assertNotNull(manager.getComputer(computer2.getId()));
 
-        manager.removeComputer(computer1);
+        manager.removeComputer(computer1.getId());
 
         assertNull(manager.getComputer(computer1.getId()));
         assertNotNull(manager.getComputer(computer2.getId()));
@@ -147,7 +147,7 @@ public class ComputerManagerImplTest {
         Computer c1 = new Computer(3, 2000, 300);
 
         manager.createComputer(c1);
-        manager.removeComputer(c1);
+        manager.removeComputer(c1.getId());
 
     }
 
@@ -180,8 +180,8 @@ public class ComputerManagerImplTest {
 
         assertThat("list has two computers", list.size(), is(equalTo(2)));
 
-        manager.removeComputer(computer1);
-        manager.removeComputer(computer2);
+        manager.removeComputer(computer1.getId());
+        manager.removeComputer(computer2.getId());
 
         list = manager.getAllComputers();
 

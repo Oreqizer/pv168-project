@@ -1,5 +1,8 @@
 package leet.configurator.frontend;
 
+import leet.configurator.backend.ComponentManagerImpl;
+import leet.configurator.backend.ComputerManagerImpl;
+import leet.configurator.backend.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,12 +19,17 @@ public class StartListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent ev) {
+
         log.info("Web app initialized!");
+
         ServletContext servletContext = ev.getServletContext();
-//        DataSource dataSource = Main.createMemoryDatabase(); TODO Main in backend
-//        servletContext.setAttribute("customerManager", new CustomerManagerImpl(dataSource));
-//        servletContext.setAttribute("bookManager", new BookManagerImpl(dataSource));
+        DataSource dataSource = Main.createMemoryDatabase();
+
+        servletContext.setAttribute("computerManager", new ComputerManagerImpl(dataSource));
+        servletContext.setAttribute("componentManager", new ComponentManagerImpl(dataSource));
+
         log.info("Managers created.");
+
     }
 
     @Override

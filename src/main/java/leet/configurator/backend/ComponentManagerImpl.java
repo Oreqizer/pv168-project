@@ -26,7 +26,6 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     @Nullable
     public Component createComponent(Component component) {
-        checkJdbc();
         validate(component);
 
         if (component.getId() != null) {
@@ -50,7 +49,6 @@ public final class ComponentManagerImpl implements ComponentManager {
     }
 
     public void updateComponent(Component component) {
-        checkJdbc();
         validate(component);
         if (component.getId() == null) {
             throw new IllegalArgumentException("component id is null");
@@ -70,7 +68,6 @@ public final class ComponentManagerImpl implements ComponentManager {
 
 
     public void removeComponent(Component component) {
-        checkJdbc();
         validate(component);
         if(component.getId()==null){
             throw new IllegalArgumentException("component id is null");
@@ -81,7 +78,6 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     @Nullable
     public Component getComponent(Long id) {
-        checkJdbc();
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null");
         }
@@ -97,14 +93,12 @@ public final class ComponentManagerImpl implements ComponentManager {
     @Transactional
     @Override
     public List<Component> getAllComponents() {
-        checkJdbc();
         return jdbc.query("SELECT * FROM COMPONENTS", componentMapper);
 
     }
 
     @Override
     public Component addComponentToComputer(Component component, Computer pc) {
-        checkJdbc();
         validate(component);
         if (pc == null) {
             throw new IllegalArgumentException("pc is null");
@@ -133,7 +127,6 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     @Override
     public Component removeComponentFromComputer(Component component, Computer pc) {
-        checkJdbc();
         validate(component);
         if (pc == null) {
             throw new IllegalArgumentException("pc is null");
@@ -165,8 +158,10 @@ public final class ComponentManagerImpl implements ComponentManager {
                     rs.getInt("PRICE"),
                     rs.getInt("ENERGY")
             );
+
     @Contract("null -> fail")
     private void validate(Component component) {
+
         if (component == null) {
             throw new IllegalArgumentException("pc should not be null");
         }
@@ -181,9 +176,4 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     }
 
-    private void checkJdbc() {
-        if (jdbc == null) {
-            throw new IllegalStateException("jdbc is not set");
-        }
-    }
 }

@@ -28,25 +28,28 @@ public final class ComputerManagerImpl implements ComputerManager {
 
     @Nullable
     public Computer createComputer(Computer pc) throws DBException, EntityException {
-        checkJdbc();
+        
         validate(pc);
 
         if (pc.getId() != null) {
             throw new IllegalArgumentException("id of a new pc should be null");
         }
+
         SimpleJdbcInsert insertComponent = new SimpleJdbcInsert(jdbc)
                 .withTableName("COMPUTERS")
                 .usingGeneratedKeyColumns("ID");
+
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("SLOTS", pc.getSlots())
                 .addValue("COOLING", pc.getCooling())
                 .addValue("PRICE", pc.getPrice());
+
         Number id = insertComponent.executeAndReturnKey(parameters);
         return pc.setId(id.longValue());
     }
 
     public void updateComputer(Computer pc) throws EntityException, DBException {
-        checkJdbc();
+        
         validate(pc);
 
         if (pc.getId() == null) {
@@ -61,19 +64,19 @@ public final class ComputerManagerImpl implements ComputerManager {
         );
     }
 
-    public void removeComputer(Computer pc) throws EntityException, DBException {
-        checkJdbc();
-        validate(pc);
+    public void removeComputer(Long id) throws EntityException, DBException {
+        
 
-        if (pc.getId() == null) {
-            throw new IllegalArgumentException("computer id is null");
+        if (id == null) {
+            throw new IllegalArgumentException("id is null");
         }
-        jdbc.update("DELETE FROM COMPUTERS WHERE ID=?", pc.getId());
+
+        jdbc.update("DELETE FROM COMPUTERS WHERE ID=?", id);
     }
 
     @Nullable
     public Computer getComputer(Long id) {
-        checkJdbc();
+        
         if (id == null) {
             throw new IllegalArgumentException("id is null");
         }
@@ -113,12 +116,6 @@ public final class ComputerManagerImpl implements ComputerManager {
         }
         if (pc.getPrice() < 0) {
             throw new IllegalArgumentException("price can't be negative");
-        }
-    }
-
-    private void checkJdbc() {
-        if (jdbc == null) {
-            throw new IllegalStateException("jdbc is not set");
         }
     }
 
