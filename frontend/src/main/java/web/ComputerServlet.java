@@ -29,10 +29,7 @@ public class ComputerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
         log.debug("GET ...");
-        log.debug("showing table of computers");
-
-        req.setAttribute("computers", getComputerManager().getAllComputers());
-        req.getRequestDispatcher(LIST_JSP).forward(req, res);
+        showComputerList(req, res);
 
     }
 
@@ -67,7 +64,16 @@ public class ComputerServlet extends HttpServlet {
 
     }
 
-    private void addComputer(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    private void showComputerList(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
+        log.debug("showing table of computers");
+
+        req.setAttribute("computers", getComputerManager().getAllComputers());
+        req.getRequestDispatcher(LIST_JSP).forward(req, res);
+
+    }
+
+    private void addComputer(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         try {
 
             //getting POST parameters from form
@@ -92,7 +98,7 @@ public class ComputerServlet extends HttpServlet {
         }
     }
 
-    private void deleteComputer(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    private void deleteComputer(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         try {
 
             Long id = Long.valueOf(req.getParameter("id"));
@@ -109,7 +115,7 @@ public class ComputerServlet extends HttpServlet {
         }
     }
 
-    private void updateComputer(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    private void updateComputer(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         try {
 
             //getting POST parameters from form
