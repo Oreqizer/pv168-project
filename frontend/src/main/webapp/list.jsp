@@ -6,6 +6,7 @@
     <table border="2">
         <thead>
         <tr>
+            <th>ID</th>
             <th>slots</th>
             <th>cooling</th>
             <th>price</th>
@@ -13,6 +14,7 @@
         </thead>
         <c:forEach items="${computers}" var="computer">
             <tr>
+                <td><c:out value="${computer.id}"/></td>
                 <td><c:out value="${computer.slots}"/></td>
                 <td><c:out value="${computer.cooling}"/></td>
                 <td><c:out value="${computer.price}"/></td>
@@ -29,7 +31,7 @@
     </table>
 
     <c:if test="${not empty error}">
-        <div style="background-color: indianred; padding: 10px">
+        <div style="background: indianred; padding: 10px">
             <c:out value="${error}"/>
         </div>
     </c:if>
@@ -37,6 +39,29 @@
     <h2>Enter a computer</h2>
     <form action="${pageContext.request.contextPath}/computers/add" method="post">
         <table>
+            <tr>
+                <th>Slots:</th>
+                <td><input type="text" name="slots" value="<c:out value='${param.slots}'/>"/></td>
+            </tr>
+            <tr>
+                <th>Cooling:</th>
+                <td><input type="text" name="cooling" value="<c:out value='${param.cooling}'/>"/></td>
+            </tr>
+            <tr>
+                <th>Price:</th>
+                <td><input type="text" name="price" value="<c:out value='${param.price}'/>"/></td>
+            </tr>
+        </table>
+        <input type="Submit" value="Enter" />
+    </form>
+
+    <h2>Update a computer</h2>
+    <form action="${pageContext.request.contextPath}/computers/update" method="post">
+        <table>
+            <tr>
+                <th>ID:</th>
+                <td><input type="text" name="id" value="<c:out value='${param.id}'/>"/></td>
+            </tr>
             <tr>
                 <th>Slots:</th>
                 <td><input type="text" name="slots" value="<c:out value='${param.slots}'/>"/></td>

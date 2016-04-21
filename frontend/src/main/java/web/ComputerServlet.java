@@ -29,8 +29,8 @@ public class ComputerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
         log.debug("GET ...");
-
         log.debug("showing table of computers");
+
         req.setAttribute("computers", getComputerManager().getAllComputers());
         req.getRequestDispatcher(LIST_JSP).forward(req, res);
 
@@ -46,55 +46,97 @@ public class ComputerServlet extends HttpServlet {
         log.debug("POST ... {}", action);
 
         switch (action) {
+
             case "/add":
-                try {
+                addComputer(req, res);
+                break;
 
-                    //getting POST parameters from form
-                    int slots = Integer.parseInt(req.getParameter("slots"));
-                    int cooling = Integer.parseInt(req.getParameter("cooling"));
-                    int price = Integer.parseInt(req.getParameter("price"));
-
-                    // store to DB
-                    Computer pc = new Computer(slots, cooling, price);
-                    pc = getComputerManager().createComputer(pc);
-                    log.info("PC created", pc.toString());
-
-                    //redirect-after-POST protects from multiple submission
-                    log.debug("redirecting after POST");
-                    res.sendRedirect(req.getContextPath() + URL_MAPPING);
-                    return;
-
-                } catch (EntityException | DBException | NumberFormatException e) {
-
-                    log.error("Cannot add PC", e);
-                    res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-                    return;
-
-                }
             case "/delete":
-                try {
+                deleteComputer(req, res);
+                break;
 
-                    Long id = Long.valueOf(req.getParameter("id"));
-                    getComputerManager().removeComputer(id);
-                    log.debug("redirecting after POST");
-                    res.sendRedirect(req.getContextPath() + URL_MAPPING);
-                    return;
-
-                } catch (EntityException | DBException e) {
-
-                    log.error("Cannot delete computer", e);
-                    res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-                    return;
-
-                }
             case "/update":
-                //TODO
-                return;
+                updateComputer(req, res);
+                break;
+
             default:
                 log.error("Unknown action " + action);
                 res.sendError(HttpServletResponse.SC_NOT_FOUND, "Unknown action " + action);
+
         }
 
+    }
+
+    private void addComputer(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        try {
+
+            //getting POST parameters from form
+            int slots = Integer.parseInt(req.getParameter("slots"));
+            int cooling = Integer.parseInt(req.getParameter("cooling"));
+            int price = Integer.parseInt(req.getParameter("price"));
+
+            // store to DB
+            Computer pc = new Computer(slots, cooling, price);
+            pc = getComputerManager().createComputer(pc);
+            log.info("PC created: {}", pc.toString());
+
+            //redirect-after-POST protects from multiple submission
+            log.debug("redirecting after POST");
+            res.sendRedirect(req.getContextPath() + URL_MAPPING);
+
+        } catch (EntityException | DBException | NumberFormatException e) {
+
+            log.error("Cannot add PC: {}", e);
+            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+
+        }
+    }
+
+    private void deleteComputer(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        try {
+
+            Long id = Long.valueOf(req.getParameter("id"));
+            getComputerManager().removeComputer(id);
+
+            log.debug("redirecting after POST");
+            res.sendRedirect(req.getContextPath() + URL_MAPPING);
+
+        } catch (EntityException | DBException e) {
+
+            log.error("Cannot delete computer", e);
+            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+
+        }
+    }
+
+    private void updateComputer(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        try {
+
+            //getting POST parameters from form
+            Long id = Long.valueOf(req.getParameter("id"));
+            int slots = Integer.parseInt(req.getParameter("slots"));
+            int cooling = Integer.parseInt(req.getParameter("cooling"));
+            int price = Integer.parseInt(req.getParameter("price"));
+
+            // store to DB
+            Computer pc = getComputerManager().getComputer(id)
+                    .setSlots(slots)
+                    .setCooling(cooling)
+                    .setPrice(price);
+
+            getComputerManager().updateComputer(pc);
+            log.info("PC updated: {}", pc.toString());
+
+            //redirect-after-POST protects from multiple submission
+            log.debug("redirecting after POST");
+            res.sendRedirect(req.getContextPath() + URL_MAPPING);
+
+        } catch (EntityException | DBException | NumberFormatException e) {
+
+            log.error("Cannot update PC: {}", e);
+            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+
+        }
     }
 
     /**
