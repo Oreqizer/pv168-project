@@ -118,7 +118,7 @@ public class ComputerServlet extends HttpServlet {
     private void updateComputer(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         try {
 
-            //getting POST parameters from form
+            //getting POST parameters from
             Long id = Long.valueOf(req.getParameter("id"));
             int slots = Integer.parseInt(req.getParameter("slots"));
             int cooling = Integer.parseInt(req.getParameter("cooling"));
