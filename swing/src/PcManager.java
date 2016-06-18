@@ -1,6 +1,14 @@
+import configurator.computer.Computer;
+import configurator.computer.ComputerManager;
+import configurator.computer.ComputerManagerImpl;
+
+import javax.sql.DataSource;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by zeman on 27-Apr-16.
@@ -16,73 +24,129 @@ public class PcManager extends JFrame {
     private JTextField componentPriceField;
     private JTextField componentHeatField;
     private JTextField componentEnergyField;
-    private JTabbedPane computerTabbedPane;
-    private JTabbedPane componentTabbedPane;
     private JPanel formPanel;
     private JPanel availableComponentPanel;
     private JPanel computerPanel;
     private JButton deleteAllComputersButton;
     private JButton deleteAllComponentsButton;
+    private JTable compTable;
+    private JTable pcTable;
+    private JButton changeCompsBtn;
 
 
+    private ComputerManager computerManager;
     private int pcCounter = 0;
+
     public PcManager() {
         super();
-
+        DataSource dataSource = configurator.Main.createMemoryDatabase();
+        computerManager = new ComputerManagerImpl(dataSource);
         setContentPane(mainPanel);
         pack();
 
-        componentTabbedPane.removeAll();
 
+        pcTable.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent me) {
+                JTable table = (JTable) me.getSource();
+                Point p = me.getPoint();
+                int row = table.rowAtPoint(p);
+                if (me.getClickCount() == 2) {
 
+                }
+            }
+        });
 
+        //region PCBtns
         ActionListener createPC = e -> {
-
+            Computer pc = new Computer(Integer.parseInt(pcSlotsField.getText()));
+            try {
+                computerManager.createComputer(pc);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            DefaultTableModel dtm = (DefaultTableModel) pcTable.getModel();
+            dtm.addRow(new Object[]{"pc" + pcCounter, pcSlotsField.getText(), 0, 0});
             pcCounter++;
-            computerTabbedPane.addTab("PC num. "+pcCounter,new PCPane(
-                    Integer.parseInt(pcSlotsField.getText())
-
-            ));
-        };
-        ActionListener createComponent = e -> {
 
 
-
-            componentTabbedPane.addTab(componentNameField.getText(),
-                    new ComponentPane(componentNameField.getText()
-                            ,Integer.parseInt(componentPriceField.getText())
-                            ,Integer.parseInt(componentHeatField.getText())
-                            ,Integer.parseInt(componentEnergyField.getText())
-                            ));
-        };
-        ActionListener delComp = e -> {
-
-            componentTabbedPane.remove(componentTabbedPane.getSelectedComponent());
         };
         ActionListener delPC = e -> {
+            DefaultTableModel dtm = (DefaultTableModel) pcTable.getModel();
+            int[] arr = pcTable.getSelectedRows();
+            for (int i = 0; i < arr.length; i++) {
+                dtm.removeRow(arr[i] - i);
+                pcCounter--;
+            }
 
-            computerTabbedPane.remove(computerTabbedPane.getSelectedComponent());
+
         };
         ActionListener delAllPC = e -> {
+            DefaultTableModel dm = (DefaultTableModel) pcTable.getModel();
+            int rowCount = dm.getRowCount();
 
-            computerTabbedPane.removeAll();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                dm.removeRow(i);
+            }
+            pcCounter = 0;
         };
+        //endregion
+
+        //region CompBtns
+        ActionListener createComponent = e -> {
+            DefaultTableModel dtm = (DefaultTableModel) compTable.getModel();
+            dtm.addRow(new Object[]{componentNameField.getText(), componentHeatField.getText()
+                    , componentEnergyField.getText(), componentPriceField.getText()});
+
+
+        };
+        ActionListener delComp = e -> {
+            DefaultTableModel dtm = (DefaultTableModel) compTable.getModel();
+            int[] arr = compTable.getSelectedRows();
+            for (int i = 0; i < arr.length; i++) {
+                dtm.removeRow(arr[i] - i);
+            }
+        };
+
         ActionListener delAllComps = e -> {
+            DefaultTableModel dm = (DefaultTableModel) compTable.getModel();
+            int rowCount = dm.getRowCount();
 
-            componentTabbedPane.removeAll();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                dm.removeRow(i);
+            }
         };
+        //endregion
 
+
+        //region ListenersAdded
+//        changeCompsBtn.addActionListener(changeComps);
         deleteComponentButton.addActionListener(delComp);
         createComponentButton.addActionListener(createComponent);
         createComputerButton.addActionListener(createPC);
         deleteComputerButton.addActionListener(delPC);
         deleteAllComputersButton.addActionListener(delAllPC);
         deleteAllComponentsButton.addActionListener(delAllComps);
+        //endregion
 
 
     }
 
+    private void createUIComponents() {
+        DefaultTableModel dm = new DefaultTableModel();
+        String header[] = new String[]{"Name", "Slots", "Cooling", "Price"};
+        dm.setColumnIdentifiers(header);
+        pcTable = new JTable(dm);
+        pcTable.setDefaultEditor(Object.class, null);
 
+
+        dm = new DefaultTableModel();
+        header = new String[]{"Name", "Heat", "Energy", "Price"};
+        dm.setColumnIdentifiers(header);
+        compTable = new JTable(dm);
+        compTable.setDefaultEditor(Object.class, null);
+
+
+    }
 
 
     private class ComponentPane extends JPanel{
@@ -136,7 +200,6 @@ public class PcManager extends JFrame {
             ActionListener addCompToPc = e -> {
 
 
-                ((PCPane)computerTabbedPane.getSelectedComponent()).getComponentTabPane().addTab(name,this);
             };
 
 
@@ -197,7 +260,6 @@ public class PcManager extends JFrame {
             JButton removeCompFromPc = new JButton("Remove Component");
             ActionListener remComp = e -> {
 
-                componentTabbedPane.addTab(componentTabPane.getSelectedComponent().getName(),componentTabPane.getSelectedComponent());
             };
 
             componentTabPane = new JTabbedPane();

@@ -16,6 +16,10 @@ public final class Computer {
     private final int cooling;
     private final int price;
 
+    public Computer(int slots) {
+        this(slots, 0, 0);
+    }
+
     public Computer(int slots, int cooling, int price) {
         this.id = null;
         this.components = new ArrayList<>();
