@@ -76,6 +76,13 @@ public final class ComputerManagerImpl implements ComputerManager {
             throw new IllegalArgumentException("id is null");
         }
 
+        Computer pc = getComputer(id);
+        assert pc != null;
+        for (Component cp : pc.getComponents()) {
+            jdbc.update("UPDATE COMPONENTS SET PC=? WHERE ID=?",
+                    null, cp.getId());
+        }
+
         jdbc.update("DELETE FROM COMPUTERS WHERE ID=?", id);
     }
 

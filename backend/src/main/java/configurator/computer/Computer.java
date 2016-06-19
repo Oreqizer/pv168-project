@@ -30,11 +30,13 @@ public final class Computer {
         this.price = price;
     }
 
-    public Computer(
-            Long id, List<Component> components, int slots, int cooling, int price,
-            int energy) {
+    public Computer(Long id, List<Component> components, int slots, int cooling, int price, int energy) {
         this.id = id;
-        this.components = components;
+        if (components == null) {
+            this.components = new ArrayList<>();
+        } else {
+            this.components = components;
+        }
         this.slots = slots;
         this.cooling = cooling;
         this.price = price;
