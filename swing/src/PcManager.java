@@ -31,7 +31,7 @@ public class PcManager extends JFrame {
     private JButton deleteAllComponentsButton;
     private JTable compTable;
     private JTable pcTable;
-    private JButton changeCompsBtn;
+
 
 
     private String[] pcHeader = new String[]{"Id", "Slots", "Cooling", "Price", "Energy", "Components"};
@@ -47,7 +47,7 @@ public class PcManager extends JFrame {
         setContentPane(mainPanel);
         pack();
 
-        refreshTables();
+        refreshUI();
 
 
         pcTable.addMouseListener(new MouseAdapter() {
@@ -57,7 +57,7 @@ public class PcManager extends JFrame {
                 int row = table.rowAtPoint(p);
                 if (me.getClickCount() == 2) {
                     new CompManager((long) pcTable.getModel().getValueAt(row, 0));
-                    refreshTables();
+                    refreshUI();
                 }
 
             }
@@ -65,30 +65,32 @@ public class PcManager extends JFrame {
 
         //region PCBtns
         ActionListener createPC = e -> {
-            Computer pc = new Computer(Integer.parseInt(pcSlotsField.getText()));
+
+
             try {
+                Computer pc = new Computer(Integer.parseInt(pcSlotsField.getText()));
                 pc = computerManager.createComputer(pc);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
 
-            refreshTables();
+            refreshUI();
             pcCounter++;
 
 
         };
         ActionListener delPC = e -> {
-            DefaultTableModel dtm = (DefaultTableModel) pcTable.getModel();
-            int[] arr = pcTable.getSelectedRows();
-            for (int i = 0; i < arr.length; i++) {
-                dtm.removeRow(arr[i] - i);
+            if (pcTable.getSelectedRow() < 0) return;
+            for (int i = 0; i < pcTable.getSelectedRows().length; i++) {
+
                 try {
-                    computerManager.removeComputer(Long.parseLong((String) dtm.getValueAt(i, 0)));
+                    computerManager.removeComputer((long) pcTable.getModel().getValueAt(i, 0));
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
                 pcCounter--;
             }
+            refreshUI();
 
         };
         ActionListener delAllPC = e -> {
@@ -98,65 +100,47 @@ public class PcManager extends JFrame {
                 e1.printStackTrace();
             }
             pcCounter = 0;
-            refreshTables();
+            refreshUI();
         };
         //endregion
 
         //region CompBtns
         ActionListener createComponent = e -> {
-            Component component = new Component(componentNameField.getText()
+
+            try {
+                Component component = new Component(componentNameField.getText()
                     , Integer.parseInt(componentHeatField.getText())
                     , Integer.parseInt(componentEnergyField.getText())
                     , Integer.parseInt(componentPriceField.getText()));
-            try {
                 component = componentManager.createComponent(component);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
-            DefaultTableModel dtm = (DefaultTableModel) compTable.getModel();
-            dtm.addRow(new Object[]{component.getId()
-                    , component.getName()
-                    , component.getHeat()
-                    , component.getEnergy()
-                    , component.getPrice()});
-
-
-
+            refreshUI();
         };
+
         ActionListener delComp = e -> {
-
-
-            DefaultTableModel dtm = (DefaultTableModel) compTable.getModel();
-
+            if (compTable.getSelectedRow() < 0) return;
             int[] arr = compTable.getSelectedRows();
             for (int i = 0; i < arr.length; i++) {
-
                 try {
-                    componentManager.removeComponentById((long) dtm.getValueAt(i, 0));
+                    componentManager.removeComponentById((long) compTable.getModel().getValueAt(i, 0));
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
-                dtm.removeRow(arr[i] - i);
-
             }
+            refreshUI();
         };
 
         ActionListener delAllComps = e -> {
-            DefaultTableModel dm = (DefaultTableModel) compTable.getModel();
-            int rowCount = dm.getRowCount();
-
-            for (int i = rowCount - 1; i >= 0; i--) {
-                dm.removeRow(i);
-            }
             try {
                 componentManager.removeAllComponents();
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
+            refreshUI();
         };
         //endregion
-
-
 
 
         //region ListenersAdded
@@ -173,7 +157,7 @@ public class PcManager extends JFrame {
     }
 
 
-    private void refreshTables() {
+    private void refreshUI() {
         try {
             System.out.println("tableRefresh");
             DefaultTableModel dm = new DefaultTableModel();

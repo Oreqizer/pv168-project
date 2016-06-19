@@ -37,6 +37,7 @@ public class CompManager extends JDialog {
         ActionListener done = e -> dispose();
 
         ActionListener add = e -> {
+            if (freeCompsTable.getSelectedRow() < 0) return;
             if (pc.getComponents().size() < pc.getSlots()) {
                 try {
                     Component comp = componentManager
@@ -55,6 +56,7 @@ public class CompManager extends JDialog {
         };
 
         ActionListener remove = e -> {
+            if (compsInPcTable.getSelectedRow() < 0) return;
             Component comp = componentManager
                     .getComponent((long) compsInPcTable.getModel()
                             .getValueAt(compsInPcTable.getSelectedRow(), 0));
