@@ -139,28 +139,43 @@ public final class ComponentManagerImpl implements ComponentManager {
 
 
     @Override
-    public Component addComponentToComputer(Component component, Computer pc) {
+    public Component addComponentToComputer(Component component, long pid) {
         validate(component);
-        if (pc == null) {
-            throw new IllegalArgumentException("pc is null");
-        }
-        if (pc.getComponents() == null) {
-            throw new IllegalArgumentException("pc components is null");
-        }
-
         if (component.getId() == null) {
             throw new IllegalArgumentException("component id is null");
         }
         if (component.getPid() != null) {
             throw new IllegalArgumentException("component id is null");
         }
-        component = component.setPid(pc.getId());
-        pc.getComponents().add(component);
-        jdbc.update(
-                "UPDATE COMPONENTS set PC=? where ID=?",
-                component.getPid(),
-                component.getId()
-        );
+        Computer pc = jdbc.queryForObject(
+                "SELECT * FROM COMPUTERS WHERE id=?"
+                , computerMapper, pid);
+        pc = pc.setComponents(jdbc.query("SELECT * FROM COMPONENTS WHERE pc=?", componentMapper, pid));
+
+        if (pc.getComponents().size() < pc.getSlots()) {
+            component = component.setPid(pc.getId());
+            pc.getComponents().add(component);
+
+            pc = pc.setCooling(pc.getCooling() + component.getHeat())
+                    .setPrice(pc.getPrice() + component.getPrice())
+                    .setEnergy(pc.getEnergy() + component.getEnergy());
+            jdbc.update(
+                    "UPDATE COMPUTERS SET SLOTS=?,COOLING=?,PRICE=?,ENERGY=? WHERE ID=?",
+                    pc.getSlots(),
+                    pc.getCooling(),
+                    pc.getPrice(),
+                    pc.getEnergy(),
+                    pc.getId()
+            );
+
+
+            jdbc.update(
+                    "UPDATE COMPONENTS SET PC=? WHERE ID=?",
+                    component.getPid(),
+                    component.getId()
+            );
+        }
+
 
         return component;
 
@@ -216,5 +231,12 @@ public final class ComponentManagerImpl implements ComponentManager {
         }
 
     }
+
+    private RowMapper<Computer> computerMapper = (rs, rowNum) ->
+            new Computer(
+                    rs.getInt("SLOTS"),
+                    rs.getInt("COOLING"),
+                    rs.getInt("PRICE"),
+                    rs.getInt("ENERGY")).setId(rs.getLong("ID"));
 
 }

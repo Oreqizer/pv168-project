@@ -47,7 +47,7 @@ public class CompManager extends JDialog {
             try {
                 comp = componentManager.getComponent((long) freeCompsTable.getModel().getValueAt(selectedRow, 0));
 
-                componentManager.addComponentToComputer(comp, pc);
+                componentManager.addComponentToComputer(comp, pc.getId());
             } catch (Exception e1) {
                 e1.printStackTrace();
             }

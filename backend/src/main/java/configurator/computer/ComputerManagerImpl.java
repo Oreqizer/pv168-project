@@ -45,7 +45,8 @@ public final class ComputerManagerImpl implements ComputerManager {
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("SLOTS", pc.getSlots())
                 .addValue("COOLING", pc.getCooling())
-                .addValue("PRICE", pc.getPrice());
+                .addValue("PRICE", pc.getPrice())
+                .addValue("ENERGY", pc.getEnergy());
 
         Number id = insertComponent.executeAndReturnKey(parameters);
         return pc.setId(id.longValue());
@@ -59,10 +60,11 @@ public final class ComputerManagerImpl implements ComputerManager {
             throw new IllegalArgumentException("computer id is null");
         }
         jdbc.update(
-                "UPDATE COMPUTERS set SLOTS=?,COOLING=?,PRICE=? where ID=?",
+                "UPDATE COMPUTERS set SLOTS=?,COOLING=?,PRICE=?,ENERGY=? where ID=?",
                 pc.getSlots(),
                 pc.getCooling(),
                 pc.getPrice(),
+                pc.getEnergy(),
                 pc.getId()
         );
     }
@@ -82,11 +84,9 @@ public final class ComputerManagerImpl implements ComputerManager {
     }
 
     @Nullable
-    public Computer getComputer(Long id) {
+    public Computer getComputer(long id) {
         
-        if (id == null) {
-            throw new IllegalArgumentException("id is null");
-        }
+
         try {
             Computer pc = jdbc.queryForObject(
                     "SELECT * FROM COMPUTERS WHERE id=?"
@@ -115,8 +115,8 @@ public final class ComputerManagerImpl implements ComputerManager {
             new Computer(
                     rs.getInt("SLOTS"),
                     rs.getInt("COOLING"),
-                    rs.getInt("PRICE")
-            ).setId(rs.getLong("ID"));
+                    rs.getInt("PRICE"),
+                    rs.getInt("ENERGY")).setId(rs.getLong("ID"));
 
     @Contract("null -> fail")
     private void validate(Computer pc) {

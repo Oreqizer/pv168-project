@@ -212,7 +212,7 @@ public class ComponentManagerImplTest {
         Component component = new Component("card", 100, 200, 100);
         component = manager.createComponent(component);
 
-        Computer pc = new Computer(3, 2000, 300);
+        Computer pc = new Computer(3, 2000, 300, energy);
         ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
         pc = pcmgr.createComputer(pc);
 
@@ -231,7 +231,7 @@ public class ComponentManagerImplTest {
         Component component = new Component("card", 100, 200, 100);
         component = manager.createComponent(component);
 
-        Computer pc = new Computer(3, 2000, 300);
+        Computer pc = new Computer(3, 2000, 300, energy);
 
         ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
         pc = pcmgr.createComputer(pc);

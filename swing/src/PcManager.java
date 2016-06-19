@@ -34,7 +34,7 @@ public class PcManager extends JFrame {
     private JButton changeCompsBtn;
 
 
-    private String[] pcHeader = new String[]{"Id", "Slots", "Cooling", "Price", "Components"};
+    private String[] pcHeader = new String[]{"Id", "Slots", "Cooling", "Price", "Energy", "Components"};
     private String[] compHeader = new String[]{"Id", "Name", "Heat", "Energy", "Price"};
 
 
@@ -92,18 +92,13 @@ public class PcManager extends JFrame {
 
         };
         ActionListener delAllPC = e -> {
-            DefaultTableModel dm = (DefaultTableModel) pcTable.getModel();
-            int rowCount = dm.getRowCount();
-
-            for (int i = rowCount - 1; i >= 0; i--) {
-                dm.removeRow(i);
-            }
             try {
                 computerManager.removeAllComputers();
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
             pcCounter = 0;
+            refreshTables();
         };
         //endregion
 
@@ -190,6 +185,7 @@ public class PcManager extends JFrame {
                         , pc.getSlots()
                         , pc.getCooling()
                         , pc.getPrice()
+                        , pc.getEnergy()
                         , pc.getComponents().size()});
                 pcCounter++;
             }
@@ -201,7 +197,11 @@ public class PcManager extends JFrame {
 
             dm.setColumnIdentifiers(compHeader);
             for (configurator.component.Component comp : componentManager.getAllFreeComponents()) {
-                dm.addRow(new Object[]{comp.getId(), comp.getName(), comp.getHeat(), comp.getEnergy(), comp.getPrice()});
+                dm.addRow(new Object[]{comp.getId()
+                        , comp.getName()
+                        , comp.getHeat()
+                        , comp.getEnergy()
+                        , comp.getPrice()});
             }
 
             compTable.setModel(dm);

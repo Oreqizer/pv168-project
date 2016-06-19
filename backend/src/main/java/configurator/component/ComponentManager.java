@@ -29,7 +29,7 @@ public interface ComponentManager {
 
     public int getNumOfComponentsInPc(long id);
 
-    public Component addComponentToComputer(Component component, Computer pc) throws DBException, EntityException;
+    public Component addComponentToComputer(Component component, long pid) throws DBException, EntityException;
 
     public Component removeComponentFromComputer(Component component, Computer pc) throws DBException, EntityException;
 }

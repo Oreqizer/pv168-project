@@ -82,7 +82,7 @@ public class ComputerServlet extends HttpServlet {
             int price = Integer.parseInt(req.getParameter("price"));
 
             // store to DB
-            Computer pc = new Computer(slots, cooling, price);
+            Computer pc = new Computer(slots, cooling, price, energy);
             pc = getComputerManager().createComputer(pc);
             log.info("PC created: {}", pc.toString());
 

@@ -16,11 +16,14 @@ public final class Computer {
     private final int cooling;
     private final int price;
 
+    private final int energy;
+
     public Computer(int slots) {
-        this(slots, 0, 0);
+        this(slots, 0, 0, 0);
     }
 
-    public Computer(int slots, int cooling, int price) {
+    public Computer(int slots, int cooling, int price, int energy) {
+        this.energy = energy;
         this.id = null;
         this.components = new ArrayList<>();
         this.slots = slots;
@@ -29,17 +32,22 @@ public final class Computer {
     }
 
     public Computer(
-            Long id, List<Component> components, int slots, int cooling, int price
-    ) {
+            Long id, List<Component> components, int slots, int cooling, int price,
+            int energy) {
         this.id = id;
         this.components = components;
         this.slots = slots;
         this.cooling = cooling;
         this.price = price;
+        this.energy = energy;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public int getEnergy() {
+        return energy;
     }
 
     public int getSlots() {
@@ -59,23 +67,27 @@ public final class Computer {
     }
     
     public Computer setId(Long id) {
-        return new Computer(id, components, slots, cooling, price);
+        return new Computer(id, components, slots, cooling, price, energy);
     }
     
     public Computer setComponents(List<Component> components) {
-        return new Computer(id, components, slots, cooling, price);
+        return new Computer(id, components, slots, cooling, price, energy);
     }
-    
+
+    public Computer setEnergy(int energy) {
+        return new Computer(id, components, slots, cooling, price, energy);
+    }
+
     public Computer setSlots(int slots) {
-        return new Computer(id, components, slots, cooling, price);
+        return new Computer(id, components, slots, cooling, price, energy);
     }
     
     public Computer setCooling(int cooling) {
-        return new Computer(id, components, slots, cooling, price);
+        return new Computer(id, components, slots, cooling, price, energy);
     }
     
     public Computer setPrice(int price) {
-        return new Computer(id, components, slots, cooling, price);
+        return new Computer(id, components, slots, cooling, price, energy);
     }
 
     @Override
@@ -86,6 +98,7 @@ public final class Computer {
                 ", slots=" + slots +
                 ", cooling=" + cooling +
                 ", price=" + price +
+                ", energy=" + energy +
                 ", components=" + components.size() +
                 '}';
     }
@@ -100,6 +113,7 @@ public final class Computer {
         if (slots != computer.slots) return false;
         if (cooling != computer.cooling) return false;
         if (price != computer.price) return false;
+        if (energy != computer.energy) return false;
         return id != null ? id.equals(computer.id) : computer.id == null;
 
     }
@@ -110,6 +124,7 @@ public final class Computer {
         result = 31 * result + slots;
         result = 31 * result + cooling;
         result = 31 * result + price;
+        result = 31 * result + energy;
         return result;
     }
 }
