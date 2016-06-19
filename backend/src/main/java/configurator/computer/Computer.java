@@ -15,7 +15,6 @@ public final class Computer {
     private final int slots;
     private final int cooling;
     private final int price;
-
     private final int energy;
 
     public Computer(int slots) {

@@ -212,11 +212,11 @@ public class ComponentManagerImplTest {
         Component component = new Component("card", 100, 200, 100);
         component = manager.createComponent(component);
 
-        Computer pc = new Computer(3, 2000, 300, energy);
+        Computer pc = new Computer(3, 2000, 300, 20);
         ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
         pc = pcmgr.createComputer(pc);
 
-        component = manager.addComponentToComputer(component, pc);
+        component = manager.addComponentToComputer(component, pc.getId());
 
         Component component2 = manager.getComponent(component.getId());
 
@@ -231,12 +231,12 @@ public class ComponentManagerImplTest {
         Component component = new Component("card", 100, 200, 100);
         component = manager.createComponent(component);
 
-        Computer pc = new Computer(3, 2000, 300, energy);
+        Computer pc = new Computer(3, 2000, 300, 200);
 
         ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
         pc = pcmgr.createComputer(pc);
 
-        component = manager.addComponentToComputer(component,pc);
+        component = manager.addComponentToComputer(component, pc.getId());
 
         Component c2 = manager.getComponent(component.getId());
 

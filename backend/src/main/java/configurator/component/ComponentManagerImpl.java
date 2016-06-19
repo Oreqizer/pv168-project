@@ -159,6 +159,7 @@ public final class ComponentManagerImpl implements ComponentManager {
             pc = pc.setCooling(pc.getCooling() + component.getHeat())
                     .setPrice(pc.getPrice() + component.getPrice())
                     .setEnergy(pc.getEnergy() + component.getEnergy());
+
             jdbc.update(
                     "UPDATE COMPUTERS SET SLOTS=?,COOLING=?,PRICE=?,ENERGY=? WHERE ID=?",
                     pc.getSlots(),

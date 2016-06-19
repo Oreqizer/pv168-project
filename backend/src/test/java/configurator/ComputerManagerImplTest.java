@@ -1,9 +1,9 @@
 package configurator;
 
+import configurator.common.DBUtils;
 import configurator.computer.Computer;
 import configurator.computer.ComputerManagerImpl;
-import configurator.common.DBUtils;
-
+import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import org.apache.derby.jdbc.EmbeddedDataSource;
 
 /**
  * Created by oreqizer on 16/03/16.
@@ -46,7 +45,7 @@ public class ComputerManagerImplTest {
     @Test
     public void testCreateComputer() throws Exception {
 
-        Computer pure = new Computer(3, 2000, 300, energy);
+        Computer pure = new Computer(3, 2000, 300, 200);
         Computer computer = manager.createComputer(pure);
 
         assertThat("pure has null id", pure.getId(), is(equalTo(null)));
@@ -69,7 +68,7 @@ public class ComputerManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testCreateComputerFail() throws Exception {
 
-        Computer computer = new Computer(-3, 2000, 300, energy);
+        Computer computer = new Computer(-3, 2000, 300, 200);
         manager.createComputer(computer);
 
     }
@@ -77,7 +76,7 @@ public class ComputerManagerImplTest {
     @Test
     public void testUpdateComputer() throws Exception {
 
-        Computer c = new Computer(3, 2000, 300, energy);
+        Computer c = new Computer(3, 2000, 300, 200);
         Computer computer = manager.createComputer(c);
 
         computer = computer
@@ -97,7 +96,7 @@ public class ComputerManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateComputerNull() throws Exception {
 
-        Computer c = new Computer(3, 2000, 300, energy);
+        Computer c = new Computer(3, 2000, 300, 200);
 
         manager.createComputer(c);
         manager.updateComputer(null);
@@ -107,7 +106,7 @@ public class ComputerManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateComputerNoId() throws Exception {
 
-        Computer c = new Computer(3, 2000, 300, energy);
+        Computer c = new Computer(3, 2000, 300, 200);
 
         manager.createComputer(c);
         manager.updateComputer(c);
@@ -117,8 +116,8 @@ public class ComputerManagerImplTest {
     @Test
     public void testRemoveComputer() throws Exception {
 
-        Computer c1 = new Computer(3, 2000, 300, energy);
-        Computer c2 = new Computer(5, 1500, 200, energy);
+        Computer c1 = new Computer(3, 2000, 300, 200);
+        Computer c2 = new Computer(5, 1500, 200, 200);
 
         Computer computer1 = manager.createComputer(c1);
         Computer computer2 = manager.createComputer(c2);
@@ -136,7 +135,7 @@ public class ComputerManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveComputerNull() throws Exception {
 
-        Computer c1 = new Computer(3, 2000, 300, energy);
+        Computer c1 = new Computer(3, 2000, 300, 200);
 
         manager.createComputer(c1);
         manager.removeComputer(null);
@@ -146,7 +145,7 @@ public class ComputerManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveComputerNoId() throws Exception {
 
-        Computer c1 = new Computer(3, 2000, 300, energy);
+        Computer c1 = new Computer(3, 2000, 300, 200);
 
         manager.createComputer(c1);
         manager.removeComputer(c1.getId());
@@ -156,7 +155,7 @@ public class ComputerManagerImplTest {
     @Test
     public void testGetComputer() throws Exception {
 
-        Computer c1 = new Computer(3, 2000, 300, energy);
+        Computer c1 = new Computer(3, 2000, 300, 200);
         Computer computer1 = manager.createComputer(c1);
 
         assertNotNull(manager.getComputer(computer1.getId()));
@@ -167,7 +166,7 @@ public class ComputerManagerImplTest {
     @Test
     public void testGetAllComputers() throws Exception {
 
-        Computer c1 = new Computer(3, 2000, 300, energy);
+        Computer c1 = new Computer(3, 2000, 300, 200);
         Computer computer1 = manager.createComputer(c1);
 
         List<Computer> list = manager.getAllComputers();
@@ -175,7 +174,7 @@ public class ComputerManagerImplTest {
         assertThat("list is not null", list, is(not(equalTo(null))));
         assertThat("list has one computer", list.size(), is(equalTo(1)));
 
-        Computer c2 = new Computer(5, 1500, 200, energy);
+        Computer c2 = new Computer(5, 1500, 200, 200);
         Computer computer2 = manager.createComputer(c2);
 
         list = manager.getAllComputers();
