@@ -132,7 +132,7 @@ public class PcManager extends JFrame {
             for (int i = 0; i < arr.length; i++) {
 
                 try {
-                    componentManager.removeComponentById(Long.parseLong((String) dtm.getValueAt(i, 0)));
+                    componentManager.removeComponentById((long) dtm.getValueAt(i, 0));
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }

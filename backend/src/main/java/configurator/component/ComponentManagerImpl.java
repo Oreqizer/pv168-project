@@ -183,17 +183,34 @@ public final class ComponentManagerImpl implements ComponentManager {
     }
 
     @Override
-    public Component removeComponentFromComputer(Component component, Computer pc) {
+    public Component removeComponentFromComputer(Component component, long pid) {
         validate(component);
-        if (pc == null) {
-            throw new IllegalArgumentException("pc is null");
-        }
-        if (pc.getComponents() == null) {
-            throw new IllegalArgumentException("pc components is null");
-        }
+
         if (component.getId() == null) {
             throw new IllegalArgumentException("component id is null");
         }
+
+        Computer pc = jdbc.queryForObject(
+                "SELECT * FROM COMPUTERS WHERE id=?"
+                , computerMapper, pid);
+        pc = pc.setComponents(jdbc.query("SELECT * FROM COMPONENTS WHERE pc=?", componentMapper, pid));
+
+
+        pc.getComponents().remove(component);
+
+        pc = pc.setCooling(pc.getCooling() - component.getHeat())
+                .setPrice(pc.getPrice() - component.getPrice())
+                .setEnergy(pc.getEnergy() - component.getEnergy());
+
+        jdbc.update(
+                "UPDATE COMPUTERS SET SLOTS=?,COOLING=?,PRICE=?,ENERGY=? WHERE ID=?",
+                pc.getSlots(),
+                pc.getCooling(),
+                pc.getPrice(),
+                pc.getEnergy(),
+                pc.getId()
+        );
+
 
         jdbc.update(
                 "UPDATE COMPONENTS set PC=? where ID=?",

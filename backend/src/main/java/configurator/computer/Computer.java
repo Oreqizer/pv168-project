@@ -93,7 +93,6 @@ public final class Computer {
     public String toString() {
         return "Computer{" +
                 "id=" + id +
-                ", components=" + components +
                 ", slots=" + slots +
                 ", cooling=" + cooling +
                 ", price=" + price +

@@ -27,47 +27,57 @@ public class CompManager extends JDialog {
 
     public CompManager(long id) {
         super();
-        System.out.println("wtf is goin on");
         setModal(true);
         setContentPane(mainPane);
         pack();
 
-
         pc = computerManager.getComputer(id);
-        currPcStatsLabel.setText(pc.toString());
-
 
         //region BtnListeners
         ActionListener done = e -> dispose();
 
         ActionListener add = e -> {
-            int selectedRow = freeCompsTable.getSelectedRow();
-            if (selectedRow < 0) return;
-            Component comp = null;
-            try {
-                comp = componentManager.getComponent((long) freeCompsTable.getModel().getValueAt(selectedRow, 0));
+            if (pc.getComponents().size() < pc.getSlots()) {
+                try {
+                    Component comp = componentManager
+                            .getComponent((long) freeCompsTable.getModel()
+                                    .getValueAt(freeCompsTable.getSelectedRow(), 0));
 
-                componentManager.addComponentToComputer(comp, pc.getId());
+                    componentManager.addComponentToComputer(comp, pc.getId());
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+                pc = computerManager.getComputer(pc.getId());
+
+                refreshUI();
+            }
+
+        };
+
+        ActionListener remove = e -> {
+            Component comp = componentManager
+                    .getComponent((long) compsInPcTable.getModel()
+                            .getValueAt(compsInPcTable.getSelectedRow(), 0));
+            try {
+                componentManager.removeComponentFromComputer(comp, pc.getId());
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
-            if (comp == null) return;
-            ((DefaultTableModel) compsInPcTable.getModel()).addRow(new Object[]{comp.getId()
-                    , comp.getName()
-                    , comp.getHeat()
-                    , comp.getEnergy()
-                    , comp.getPrice()});
-            ((DefaultTableModel) freeCompsTable.getModel()).removeRow(selectedRow);
+            pc = computerManager.getComputer(pc.getId());
+
+            refreshUI();
         };
+
+        removeCompBtn.addActionListener(remove);
         addCompBtn.addActionListener(add);
         doneBtn.addActionListener(done);
         //endregion
 
-        refreshTables();
+        refreshUI();
         setVisible(true);
     }
 
-    private void refreshTables() {
+    private void refreshUI() {
         try {
             System.out.println("refreshTables2");
             DefaultTableModel dm = new DefaultTableModel();
@@ -89,6 +99,7 @@ public class CompManager extends JDialog {
                 dm.addRow(new Object[]{comp.getId(), comp.getName(), comp.getHeat(), comp.getEnergy(), comp.getPrice()});
             }
             freeCompsTable.setModel(dm);
+            currPcStatsLabel.setText(pc.toString());
             System.out.println("refreshTables2Ends");
         } catch (Exception e) {
             e.printStackTrace();

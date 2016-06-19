@@ -218,7 +218,10 @@ public class ComponentManagerImplTest {
 
         component = manager.addComponentToComputer(component, pc.getId());
 
+
         Component component2 = manager.getComponent(component.getId());
+
+        pc = new ComputerManagerImpl(ds).getComputer(pc.getId());
 
         assertThat("component's pc changed", component2.getPid(), is(equalTo(pc.getId())));
         assertThat("pc has component", pc.getComponents().contains(component2), is(equalTo(true)));
@@ -242,7 +245,7 @@ public class ComponentManagerImplTest {
 
         assertThat("component's pc is there", c2.getPid(), is(equalTo(pc.getId())));
 
-        component = manager.removeComponentFromComputer(component, pc);
+        component = manager.removeComponentFromComputer(component, pc.getId());
 
         c2 = manager.getComponent(component.getId());
 
