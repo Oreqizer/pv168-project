@@ -17,6 +17,10 @@ public interface ComponentManager {
 
     public void removeComponent(Component component) throws DBException, EntityException;
 
+    public void removeAllComponents() throws DBException, EntityException;
+
+    public void removeComponentById(long id) throws DBException, EntityException;
+
     public Component getComponent(Long id);
 
     public List<Component> getAllComponents();

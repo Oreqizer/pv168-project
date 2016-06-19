@@ -16,6 +16,8 @@ public interface ComputerManager {
 
     public void removeComputer(Long id) throws DBException, EntityException;
 
+    public void removeAllComputers() throws DBException, EntityException;
+
     public Computer getComputer(Long id);
 
     public List<Computer> getAllComputers();

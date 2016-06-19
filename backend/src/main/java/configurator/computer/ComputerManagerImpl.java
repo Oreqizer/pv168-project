@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,6 +75,10 @@ public final class ComputerManagerImpl implements ComputerManager {
         jdbc.update("DELETE FROM COMPUTERS WHERE ID=?", id);
     }
 
+    public void removeAllComputers() throws EntityException, DBException {
+        for (Computer pc : getAllComputers()) removeComputer(pc.getId());
+    }
+
     @Nullable
     public Computer getComputer(Long id) {
         
@@ -92,7 +97,11 @@ public final class ComputerManagerImpl implements ComputerManager {
     @Transactional
     @Nullable
     public List<Computer> getAllComputers() {
-        return jdbc.query("SELECT * FROM COMPUTERS", computerMapper);
+        List<Computer> res = jdbc.query("SELECT * FROM COMPUTERS", computerMapper);
+
+        if (res == null) return new ArrayList<>();
+
+        return res;
     }
 
     private RowMapper<Computer> computerMapper = (rs, rowNum) ->

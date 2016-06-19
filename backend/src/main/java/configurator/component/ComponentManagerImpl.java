@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,6 +67,9 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     }
 
+    public void removeAllComponents() {
+        getAllComponents().forEach(this::removeComponent);
+    }
 
 
     public void removeComponent(Component component) {
@@ -74,6 +78,11 @@ public final class ComponentManagerImpl implements ComponentManager {
             throw new IllegalArgumentException("component id is null");
         }
         jdbc.update("DELETE FROM COMPONENTS WHERE ID=?", component.getId());
+
+    }
+
+    public void removeComponentById(long id) {
+        jdbc.update("DELETE FROM COMPONENTS WHERE ID=?", id);
 
     }
 
@@ -94,9 +103,12 @@ public final class ComponentManagerImpl implements ComponentManager {
     @Transactional
     @Override
     public List<Component> getAllComponents() {
-        return jdbc.query("SELECT * FROM COMPONENTS", componentMapper);
+        List<Component> res = jdbc.query("SELECT * FROM COMPONENTS", componentMapper);
+        if (res == null) return new ArrayList<>();
+        return res;
 
     }
+
 
     @Override
     public Component addComponentToComputer(Component component, Computer pc) {
