@@ -102,6 +102,15 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     @Transactional
     @Override
+    public List<Component> getAllFreeComponents() {
+        List<Component> res = jdbc.query("SELECT * FROM COMPONENTS WHERE pc=? ", componentMapper, null);
+        if (res == null) return new ArrayList<>();
+        return res;
+    }
+
+
+    @Transactional
+    @Override
     public List<Component> getAllComponents() {
         List<Component> res = jdbc.query("SELECT * FROM COMPONENTS", componentMapper);
         if (res == null) return new ArrayList<>();
