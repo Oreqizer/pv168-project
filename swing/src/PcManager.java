@@ -56,8 +56,9 @@ public class PcManager extends JFrame {
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
                 if (me.getClickCount() == 2) {
-                    new CompManager((Long) pcTable.getModel().getValueAt(row, 0));
+                    new CompManager((long) pcTable.getModel().getValueAt(row, 0));
                 }
+                refreshTables();
             }
         });
 

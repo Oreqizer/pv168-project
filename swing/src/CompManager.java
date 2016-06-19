@@ -39,10 +39,13 @@ public class CompManager extends JDialog {
 
         //region BtnListeners
         ActionListener done = e -> dispose();
+
         ActionListener add = e -> {
+            int selectedRow = freeCompsTable.getSelectedRow();
+            if (selectedRow < 0) return;
             Component comp = null;
             try {
-                comp = componentManager.getComponent((long) freeCompsTable.getSelectedRow());
+                comp = componentManager.getComponent((long) freeCompsTable.getModel().getValueAt(selectedRow, 0));
 
                 componentManager.addComponentToComputer(comp, pc);
             } catch (Exception e1) {
@@ -54,7 +57,7 @@ public class CompManager extends JDialog {
                     , comp.getHeat()
                     , comp.getEnergy()
                     , comp.getPrice()});
-            ((DefaultTableModel) freeCompsTable.getModel()).removeRow(freeCompsTable.getSelectedRow());
+            ((DefaultTableModel) freeCompsTable.getModel()).removeRow(selectedRow);
         };
         addCompBtn.addActionListener(add);
         doneBtn.addActionListener(done);
