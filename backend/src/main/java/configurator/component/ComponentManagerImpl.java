@@ -116,8 +116,14 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     @Transactional
     @Override
-    public long getNumOfComponentsInPc(long id) {
-        return getAllComponents().stream().filter(c -> c.getPid().equals(id)).count();
+    public int getNumOfComponentsInPc(long id) {
+        List<Component> list = getAllComponents();
+        if (list == null || list.size() == 0) return 0;
+
+        return (list
+                .stream()
+                .filter(c -> c.getPid() != null && c.getPid().equals(id))
+                .collect(Collectors.toList())).size();
 
     }
 

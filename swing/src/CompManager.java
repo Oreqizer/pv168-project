@@ -34,7 +34,7 @@ public class CompManager extends JDialog {
 
 
         pc = computerManager.getComputer(id);
-        currPcStatsLabel.setText(pc.toString());
+        currPcStatsLabel.setText(pc.toString() + ", " + componentManager.getNumOfComponentsInPc(pc.getId()));
 
 
         //region BtnListeners

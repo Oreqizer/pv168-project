@@ -27,7 +27,7 @@ public interface ComponentManager {
 
     public List<Component> getAllFreeComponents();
 
-    public long getNumOfComponentsInPc(long id);
+    public int getNumOfComponentsInPc(long id);
 
     public Component addComponentToComputer(Component component, Computer pc) throws DBException, EntityException;
 

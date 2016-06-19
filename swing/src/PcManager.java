@@ -34,7 +34,7 @@ public class PcManager extends JFrame {
     private JButton changeCompsBtn;
 
 
-    private String[] pcHeader = new String[]{"Id", "Name", "Slots", "Cooling", "Price"};
+    private String[] pcHeader = new String[]{"Id", "Slots", "Cooling", "Price", "Components"};
     private String[] compHeader = new String[]{"Id", "Name", "Heat", "Energy", "Price"};
 
 
@@ -57,8 +57,9 @@ public class PcManager extends JFrame {
                 int row = table.rowAtPoint(p);
                 if (me.getClickCount() == 2) {
                     new CompManager((long) pcTable.getModel().getValueAt(row, 0));
+                    refreshTables();
                 }
-                refreshTables();
+
             }
         });
 
@@ -71,8 +72,7 @@ public class PcManager extends JFrame {
                 ex.printStackTrace();
             }
 
-            DefaultTableModel dtm = (DefaultTableModel) pcTable.getModel();
-            dtm.addRow(new Object[]{pc.getId(), pc.getSlots(), pc.getCooling(), pc.getPrice()});
+            refreshTables();
             pcCounter++;
 
 
@@ -189,7 +189,13 @@ public class PcManager extends JFrame {
             DefaultTableModel dm = new DefaultTableModel();
             dm.setColumnIdentifiers(pcHeader);
             for (Computer pc : computerManager.getAllComputers()) {
-                dm.addRow(new Object[]{pc.getId(), pc.getSlots(), pc.getCooling(), pc.getPrice()});
+
+
+                dm.addRow(new Object[]{pc.getId()
+                        , pc.getSlots()
+                        , pc.getCooling()
+                        , pc.getPrice()
+                        , componentManager.getNumOfComponentsInPc(pc.getId())});
                 pcCounter++;
             }
 
