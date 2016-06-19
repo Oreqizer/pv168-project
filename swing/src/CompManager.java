@@ -38,34 +38,44 @@ public class CompManager extends JDialog {
 
         ActionListener add = e -> {
             if (freeCompsTable.getSelectedRow() < 0) return;
-            if (pc.getComponents().size() < pc.getSlots()) {
-                try {
-                    Component comp = componentManager
-                            .getComponent((long) freeCompsTable.getModel()
-                                    .getValueAt(freeCompsTable.getSelectedRow(), 0));
 
-                    componentManager.addComponentToComputer(comp, pc.getId());
+            for (int i = 0; i < freeCompsTable.getSelectedRows().length; i++) {
+                try {
+                    if (pc.getComponents().size() < pc.getSlots()) {
+                        try {
+                            Component comp = componentManager
+                                    .getComponent((long) freeCompsTable.getModel()
+                                            .getValueAt(i, 0));
+
+                            componentManager.addComponentToComputer(comp, pc.getId());
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                        pc = computerManager.getComputer(pc.getId());
+
+
+                    } else return;
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
-                pc = computerManager.getComputer(pc.getId());
 
-                refreshUI();
             }
-
+            refreshUI();
         };
 
         ActionListener remove = e -> {
             if (compsInPcTable.getSelectedRow() < 0) return;
-            Component comp = componentManager
-                    .getComponent((long) compsInPcTable.getModel()
-                            .getValueAt(compsInPcTable.getSelectedRow(), 0));
-            try {
-                componentManager.removeComponentFromComputer(comp, pc.getId());
-            } catch (Exception e1) {
-                e1.printStackTrace();
+            for (int i = 0; i < compsInPcTable.getSelectedRows().length; i++) {
+                Component comp = componentManager
+                        .getComponent((long) compsInPcTable.getModel()
+                                .getValueAt(i, 0));
+                try {
+                    componentManager.removeComponentFromComputer(comp, pc.getId());
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+                pc = computerManager.getComputer(pc.getId());
             }
-            pc = computerManager.getComputer(pc.getId());
 
             refreshUI();
         };

@@ -65,8 +65,6 @@ public class PcManager extends JFrame {
 
         //region PCBtns
         ActionListener createPC = e -> {
-
-
             try {
                 Computer pc = new Computer(Integer.parseInt(pcSlotsField.getText()));
                 pc = computerManager.createComputer(pc);
