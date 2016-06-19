@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by oreqizer on 16/03/16.
@@ -103,9 +104,14 @@ public final class ComponentManagerImpl implements ComponentManager {
     @Transactional
     @Override
     public List<Component> getAllFreeComponents() {
-        List<Component> res = jdbc.query("SELECT * FROM COMPONENTS WHERE pc=? ", componentMapper, null);
+        List<Component> res = jdbc.query("SELECT * FROM COMPONENTS", componentMapper);
+
+        List<Component> ret = new ArrayList<>();
         if (res == null) return new ArrayList<>();
-        return res;
+
+        ret.addAll(res.stream().filter(c -> c.getPid() == null).collect(Collectors.toList()));
+
+        return ret;
     }
 
 

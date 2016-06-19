@@ -69,6 +69,7 @@ public class CompManager extends JDialog {
 
     private void refreshTables() {
         try {
+            System.out.println("refreshTables2");
             DefaultTableModel dm = new DefaultTableModel();
             dm.setColumnIdentifiers(compHeader);
             for (configurator.component.Component comp : componentManager.getAllComponents()) {
@@ -79,17 +80,18 @@ public class CompManager extends JDialog {
 
             compsInPcTable.setModel(dm);
 
-            System.out.println("Kappa");
+
 
             dm = new DefaultTableModel();
 
             dm.setColumnIdentifiers(compHeader);
-            for (configurator.component.Component comp : componentManager.getAllComponents()) {
+            for (configurator.component.Component comp : componentManager.getAllFreeComponents()) {
                 dm.addRow(new Object[]{comp.getId(), comp.getName(), comp.getHeat(), comp.getEnergy(), comp.getPrice()});
             }
             freeCompsTable.setModel(dm);
+            System.out.println("refreshTables2Ends");
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 

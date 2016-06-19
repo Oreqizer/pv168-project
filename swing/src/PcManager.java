@@ -163,7 +163,8 @@ public class PcManager extends JFrame {
         //endregion
 
         ActionListener changeComps = e -> {
-            CompManager tmp = new CompManager(pcTable.getSelectedRow());
+            refreshTables();
+//            CompManager tmp = new CompManager(pcTable.getSelectedRow());
         };
 
 
@@ -184,24 +185,31 @@ public class PcManager extends JFrame {
 
     private void refreshTables() {
         try {
+            System.out.println("tableRefresh");
             DefaultTableModel dm = new DefaultTableModel();
             dm.setColumnIdentifiers(pcHeader);
             for (Computer pc : computerManager.getAllComputers()) {
                 dm.addRow(new Object[]{pc.getId(), pc.getSlots(), pc.getCooling(), pc.getPrice()});
                 pcCounter++;
             }
-            pcTable.setModel(dm);
 
+            pcTable.setModel(dm);
+            dm.fireTableDataChanged();
 
             dm = new DefaultTableModel();
 
             dm.setColumnIdentifiers(compHeader);
-            for (configurator.component.Component comp : componentManager.getAllComponents()) {
+            for (configurator.component.Component comp : componentManager.getAllFreeComponents()) {
                 dm.addRow(new Object[]{comp.getId(), comp.getName(), comp.getHeat(), comp.getEnergy(), comp.getPrice()});
             }
-            compTable.setModel(dm);
-        } catch (Exception e) {
 
+            compTable.setModel(dm);
+            dm.fireTableDataChanged();
+
+
+            System.out.println("tableRefreshEnds");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
