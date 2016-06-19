@@ -148,14 +148,6 @@
               <text value="Delete All Components"/>
             </properties>
           </component>
-          <component id="3d953" class="javax.swing.JButton" binding="changeCompsBtn">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="Add/remove comps"/>
-            </properties>
-          </component>
         </children>
       </grid>
       <grid id="73c41" binding="computerPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="5" vgap="5">

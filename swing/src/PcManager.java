@@ -90,7 +90,6 @@ public class PcManager extends JFrame {
                 pcCounter--;
             }
 
-
         };
         ActionListener delAllPC = e -> {
             DefaultTableModel dm = (DefaultTableModel) pcTable.getModel();
@@ -162,15 +161,11 @@ public class PcManager extends JFrame {
         };
         //endregion
 
-        ActionListener changeComps = e -> {
-            refreshTables();
-//            CompManager tmp = new CompManager(pcTable.getSelectedRow());
-        };
+
 
 
         //region ListenersAdded
 
-        changeCompsBtn.addActionListener(changeComps);
         deleteComponentButton.addActionListener(delComp);
         createComponentButton.addActionListener(createComponent);
         createComputerButton.addActionListener(createPC);
@@ -195,7 +190,7 @@ public class PcManager extends JFrame {
                         , pc.getSlots()
                         , pc.getCooling()
                         , pc.getPrice()
-                        , componentManager.getNumOfComponentsInPc(pc.getId())});
+                        , pc.getComponents().size()});
                 pcCounter++;
             }
 

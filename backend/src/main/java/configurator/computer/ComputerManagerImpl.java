@@ -2,6 +2,7 @@ package configurator.computer;
 
 import configurator.common.DBException;
 import configurator.common.EntityException;
+import configurator.component.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by oreqizer on 16/03/16.
@@ -86,9 +88,13 @@ public final class ComputerManagerImpl implements ComputerManager {
             throw new IllegalArgumentException("id is null");
         }
         try {
-            return jdbc.queryForObject(
+            Computer pc = jdbc.queryForObject(
                     "SELECT * FROM COMPUTERS WHERE id=?"
                     , computerMapper, id);
+
+            pc = pc.setComponents(jdbc.query("SELECT * FROM COMPONENTS WHERE pc=?", componentMapper, id));
+            return pc;
+
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -97,10 +103,11 @@ public final class ComputerManagerImpl implements ComputerManager {
     @Transactional
     @Nullable
     public List<Computer> getAllComputers() {
-        List<Computer> res = jdbc.query("SELECT * FROM COMPUTERS", computerMapper);
+        List<Computer> tmp = jdbc.query("SELECT * FROM COMPUTERS", computerMapper);
 
-        if (res == null) return new ArrayList<>();
+        if (tmp == null) return new ArrayList<>();
 
+        List<Computer> res = tmp.stream().map(pc -> pc.setComponents(jdbc.query("SELECT * FROM COMPONENTS WHERE PC=?", componentMapper, pc.getId()))).collect(Collectors.toList());
         return res;
     }
 
@@ -127,5 +134,15 @@ public final class ComputerManagerImpl implements ComputerManager {
             throw new IllegalArgumentException("price can't be negative");
         }
     }
+
+    private RowMapper<Component> componentMapper = (rs, rowNum) ->
+            new Component(
+                    rs.getLong("ID"),
+                    rs.getLong("PC") == 0 ? null : rs.getLong("PC"),
+                    rs.getString("NAME"),
+                    rs.getInt("HEAT"),
+                    rs.getInt("PRICE"),
+                    rs.getInt("ENERGY")
+            );
 
 }

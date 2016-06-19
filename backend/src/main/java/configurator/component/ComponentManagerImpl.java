@@ -101,18 +101,6 @@ public final class ComponentManagerImpl implements ComponentManager {
         }
     }
 
-    @Transactional
-    @Override
-    public List<Component> getAllFreeComponents() {
-        List<Component> res = jdbc.query("SELECT * FROM COMPONENTS", componentMapper);
-
-        List<Component> ret = new ArrayList<>();
-        if (res == null) return new ArrayList<>();
-
-        ret.addAll(res.stream().filter(c -> c.getPid() == null).collect(Collectors.toList()));
-
-        return ret;
-    }
 
     @Transactional
     @Override
@@ -127,6 +115,18 @@ public final class ComponentManagerImpl implements ComponentManager {
 
     }
 
+    @Transactional
+    @Override
+    public List<Component> getAllFreeComponents() {
+        List<Component> res = jdbc.query("SELECT * FROM COMPONENTS", componentMapper);
+
+        List<Component> ret = new ArrayList<>();
+        if (res == null) return new ArrayList<>();
+
+        ret.addAll(res.stream().filter(c -> c.getPid() == null).collect(Collectors.toList()));
+
+        return ret;
+    }
 
     @Transactional
     @Override

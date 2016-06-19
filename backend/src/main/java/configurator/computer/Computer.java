@@ -86,6 +86,7 @@ public final class Computer {
                 ", slots=" + slots +
                 ", cooling=" + cooling +
                 ", price=" + price +
+                ", components=" + components.size() +
                 '}';
     }
 
