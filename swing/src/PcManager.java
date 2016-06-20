@@ -72,6 +72,7 @@ public class PcManager extends JFrame {
                 int row = table.rowAtPoint(p);
                 if (me.getClickCount() == 2) {
                     System.out.println((long) compTable.getModel().getValueAt(row, 0));
+                    new UpdateComponentDialog((long) compTable.getModel().getValueAt(row, 0));
                     refreshUI();
                 }
 
