@@ -2,7 +2,8 @@ import configurator.component.Component;
 import configurator.component.ComponentManager;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by zeman on 20-Jun-16.
@@ -16,6 +17,8 @@ public class UpdateComponentDialog extends JDialog {
     private JTextField energyTextField;
     private JLabel errorMsg;
 
+    private static final Logger logger = Logger.getLogger(UpdateComponentDialog.class.getName());
+
 
     private ComponentManager componentManager = Main.getComponentManager();
     private Component component;
@@ -26,13 +29,14 @@ public class UpdateComponentDialog extends JDialog {
         setContentPane(mainPane);
         pack();
         setResizable(false);
+
         component = componentManager.getComponent(id);
         nameTextField.setText(component.getName());
         priceTextField.setText(component.getPrice() + "");
         heatTextField.setText(component.getHeat() + "");
         energyTextField.setText(component.getEnergy() + "");
 
-        ActionListener update = e -> {
+        updateBtn.addActionListener(e -> {
 
             try {
                 int price = Integer.parseInt(priceTextField.getText());
@@ -50,12 +54,11 @@ public class UpdateComponentDialog extends JDialog {
                 dispose();
             } catch (Exception e1) {
                 errorMsg.setText(e1.toString());
+                logger.log(Level.SEVERE, e1.toString(), e1);
                 e1.printStackTrace();
             }
-        };
+        });
 
-
-        updateBtn.addActionListener(update);
         setVisible(true);
     }
 }

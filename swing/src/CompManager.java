@@ -5,7 +5,8 @@ import configurator.computer.ComputerManager;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by zeman on 18-Jun-16.
@@ -27,6 +28,8 @@ public class CompManager extends JDialog {
     private ComponentManager componentManager = Main.getComponentManager();
 
     private Computer pc;
+    private static final Logger logger = Logger.getLogger(CompManager.class.getName());
+
 
     public CompManager(long id) {
         super();
@@ -34,21 +37,21 @@ public class CompManager extends JDialog {
         setResizable(false);
         setContentPane(mainPane);
         pack();
-
-
         pc = computerManager.getComputer(id);
+        refreshUI();
 
-        updateNumberOfSlotsTextField.setText(pc.getSlots() + "");
+
 
         //region BtnListeners
-        ActionListener done = e -> dispose();
 
-        ActionListener updateSlots = e -> {
+        doneBtn.addActionListener(e -> dispose());
+
+        updateComputerButton.addActionListener(e -> {
             updateSlots();
             refreshUI();
-        };
+        });
 
-        ActionListener add = e -> {
+        addCompBtn.addActionListener(e -> {
             if (freeCompsTable.getSelectedRow() < 0) return;
 
             for (int i = 0; i < freeCompsTable.getSelectedRows().length; i++) {
@@ -66,15 +69,14 @@ public class CompManager extends JDialog {
                         refreshUI();
                     } else return;
                 } catch (Exception e1) {
+                    logger.log(Level.SEVERE, e1.toString(), e1);
                     errorMsg.setText(e1.toString());
-
                 }
-
             }
+        });
 
-        };
 
-        ActionListener remove = e -> {
+        removeCompBtn.addActionListener(e -> {
             if (compsInPcTable.getSelectedRow() < 0) return;
             for (int i = 0; i < compsInPcTable.getSelectedRows().length; i++) {
                 Component comp = componentManager
@@ -85,21 +87,14 @@ public class CompManager extends JDialog {
                     refreshUI();
                 } catch (Exception e1) {
                     errorMsg.setText(e1.toString());
+                    logger.log(Level.SEVERE, e1.toString(), e1);
                     e1.printStackTrace();
                 }
                 pc = computerManager.getComputer(pc.getId());
             }
+        });
 
-
-        };
-
-        removeCompBtn.addActionListener(remove);
-        addCompBtn.addActionListener(add);
-        doneBtn.addActionListener(done);
-        updateComputerButton.addActionListener(updateSlots);
         //endregion
-
-        refreshUI();
         setVisible(true);
     }
 
@@ -126,10 +121,12 @@ public class CompManager extends JDialog {
             }
             freeCompsTable.setModel(dm);
             currPcStatsLabel.setText(pc.toString());
+            updateNumberOfSlotsTextField.setText(pc.getSlots() + "");
             errorMsg.setText("");
             System.out.println("refreshTables2Ends");
         } catch (Exception e) {
             errorMsg.setText(e.toString());
+            logger.log(Level.SEVERE, e.toString(), e);
             e.printStackTrace();
         }
     }
@@ -159,6 +156,7 @@ public class CompManager extends JDialog {
             computerManager.updateComputer(pc);
         } catch (Exception ex) {
             errorMsg.setText(ex.toString());
+            logger.log(Level.SEVERE, ex.toString(), ex);
             ex.printStackTrace();
         }
     }

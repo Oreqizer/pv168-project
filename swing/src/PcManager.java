@@ -6,9 +6,10 @@ import configurator.computer.ComputerManager;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by zeman on 27-Apr-16.
@@ -38,20 +39,21 @@ public class PcManager extends JFrame {
     private String[] pcHeader = new String[]{"Id", "Slots", "Cooling", "Price", "Energy", "Components"};
     private String[] compHeader = new String[]{"Id", "Name", "Heat", "Energy", "Price"};
 
+    private static final Logger logger = Logger.getLogger(PcManager.class.getName());
 
     static private ComputerManager computerManager = Main.getComputerManager();
     static private ComponentManager componentManager = Main.getComponentManager();
-    private int pcCounter = 0;
+
 
     public PcManager() {
         super();
         setContentPane(mainPanel);
         pack();
         setResizable(false);
-
         refreshUI();
 
 
+        //region tableClickEvents
         pcTable.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent me) {
                 JTable table = (JTable) me.getSource();
@@ -76,12 +78,13 @@ public class PcManager extends JFrame {
                     new UpdateComponentDialog((long) compTable.getModel().getValueAt(row, 0));
                     refreshUI();
                 }
-
             }
         });
+        //endregion
 
         //region PCBtns
-        ActionListener createPC = e -> {
+
+        createComputerButton.addActionListener(e -> {
             try {
                 int tmp = Integer.parseInt(pcSlotsField.getText());
                 if (tmp <= 0) {
@@ -94,48 +97,42 @@ public class PcManager extends JFrame {
                 refreshUI();
             } catch (Exception ex) {
                 errorMsg.setText(ex.toString());
+                logger.log(Level.SEVERE, ex.toString(), ex);
                 ex.printStackTrace();
             }
 
+        });
 
-            pcCounter++;
-
-
-        };
-        ActionListener delPC = e -> {
+        deleteComputerButton.addActionListener(e -> {
             if (pcTable.getSelectedRow() < 0) return;
             try {
-            for (int i = 0; i < pcTable.getSelectedRows().length; i++) {
-
-
-                computerManager.removeComputer((long) pcTable.getModel().getValueAt(i, 0));
-                refreshUI();
-            }
-
+                for (int i = 0; i < pcTable.getSelectedRows().length; i++) {
+                    computerManager.removeComputer((long) pcTable.getModel().getValueAt(i, 0));
+                    refreshUI();
+                }
             } catch (Exception e1) {
                 errorMsg.setText(e1.toString());
+                logger.log(Level.SEVERE, e1.toString(), e1);
                 e1.printStackTrace();
             }
-            pcCounter--;
+        });
 
-
-
-        };
-        ActionListener delAllPC = e -> {
+        deleteAllComputersButton.addActionListener(e -> {
             try {
                 computerManager.removeAllComputers();
             } catch (Exception e1) {
                 errorMsg.setText(e1.toString());
+                logger.log(Level.SEVERE, e1.toString(), e1);
                 e1.printStackTrace();
             }
-            pcCounter = 0;
             refreshUI();
-        };
+        });
+
         //endregion
 
         //region CompBtns
-        ActionListener createComponent = e -> {
 
+        createComponentButton.addActionListener(e -> {
             try {
                 int tmp = Integer.parseInt(componentPriceField.getText());
                 if (tmp < 0) {
@@ -143,20 +140,19 @@ public class PcManager extends JFrame {
                     return;
                 }
                 Component component = new Component(componentNameField.getText()
-                    , Integer.parseInt(componentHeatField.getText())
-                    , Integer.parseInt(componentEnergyField.getText())
+                        , Integer.parseInt(componentHeatField.getText())
+                        , Integer.parseInt(componentEnergyField.getText())
                         , tmp);
                 component = componentManager.createComponent(component);
                 refreshUI();
             } catch (Exception e1) {
                 errorMsg.setText(e1.toString());
+                logger.log(Level.SEVERE, e1.toString(), e1);
                 e1.printStackTrace();
             }
+        });
 
-
-        };
-
-        ActionListener delComp = e -> {
+        deleteComponentButton.addActionListener(e -> {
             if (compTable.getSelectedRow() < 0) return;
             int[] arr = compTable.getSelectedRows();
             for (int i = 0; i < arr.length; i++) {
@@ -165,36 +161,26 @@ public class PcManager extends JFrame {
                     refreshUI();
                 } catch (Exception e1) {
                     errorMsg.setText(e1.toString());
+                    logger.log(Level.SEVERE, e1.toString(), e1);
                     e1.printStackTrace();
                 }
             }
 
-        };
+        });
 
-        ActionListener delAllComps = e -> {
+        deleteAllComponentsButton.addActionListener(e -> {
             try {
                 componentManager.removeAllComponents();
                 refreshUI();
             } catch (Exception e1) {
                 errorMsg.setText(e1.toString());
+                logger.log(Level.SEVERE, e1.toString(), e1);
                 e1.printStackTrace();
             }
 
-        };
+        });
         //endregion
-
-
-        //region ListenersAdded
-
-        deleteComponentButton.addActionListener(delComp);
-        createComponentButton.addActionListener(createComponent);
-        createComputerButton.addActionListener(createPC);
-        deleteComputerButton.addActionListener(delPC);
-        deleteAllComputersButton.addActionListener(delAllPC);
-        deleteAllComponentsButton.addActionListener(delAllComps);
-        //endregion
-
-
+        //TODO vlakna, lokalizaciu, logging
     }
 
 
@@ -205,14 +191,13 @@ public class PcManager extends JFrame {
             dm.setColumnIdentifiers(pcHeader);
             for (Computer pc : computerManager.getAllComputers()) {
 
-
                 dm.addRow(new Object[]{pc.getId()
                         , pc.getSlots()
                         , pc.getCooling()
                         , pc.getPrice()
                         , pc.getEnergy()
                         , pc.getComponents().size()});
-                pcCounter++;
+
             }
 
             pcTable.setModel(dm);
