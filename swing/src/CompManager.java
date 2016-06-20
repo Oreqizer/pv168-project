@@ -33,6 +33,7 @@ public class CompManager extends JDialog {
 
     public CompManager(long id) {
         super();
+        logger.log(Level.FINE, "Starting editing window for computer with id: " + id);
         setModal(true);
         setResizable(false);
         setContentPane(mainPane);
@@ -44,9 +45,13 @@ public class CompManager extends JDialog {
 
         //region BtnListeners
 
-        doneBtn.addActionListener(e -> dispose());
+        doneBtn.addActionListener(e -> {
+            logger.log(Level.FINE, "Disposing editing window for computer with id: " + id);
+            dispose();
+        });
 
         updateComputerButton.addActionListener(e -> {
+
             updateSlots();
             refreshUI();
         });
@@ -55,12 +60,12 @@ public class CompManager extends JDialog {
             if (freeCompsTable.getSelectedRow() < 0) return;
 
             for (int i = 0; i < freeCompsTable.getSelectedRows().length; i++) {
+                Component comp = componentManager
+                        .getComponent((long) freeCompsTable.getModel().getValueAt(i, 0));
                 try {
                     if (pc.getComponents().size() < pc.getSlots()) {
+                        logger.log(Level.FINE, "Adding component(id:" + comp.getId() + ") to computer (id:" + id + ")");
 
-                        Component comp = componentManager
-                                .getComponent((long) freeCompsTable.getModel()
-                                        .getValueAt(i, 0));
 
                         componentManager.addComponentToComputer(comp, pc.getId());
 
@@ -82,6 +87,7 @@ public class CompManager extends JDialog {
                 Component comp = componentManager
                         .getComponent((long) compsInPcTable.getModel()
                                 .getValueAt(i, 0));
+                logger.log(Level.FINE, "Removing component(id:" + comp.getId() + ") from computer (id:" + id + ")");
                 try {
                     componentManager.removeComponentFromComputer(comp, pc.getId());
                     refreshUI();
@@ -101,6 +107,7 @@ public class CompManager extends JDialog {
     private void refreshUI() {
         try {
             System.out.println("refreshTables2");
+            logger.log(Level.FINE, "Refreshing UI");
             DefaultTableModel dm = new DefaultTableModel();
             dm.setColumnIdentifiers(compHeader);
             for (configurator.component.Component comp : componentManager.getAllComponents()) {
@@ -150,9 +157,12 @@ public class CompManager extends JDialog {
             int tmp = Integer.parseInt(updateNumberOfSlotsTextField.getText());
             if (tmp <= 0) {
                 errorMsg.setText("Number of slots cannot be negative or 0!");
+                logger.log(Level.FINE, "ErrorMsg is :Number of slots cannot be negative or 0!");
+
                 return;
             }
             pc = pc.setSlots(tmp);
+            logger.log(Level.FINE, "Updating computer with id:" + pc.getId() + " and slots :" + tmp);
             computerManager.updateComputer(pc);
         } catch (Exception ex) {
             errorMsg.setText(ex.toString());

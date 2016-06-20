@@ -25,6 +25,7 @@ public class UpdateComponentDialog extends JDialog {
 
     public UpdateComponentDialog(long id) {
         super();
+        logger.log(Level.FINE, "Starting editing window for component with id: " + id);
         setModal(true);
         setContentPane(mainPane);
         pack();
@@ -41,15 +42,19 @@ public class UpdateComponentDialog extends JDialog {
             try {
                 int price = Integer.parseInt(priceTextField.getText());
                 if (price < 0) {
+                    logger.log(Level.FINE, "Error Msg is : Price cannot be negative number!");
+
                     errorMsg.setText("Price cannot be negative number!");
                     return;
                 }
+                logger.log(Level.FINE, "Updating component");
                 componentManager.updateComponent(component
                         .setEnergy(Integer.parseInt(energyTextField.getText()))
                         .setHeat(Integer.parseInt(heatTextField.getText()))
                         .setPrice(price)
                         .setName(nameTextField.getText())
                 );
+
 
                 dispose();
             } catch (Exception e1) {

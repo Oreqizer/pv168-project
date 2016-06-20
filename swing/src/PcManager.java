@@ -33,7 +33,7 @@ public class PcManager extends JFrame {
     private JTable compTable;
     private JTable pcTable;
     private JLabel errorMsg;
-    private JButton updatePC;
+
 
 
     private String[] pcHeader = new String[]{"Id", "Slots", "Cooling", "Price", "Energy", "Components"};
@@ -47,6 +47,7 @@ public class PcManager extends JFrame {
 
     public PcManager() {
         super();
+        logger.log(Level.FINE, "Starting MainWindow");
         setContentPane(mainPanel);
         pack();
         setResizable(false);
@@ -60,6 +61,9 @@ public class PcManager extends JFrame {
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
                 if (me.getClickCount() == 2) {
+                    logger.log(Level.FINE, "Editing Computer and its components of " +
+                            pcTable.getModel().getValueAt(row, 0));
+
                     new CompManager((long) pcTable.getModel().getValueAt(row, 0));
                     refreshUI();
                 }
@@ -74,7 +78,9 @@ public class PcManager extends JFrame {
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
                 if (me.getClickCount() == 2) {
-                    System.out.println((long) compTable.getModel().getValueAt(row, 0));
+                    logger.log(Level.FINE, "Editing values of component of " +
+                            compTable.getModel().getValueAt(row, 0));
+
                     new UpdateComponentDialog((long) compTable.getModel().getValueAt(row, 0));
                     refreshUI();
                 }
@@ -88,12 +94,16 @@ public class PcManager extends JFrame {
             try {
                 int tmp = Integer.parseInt(pcSlotsField.getText());
                 if (tmp <= 0) {
+                    logger.log(Level.FINE, "errorMsg is Number of slots cannot be negative or 0!");
                     errorMsg.setText("Number of slots cannot be negative or 0!");
                     return;
                 }
 
                 Computer pc = new Computer(tmp);
+
+                logger.log(Level.FINE, "Creating new computer :" + pc);
                 pc = computerManager.createComputer(pc);
+
                 refreshUI();
             } catch (Exception ex) {
                 errorMsg.setText(ex.toString());
@@ -107,6 +117,7 @@ public class PcManager extends JFrame {
             if (pcTable.getSelectedRow() < 0) return;
             try {
                 for (int i = 0; i < pcTable.getSelectedRows().length; i++) {
+                    logger.log(Level.FINE, "deleting component with id:" + pcTable.getModel().getValueAt(i, 0));
                     computerManager.removeComputer((long) pcTable.getModel().getValueAt(i, 0));
                     refreshUI();
                 }
@@ -117,8 +128,10 @@ public class PcManager extends JFrame {
             }
         });
 
+
         deleteAllComputersButton.addActionListener(e -> {
             try {
+                logger.log(Level.FINE, "deleting all components from database");
                 computerManager.removeAllComputers();
             } catch (Exception e1) {
                 errorMsg.setText(e1.toString());
@@ -136,14 +149,20 @@ public class PcManager extends JFrame {
             try {
                 int tmp = Integer.parseInt(componentPriceField.getText());
                 if (tmp < 0) {
+                    logger.log(Level.FINE, "ErrorMsg is Price cannot be negative number!");
+
                     errorMsg.setText("Price cannot be negative number!");
+
                     return;
                 }
                 Component component = new Component(componentNameField.getText()
                         , Integer.parseInt(componentHeatField.getText())
                         , Integer.parseInt(componentEnergyField.getText())
                         , tmp);
+                logger.log(Level.FINE, "Creating new Component:" + component);
+
                 component = componentManager.createComponent(component);
+
                 refreshUI();
             } catch (Exception e1) {
                 errorMsg.setText(e1.toString());
@@ -157,6 +176,8 @@ public class PcManager extends JFrame {
             int[] arr = compTable.getSelectedRows();
             for (int i = 0; i < arr.length; i++) {
                 try {
+                    logger.log(Level.FINE, "Deleting component with id:" + compTable.getModel().getValueAt(i, 0));
+
                     componentManager.removeComponentById((long) compTable.getModel().getValueAt(i, 0));
                     refreshUI();
                 } catch (Exception e1) {
@@ -170,6 +191,8 @@ public class PcManager extends JFrame {
 
         deleteAllComponentsButton.addActionListener(e -> {
             try {
+                logger.log(Level.FINE, "Deleting all components");
+
                 componentManager.removeAllComponents();
                 refreshUI();
             } catch (Exception e1) {
@@ -186,6 +209,8 @@ public class PcManager extends JFrame {
 
     private void refreshUI() {
         try {
+            logger.log(Level.FINE, "Refreshing UI");
+
             System.out.println("tableRefresh");
             DefaultTableModel dm = new DefaultTableModel();
             dm.setColumnIdentifiers(pcHeader);
