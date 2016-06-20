@@ -18,6 +18,9 @@ public class CompManager extends JDialog {
     private JButton doneBtn;
     private JPanel mainPane;
     private JLabel currPcStatsLabel;
+    private JTextField updateNumberOfSlotsTextField;
+    private JButton updateComputerButton;
+    private JLabel errorMsg;
 
     private String[] compHeader = new String[]{"Id", "Name", "Heat", "Energy", "Price"};
     private ComputerManager computerManager = Main.getComputerManager();
@@ -31,10 +34,18 @@ public class CompManager extends JDialog {
         setContentPane(mainPane);
         pack();
 
+
         pc = computerManager.getComputer(id);
+
+        updateNumberOfSlotsTextField.setText(pc.getSlots() + "");
 
         //region BtnListeners
         ActionListener done = e -> dispose();
+
+        ActionListener updateSlots = e -> {
+            updateSlots();
+            refreshUI();
+        };
 
         ActionListener add = e -> {
             if (freeCompsTable.getSelectedRow() < 0) return;
@@ -42,25 +53,24 @@ public class CompManager extends JDialog {
             for (int i = 0; i < freeCompsTable.getSelectedRows().length; i++) {
                 try {
                     if (pc.getComponents().size() < pc.getSlots()) {
-                        try {
-                            Component comp = componentManager
-                                    .getComponent((long) freeCompsTable.getModel()
-                                            .getValueAt(i, 0));
 
-                            componentManager.addComponentToComputer(comp, pc.getId());
-                        } catch (Exception e1) {
-                            e1.printStackTrace();
-                        }
+                        Component comp = componentManager
+                                .getComponent((long) freeCompsTable.getModel()
+                                        .getValueAt(i, 0));
+
+                        componentManager.addComponentToComputer(comp, pc.getId());
+
                         pc = computerManager.getComputer(pc.getId());
 
-
+                        refreshUI();
                     } else return;
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+                    errorMsg.setText(e1.toString());
+
                 }
 
             }
-            refreshUI();
+
         };
 
         ActionListener remove = e -> {
@@ -71,18 +81,21 @@ public class CompManager extends JDialog {
                                 .getValueAt(i, 0));
                 try {
                     componentManager.removeComponentFromComputer(comp, pc.getId());
+                    refreshUI();
                 } catch (Exception e1) {
+                    errorMsg.setText(e1.toString());
                     e1.printStackTrace();
                 }
                 pc = computerManager.getComputer(pc.getId());
             }
 
-            refreshUI();
+
         };
 
         removeCompBtn.addActionListener(remove);
         addCompBtn.addActionListener(add);
         doneBtn.addActionListener(done);
+        updateComputerButton.addActionListener(updateSlots);
         //endregion
 
         refreshUI();
@@ -112,8 +125,10 @@ public class CompManager extends JDialog {
             }
             freeCompsTable.setModel(dm);
             currPcStatsLabel.setText(pc.toString());
+            errorMsg.setText("");
             System.out.println("refreshTables2Ends");
         } catch (Exception e) {
+            errorMsg.setText(e.toString());
             e.printStackTrace();
         }
     }
@@ -129,5 +144,21 @@ public class CompManager extends JDialog {
         dm.setColumnIdentifiers(compHeader);
         freeCompsTable = new JTable(dm);
         freeCompsTable.setDefaultEditor(Object.class, null);
+    }
+
+
+    private void updateSlots() {
+        try {
+            int tmp = Integer.parseInt(updateNumberOfSlotsTextField.getText());
+            if (tmp <= 0) {
+                errorMsg.setText("Number of slots cannot be negative or 0!");
+                return;
+            }
+            pc = pc.setSlots(tmp);
+            computerManager.updateComputer(pc);
+        } catch (Exception ex) {
+            errorMsg.setText(ex.toString());
+            ex.printStackTrace();
+        }
     }
 }

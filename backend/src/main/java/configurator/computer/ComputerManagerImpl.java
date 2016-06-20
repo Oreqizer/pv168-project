@@ -3,6 +3,8 @@ package configurator.computer;
 import configurator.common.DBException;
 import configurator.common.EntityException;
 import configurator.component.Component;
+import configurator.component.ComponentManager;
+import configurator.component.ComponentManagerImpl;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -59,6 +61,16 @@ public final class ComputerManagerImpl implements ComputerManager {
         if (pc.getId() == null) {
             throw new IllegalArgumentException("computer id is null");
         }
+        if (pc.getSlots() < pc.getComponents().size()) {
+            ComponentManager manager = new ComponentManagerImpl(jdbc.getDataSource());
+
+            while (pc.getSlots() < pc.getComponents().size()) {
+                manager.removeComponentFromComputer(pc.getComponents().get(0), pc.getId());
+                pc.getComponents().remove(pc.getComponents().get(0));
+
+            }
+        }
+
         jdbc.update(
                 "UPDATE COMPUTERS set SLOTS=?,COOLING=?,PRICE=?,ENERGY=? where ID=?",
                 pc.getSlots(),
