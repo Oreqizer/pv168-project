@@ -31,6 +31,7 @@ public class CompManager extends JDialog {
     public CompManager(long id) {
         super();
         setModal(true);
+        setResizable(false);
         setContentPane(mainPane);
         pack();
 

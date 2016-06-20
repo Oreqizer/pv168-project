@@ -47,6 +47,7 @@ public class PcManager extends JFrame {
         super();
         setContentPane(mainPanel);
         pack();
+        setResizable(false);
 
         refreshUI();
 

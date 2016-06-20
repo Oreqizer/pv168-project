@@ -25,6 +25,7 @@ public class UpdateComponentDialog extends JDialog {
         setModal(true);
         setContentPane(mainPane);
         pack();
+        setResizable(false);
         component = componentManager.getComponent(id);
         nameTextField.setText(component.getName());
         priceTextField.setText(component.getPrice() + "");
