@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 /**
  * Created by oreqizer on 20/04/16.
@@ -79,7 +80,7 @@ public class ComputerServlet extends HttpServlet {
             //getting POST parameters from form
             int slots = Integer.parseInt(req.getParameter("slots"));
             int cooling = Integer.parseInt(req.getParameter("cooling"));
-            int price = Integer.parseInt(req.getParameter("price"));
+            BigDecimal price = Integer.parseInt(req.getParameter("price"));
 
             // store to DB
             Computer pc = new Computer(slots, cooling, price, energy);
@@ -122,7 +123,7 @@ public class ComputerServlet extends HttpServlet {
             Long id = Long.valueOf(req.getParameter("id"));
             int slots = Integer.parseInt(req.getParameter("slots"));
             int cooling = Integer.parseInt(req.getParameter("cooling"));
-            int price = Integer.parseInt(req.getParameter("price"));
+            BigDecimal price = Integer.parseInt(req.getParameter("price"));
 
             // store to DB
             Computer pc = getComputerManager().getComputer(id)

@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -157,7 +158,7 @@ public final class ComponentManagerImpl implements ComponentManager {
             pc.getComponents().add(component);
 
             pc = pc.setCooling(pc.getCooling() + component.getHeat())
-                    .setPrice(pc.getPrice() + component.getPrice())
+                    .setPrice(component.getPrice().add(pc.getPrice()))
                     .setEnergy(pc.getEnergy() + component.getEnergy());
 
             jdbc.update(
@@ -199,7 +200,7 @@ public final class ComponentManagerImpl implements ComponentManager {
         pc.getComponents().remove(component);
 
         pc = pc.setCooling(pc.getCooling() - component.getHeat())
-                .setPrice(pc.getPrice() - component.getPrice())
+                .setPrice(pc.getPrice().subtract(component.getPrice()))
                 .setEnergy(pc.getEnergy() - component.getEnergy());
 
         jdbc.update(
@@ -229,7 +230,7 @@ public final class ComponentManagerImpl implements ComponentManager {
                     rs.getLong("PC") == 0 ? null : rs.getLong("PC"),
                     rs.getString("NAME"),
                     rs.getInt("HEAT"),
-                    rs.getInt("PRICE"),
+                    rs.getBigDecimal("PRICE"),
                     rs.getInt("ENERGY")
             );
 
@@ -244,7 +245,7 @@ public final class ComponentManagerImpl implements ComponentManager {
             throw new IllegalArgumentException("component name cannot be null or empty");
         }
 
-        if (component.getPrice() < 0) {
+        if (component.getPrice().compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("price can't be negative");
         }
 
@@ -254,7 +255,7 @@ public final class ComponentManagerImpl implements ComponentManager {
             new Computer(
                     rs.getInt("SLOTS"),
                     rs.getInt("COOLING"),
-                    rs.getInt("PRICE"),
+                    rs.getBigDecimal("PRICE"),
                     rs.getInt("ENERGY")).setId(rs.getLong("ID"));
 
 }

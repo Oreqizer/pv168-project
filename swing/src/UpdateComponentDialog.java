@@ -2,6 +2,7 @@ import configurator.component.Component;
 import configurator.component.ComponentManager;
 
 import javax.swing.*;
+import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,8 +41,9 @@ public class UpdateComponentDialog extends JDialog {
         updateBtn.addActionListener(e -> {
 
             try {
-                int price = Integer.parseInt(priceTextField.getText());
-                if (price < 0) {
+                BigDecimal price = Main.parseBigDecimal(priceTextField.getText());
+//
+                if (price.compareTo(BigDecimal.ZERO) < 0) {
                     logger.log(Level.FINE, "Error Msg is : Price cannot be negative number!");
 
                     errorMsg.setText("Price cannot be negative number!");

@@ -2,6 +2,7 @@ package configurator.computer;
 
 import configurator.component.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,14 +15,14 @@ public final class Computer {
     private final List<Component> components;
     private final int slots;
     private final int cooling;
-    private final int price;
+    private final BigDecimal price;
     private final int energy;
 
     public Computer(int slots) {
-        this(slots, 0, 0, 0);
+        this(slots, 0, new BigDecimal(0), 0);
     }
 
-    public Computer(int slots, int cooling, int price, int energy) {
+    public Computer(int slots, int cooling, BigDecimal price, int energy) {
         this.energy = energy;
         this.id = null;
         this.components = new ArrayList<>();
@@ -30,7 +31,7 @@ public final class Computer {
         this.price = price;
     }
 
-    public Computer(Long id, List<Component> components, int slots, int cooling, int price, int energy) {
+    public Computer(Long id, List<Component> components, int slots, int cooling, BigDecimal price, int energy) {
         this.id = id;
         if (components == null) {
             this.components = new ArrayList<>();
@@ -63,7 +64,7 @@ public final class Computer {
         return cooling;
     }
 
-    public int getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
     
@@ -86,8 +87,8 @@ public final class Computer {
     public Computer setCooling(int cooling) {
         return new Computer(id, components, slots, cooling, price, energy);
     }
-    
-    public Computer setPrice(int price) {
+
+    public Computer setPrice(BigDecimal price) {
         return new Computer(id, components, slots, cooling, price, energy);
     }
 
@@ -123,7 +124,7 @@ public final class Computer {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + slots;
         result = 31 * result + cooling;
-        result = 31 * result + price;
+        result = 31 * result + price.intValueExact();
         result = 31 * result + energy;
         return result;
     }

@@ -1,5 +1,7 @@
 package configurator.component;
 
+import java.math.BigDecimal;
+
 /**
  * Created by oreqizer on 16/03/16.
  */
@@ -9,10 +11,10 @@ public final class Component {
     private final Long pid;
     private final String name;
     private final int heat;
-    private final int price;
+    private final BigDecimal price;
     private final int energy;
 
-    public Component(String name, int heat, int price, int energy) {
+    public Component(String name, int heat, BigDecimal price, int energy) {
         this.id = null;
         this.pid = null;
         this.name = name;
@@ -23,7 +25,7 @@ public final class Component {
 
 
     public Component(
-            Long id, Long pid, String name, int heat, int price, int energy
+            Long id, Long pid, String name, int heat, BigDecimal price, int energy
     ) {
         this.id = id;
         this.pid = pid;
@@ -49,7 +51,7 @@ public final class Component {
         return heat;
     }
 
-    public int getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
@@ -73,7 +75,7 @@ public final class Component {
         return new Component(id, pid, name, heat, price, energy);
     }
 
-    public Component setPrice(int price) {
+    public Component setPrice(BigDecimal price) {
         return new Component(id, pid, name, heat, price, energy);
     }
 
@@ -115,7 +117,7 @@ public final class Component {
         result = 31 * result +  (pid !=null ? id.hashCode() :0)  ;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + heat;
-        result = 31 * result + price;
+        result = 31 * result + price.intValueExact();
         result = 31 * result + energy;
         return result;
     }

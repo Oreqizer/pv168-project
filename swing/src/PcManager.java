@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -147,8 +148,9 @@ public class PcManager extends JFrame {
 
         createComponentButton.addActionListener(e -> {
             try {
-                int tmp = Integer.parseInt(componentPriceField.getText());
-                if (tmp < 0) {
+                BigDecimal tmp = Main.parseBigDecimal(componentPriceField.getText());
+
+                if (tmp.compareTo(BigDecimal.ZERO) < 0) {
                     logger.log(Level.FINE, "ErrorMsg is Price cannot be negative number!");
 
                     errorMsg.setText("Price cannot be negative number!");
@@ -157,8 +159,8 @@ public class PcManager extends JFrame {
                 }
                 Component component = new Component(componentNameField.getText()
                         , Integer.parseInt(componentHeatField.getText())
-                        , Integer.parseInt(componentEnergyField.getText())
-                        , tmp);
+                        , tmp
+                        , Integer.parseInt(componentEnergyField.getText()));
                 logger.log(Level.FINE, "Creating new Component:" + component);
 
                 component = componentManager.createComponent(component);

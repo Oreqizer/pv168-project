@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class ComponentManagerImplTest {
     @Test
     public void testCreateComponent() throws Exception {
 
-        Component pure = new Component("card", 100, 200, 100);
+        Component pure = new Component("card", 100, new BigDecimal(200), 100);
 
         assertThat("pure has null id", pure.getId(), is(equalTo(null)));
 
@@ -74,7 +75,7 @@ public class ComponentManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testCreateComponentFail() throws Exception {
 
-        Component component = new Component("card", 100, -200, 100);
+        Component component = new Component("card", 100, new BigDecimal(-200), 100);
         manager.createComponent(component);
 
     }
@@ -82,7 +83,7 @@ public class ComponentManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testCreateComponentFail2() throws Exception {
 
-        Component component = new Component("", 100, 200, 100);
+        Component component = new Component("", 100, new BigDecimal(200), 100);
         manager.createComponent(component);
 
     }
@@ -90,12 +91,12 @@ public class ComponentManagerImplTest {
     @Test
     public void testUpdateComponent() throws Exception {
 
-        Component component = new Component("card", 100, 200, 100);
+        Component component = new Component("card", 100, new BigDecimal(200), 100);
         component = manager.createComponent(component);
 
         component = component
                 .setHeat(150)
-                .setPrice(250)
+                .setPrice(new BigDecimal(250))
                 .setEnergy(150);
 
         manager.updateComponent(component);
@@ -111,7 +112,7 @@ public class ComponentManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateComponentNull() throws Exception {
 
-        Component c = new Component("card", 100, 200, 100);
+        Component c = new Component("card", 100, new BigDecimal(200), 100);
 
         c = manager.createComponent(c);
         manager.updateComponent(null);
@@ -121,7 +122,7 @@ public class ComponentManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateComponentNoId() throws Exception {
 
-        Component c = new Component("card", 100, 200, 100);
+        Component c = new Component("card", 100, new BigDecimal(200), 100);
 
         //c = manager.createComponent(c);
         manager.updateComponent(c);
@@ -131,8 +132,8 @@ public class ComponentManagerImplTest {
     @Test
     public void testRemoveComponent() throws Exception {
 
-        Component component1 = new Component("card", 100, 200, 100);
-        Component component2 = new Component("pcu", 100, 300, 100);
+        Component component1 = new Component("card", 100, new BigDecimal(200), 100);
+        Component component2 = new Component("pcu", 100, new BigDecimal(300), 100);
 
         component1 = manager.createComponent(component1);
         component2 = manager.createComponent(component2);
@@ -151,7 +152,7 @@ public class ComponentManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveComponentNull() throws Exception {
 
-        Component c1 = new Component("card", 100, 200, 100);
+        Component c1 = new Component("card", 100, new BigDecimal(200), 100);
 
         manager.createComponent(c1);
         manager.removeComponent(null);
@@ -161,7 +162,7 @@ public class ComponentManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveComponentNoId() throws Exception {
 
-        Component c1 = new Component("card", 100, 200, 100);
+        Component c1 = new Component("card", 100, new BigDecimal(200), 100);
 
         manager.createComponent(c1);
         manager.removeComponent(c1);
@@ -171,7 +172,7 @@ public class ComponentManagerImplTest {
     @Test
     public void testGetComponent() throws Exception {
 
-        Component component = new Component("card", 100, 200, 100);
+        Component component = new Component("card", 100, new BigDecimal(200), 100);
         component = manager.createComponent(component);
 
         assertNotNull(manager.getComponent(component.getId()));
@@ -182,7 +183,7 @@ public class ComponentManagerImplTest {
     @Test
     public void testGetAllComponents() throws Exception {
 
-        Component component = new Component("card", 100, 200, 100);
+        Component component = new Component("card", 100, new BigDecimal(200), 100);
         component = manager.createComponent(component);
 
         List<Component> list = manager.getAllComponents();
@@ -190,7 +191,7 @@ public class ComponentManagerImplTest {
         assertThat("list is not null", list, is(not(equalTo(null))));
         assertThat("list has one component", list.size(), is(equalTo(1)));
 
-        Component component2 = new Component("pcu", 100, 300, 100);
+        Component component2 = new Component("pcu", 100, new BigDecimal(300), 100);
         component2 = manager.createComponent(component2);
 
         list = manager.getAllComponents();
@@ -209,10 +210,10 @@ public class ComponentManagerImplTest {
     @Test
     public void testAddComponentToComputer() throws Exception {
 
-        Component component = new Component("card", 100, 200, 100);
+        Component component = new Component("card", 100, new BigDecimal(200), 100);
         component = manager.createComponent(component);
 
-        Computer pc = new Computer(3, 2000, 300, 20);
+        Computer pc = new Computer(3, 2000, new BigDecimal(300), 20);
         ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
         pc = pcmgr.createComputer(pc);
 
@@ -231,10 +232,10 @@ public class ComponentManagerImplTest {
     @Test
     public void testRemoveComponentFromComputer() throws Exception {
 
-        Component component = new Component("card", 100, 200, 100);
+        Component component = new Component("card", 100, new BigDecimal(200), 100);
         component = manager.createComponent(component);
 
-        Computer pc = new Computer(3, 2000, 300, 200);
+        Computer pc = new Computer(3, 2000, new BigDecimal(300), 200);
 
         ComputerManager pcmgr = new ComputerManagerImpl(getDataSource());
         pc = pcmgr.createComputer(pc);
