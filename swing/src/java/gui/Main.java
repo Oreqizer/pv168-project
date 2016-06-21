@@ -1,4 +1,4 @@
-package java;
+package gui;
 
 import configurator.component.ComponentManager;
 import configurator.component.ComponentManagerImpl;

@@ -1,10 +1,9 @@
-package java;
+package gui;
 
 import configurator.component.Component;
 import configurator.component.ComponentManager;
 
 import javax.swing.*;
-import java.Main;
 import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
