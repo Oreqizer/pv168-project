@@ -1,3 +1,5 @@
+package java;
+
 import configurator.component.ComponentManager;
 import configurator.component.ComponentManagerImpl;
 import configurator.computer.ComputerManager;

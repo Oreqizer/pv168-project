@@ -1,3 +1,5 @@
+package java;
+
 import configurator.component.Component;
 import configurator.component.ComponentManager;
 import configurator.computer.Computer;
@@ -48,6 +50,7 @@ public class PcManager extends JFrame {
 
     public PcManager() {
         super();
+
         logger.log(Level.FINE, "Starting MainWindow");
         setContentPane(mainPanel);
         pack();
