@@ -40,15 +40,22 @@ public class PcManager extends JFrame {
     private JLabel slotLabel;
     private JLabel nameLabel;
     private JLabel priceLabel;
-    private JLabel heatlabel;
-    private JLabel enerbLabel;
+    private JLabel heatLabel;
+    private JLabel energyLabel;
     private JLabel computerTableLabel;
     private JLabel freeCompsLabel;
     private static final ResourceBundle bundle = ResourceBundle.getBundle("languages", Locale.getDefault());
 
 
-    private String[] pcHeader = new String[]{"Id", "Slots", "Cooling", "Price", "Energy", "Components"};
-    private String[] compHeader = new String[]{"Id", "Name", "Heat", "Energy", "Price"};
+    private String[] pcHeader = new String[]{"Id"
+            , bundle.getString("label.price")
+            , bundle.getString("label.cooling"), bundle.getString("label.energy")
+            , bundle.getString("label.slots")
+            , bundle.getString("label.components")};
+
+    private String[] compHeader = new String[]{"Id"
+            , bundle.getString("label.name"), bundle.getString("label.price")
+            , bundle.getString("label.heat"), bundle.getString("label.energy")};
 
     private static final Logger logger = Logger.getLogger(PcManager.class.getName());
 
@@ -59,11 +66,13 @@ public class PcManager extends JFrame {
     public PcManager() {
         super();
 
+
         logger.log(Level.FINE, "Starting MainWindow");
         setContentPane(mainPanel);
         pack();
         setResizable(false);
         refreshUI();
+        localizeUI();
 
 
         //region tableClickEvents
@@ -217,7 +226,23 @@ public class PcManager extends JFrame {
 
         });
         //endregion
-        //TODO vlakna, lokalizaciu, logging
+        //TODO vlakna, lokalizaciu(currency ak chceme ? :D), logging , heat/cooling(rozdiel)
+    }
+
+    private void localizeUI() {
+        computerTableLabel.setText(bundle.getString("label.table.computers"));
+        slotLabel.setText(bundle.getString("label.slots"));
+        nameLabel.setText(bundle.getString("label.name"));
+        priceLabel.setText(bundle.getString("label.price"));
+        energyLabel.setText(bundle.getString("label.energy"));
+        heatLabel.setText(bundle.getString("label.heat"));
+        freeCompsLabel.setText(bundle.getString("label.table.freeComps"));
+        createComponentButton.setText(bundle.getString("button.createComponent"));
+        deleteComponentButton.setText(bundle.getString("button.deleteComponent"));
+        createComputerButton.setText(bundle.getString("button.createComputer"));
+        deleteComponentButton.setText(bundle.getString("button.deleteComputer"));
+        deleteAllComponentsButton.setText(bundle.getString("button.deleteAllComponents"));
+        deleteAllComputersButton.setText(bundle.getString("button.deleteAllComputers"));
     }
 
 
@@ -231,10 +256,10 @@ public class PcManager extends JFrame {
             for (Computer pc : computerManager.getAllComputers()) {
 
                 dm.addRow(new Object[]{pc.getId()
-                        , pc.getSlots()
-                        , pc.getCooling()
                         , pc.getPrice()
+                        , pc.getCooling()
                         , pc.getEnergy()
+                        , pc.getSlots()
                         , pc.getComponents().size()});
 
             }
@@ -248,9 +273,10 @@ public class PcManager extends JFrame {
             for (configurator.component.Component comp : componentManager.getAllFreeComponents()) {
                 dm.addRow(new Object[]{comp.getId()
                         , comp.getName()
+                        , comp.getPrice()
                         , comp.getHeat()
                         , comp.getEnergy()
-                        , comp.getPrice()});
+                });
             }
 
             compTable.setModel(dm);

@@ -20,6 +20,10 @@ public class UpdateComponentDialog extends JDialog {
     private JTextField priceTextField;
     private JTextField heatTextField;
     private JTextField energyTextField;
+    private JLabel nameLabel;
+    private JLabel priceLabel;
+    private JLabel heatLabel;
+    private JLabel energyLabel;
 
 
     private static final Logger logger = Logger.getLogger(UpdateComponentDialog.class.getName());
@@ -48,6 +52,10 @@ public class UpdateComponentDialog extends JDialog {
         heatTextField.setText(component.getHeat() + "");
         energyTextField.setText(component.getEnergy() + "");
         updateBtn.setText(bundle.getString("button.update"));
+        nameLabel.setText(bundle.getString("label.name"));
+        priceLabel.setText(bundle.getString("label.price"));
+        energyLabel.setText(bundle.getString("label.energy"));
+        heatLabel.setText(bundle.getString("label.heat"));
 
 
         updateBtn.addActionListener(e -> {

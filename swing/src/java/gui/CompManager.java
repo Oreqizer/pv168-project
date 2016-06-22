@@ -30,7 +30,9 @@ public class CompManager extends JDialog {
     private JLabel freeCompsLabel;
     private static final ResourceBundle bundle = ResourceBundle.getBundle("languages", Locale.getDefault());
 
-    private String[] compHeader = new String[]{"Id", "Name", "Heat", "Energy", "Price"};
+    private String[] compHeader = new String[]{"Id"
+            , bundle.getString("label.name"), bundle.getString("label.price")
+            , bundle.getString("label.heat"), bundle.getString("label.energy")};
     private ComputerManager computerManager = Main.getComputerManager();
     private ComponentManager componentManager = Main.getComponentManager();
 
@@ -76,14 +78,16 @@ public class CompManager extends JDialog {
                     if (pc.getComponents().size() < pc.getSlots()) {
                         logger.log(Level.FINE, "Adding component(id:" + comp.getId() + ") to computer (id:" + id + ")");
 
-
-                        System.out.println("kappa");
                         componentManager.addComponentToComputer(comp, pc.getId());
 
                         pc = computerManager.getComputer(pc.getId());
-                        System.out.println("kappa2");
 
-                    } else return;
+                    } else {
+                        refreshUI();
+                        JOptionPane.showMessageDialog(this, bundle.getString("notEnoughSlots"));
+
+                        return;
+                    }
                 } catch (Exception e1) {
                     logger.log(Level.SEVERE, e1.toString(), e1);
                     JOptionPane.showMessageDialog(this, bundle.getString("exception.addComponentToPc"));
@@ -148,7 +152,12 @@ public class CompManager extends JDialog {
         }
         freeCompsTable.setModel(dm);
         updateNumberOfSlotsTextField.setText(pc.getSlots() + "");
-        currPcStatsLabel.setText(pc.toString());
+        currPcStatsLabel.setText("PC: Id :" + pc.getId() + ", " + bundle.getString("label.price") + ": " + pc.getPrice() + ", "
+                + bundle.getString("label.cooling") + ": " + pc.getCooling() + ", "
+                + bundle.getString("label.energy") + ": " + pc.getEnergy() + ", "
+                + bundle.getString("label.slots") + ": " + pc.getSlots() + ", "
+                + bundle.getString("label.components") + ": " + pc.getComponents().size()
+        );
         System.out.println("refreshTables2Ends");
 
     }
