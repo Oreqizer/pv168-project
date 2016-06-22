@@ -7,6 +7,8 @@ import configurator.computer.ComputerManager;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +25,10 @@ public class CompManager extends JDialog {
     private JLabel currPcStatsLabel;
     private JTextField updateNumberOfSlotsTextField;
     private JButton updateComputerButton;
-    private JLabel errorMsg;
+    private JLabel updateLabel;
+    private JLabel compsInPcLabel;
+    private JLabel freeCompsLabel;
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("languages", Locale.getDefault());
 
     private String[] compHeader = new String[]{"Id", "Name", "Heat", "Energy", "Price"};
     private ComputerManager computerManager = Main.getComputerManager();
@@ -41,7 +46,9 @@ public class CompManager extends JDialog {
         setContentPane(mainPane);
         pack();
         pc = computerManager.getComputer(id);
+        localizeUI();
         refreshUI();
+
 
 
 
@@ -62,24 +69,27 @@ public class CompManager extends JDialog {
             if (freeCompsTable.getSelectedRow() < 0) return;
 
             for (int i = 0; i < freeCompsTable.getSelectedRows().length; i++) {
-                Component comp = componentManager
-                        .getComponent((long) freeCompsTable.getModel().getValueAt(i, 0));
+                Component comp =
+                        componentManager.getComponent((long) freeCompsTable.getModel()
+                                .getValueAt(freeCompsTable.getSelectedRows()[i], 0));
                 try {
                     if (pc.getComponents().size() < pc.getSlots()) {
                         logger.log(Level.FINE, "Adding component(id:" + comp.getId() + ") to computer (id:" + id + ")");
 
 
+                        System.out.println("kappa");
                         componentManager.addComponentToComputer(comp, pc.getId());
 
                         pc = computerManager.getComputer(pc.getId());
+                        System.out.println("kappa2");
 
-                        refreshUI();
                     } else return;
                 } catch (Exception e1) {
                     logger.log(Level.SEVERE, e1.toString(), e1);
-                    errorMsg.setText(e1.toString());
+                    JOptionPane.showMessageDialog(this, bundle.getString("exception.addComponentToPc"));
                 }
             }
+            refreshUI();
         });
 
 
@@ -88,56 +98,59 @@ public class CompManager extends JDialog {
             for (int i = 0; i < compsInPcTable.getSelectedRows().length; i++) {
                 Component comp = componentManager
                         .getComponent((long) compsInPcTable.getModel()
-                                .getValueAt(i, 0));
+                                .getValueAt(compsInPcTable.getSelectedRows()[i], 0));
                 logger.log(Level.FINE, "Removing component(id:" + comp.getId() + ") from computer (id:" + id + ")");
                 try {
                     componentManager.removeComponentFromComputer(comp, pc.getId());
-                    refreshUI();
+
                 } catch (Exception e1) {
-                    errorMsg.setText(e1.toString());
+                    JOptionPane.showMessageDialog(this, bundle.getString("exception.removeComponentFromPc"));
                     logger.log(Level.SEVERE, e1.toString(), e1);
                     e1.printStackTrace();
                 }
                 pc = computerManager.getComputer(pc.getId());
             }
+            refreshUI();
         });
 
         //endregion
         setVisible(true);
     }
 
+    private void localizeUI() {
+        updateLabel.setText(bundle.getString("label.update.slots"));
+        compsInPcLabel.setText(bundle.getString("label.table.compsInPc"));
+        freeCompsLabel.setText(bundle.getString("label.table.freeComps"));
+        doneBtn.setText(bundle.getString("button.done"));
+        addCompBtn.setText(bundle.getString("button.addCompToPC"));
+        removeCompBtn.setText(bundle.getString("button.removeCompFromPc"));
+    }
+
     private void refreshUI() {
-        try {
-            System.out.println("refreshTables2");
-            logger.log(Level.FINE, "Refreshing UI");
-            DefaultTableModel dm = new DefaultTableModel();
-            dm.setColumnIdentifiers(compHeader);
-            for (configurator.component.Component comp : componentManager.getAllComponents()) {
-                if (comp.getPid() != null && comp.getPid().equals(pc.getId())) {
-                    dm.addRow(new Object[]{comp.getId(), comp.getName(), comp.getHeat(), comp.getEnergy(), comp.getPrice()});
-                }
-            }
 
-            compsInPcTable.setModel(dm);
-
-
-
-            dm = new DefaultTableModel();
-
-            dm.setColumnIdentifiers(compHeader);
-            for (configurator.component.Component comp : componentManager.getAllFreeComponents()) {
+        System.out.println("refreshTables2");
+        logger.log(Level.FINE, "Refreshing UI");
+        DefaultTableModel dm = new DefaultTableModel();
+        dm.setColumnIdentifiers(compHeader);
+        for (configurator.component.Component comp : componentManager.getAllComponents()) {
+            if (comp.getPid() != null && comp.getPid().equals(pc.getId())) {
                 dm.addRow(new Object[]{comp.getId(), comp.getName(), comp.getHeat(), comp.getEnergy(), comp.getPrice()});
             }
-            freeCompsTable.setModel(dm);
-            currPcStatsLabel.setText(pc.toString());
-            updateNumberOfSlotsTextField.setText(pc.getSlots() + "");
-            errorMsg.setText("");
-            System.out.println("refreshTables2Ends");
-        } catch (Exception e) {
-            errorMsg.setText(e.toString());
-            logger.log(Level.SEVERE, e.toString(), e);
-            e.printStackTrace();
         }
+
+        compsInPcTable.setModel(dm);
+
+        dm = new DefaultTableModel();
+
+        dm.setColumnIdentifiers(compHeader);
+        for (configurator.component.Component comp : componentManager.getAllFreeComponents()) {
+            dm.addRow(new Object[]{comp.getId(), comp.getName(), comp.getHeat(), comp.getEnergy(), comp.getPrice()});
+        }
+        freeCompsTable.setModel(dm);
+        updateNumberOfSlotsTextField.setText(pc.getSlots() + "");
+        currPcStatsLabel.setText(pc.toString());
+        System.out.println("refreshTables2Ends");
+
     }
 
     private void createUIComponents() {
@@ -151,6 +164,7 @@ public class CompManager extends JDialog {
         dm.setColumnIdentifiers(compHeader);
         freeCompsTable = new JTable(dm);
         freeCompsTable.setDefaultEditor(Object.class, null);
+
     }
 
 
@@ -158,8 +172,8 @@ public class CompManager extends JDialog {
         try {
             int tmp = Integer.parseInt(updateNumberOfSlotsTextField.getText());
             if (tmp <= 0) {
-                errorMsg.setText("Number of slots cannot be negative or 0!");
-                logger.log(Level.FINE, "ErrorMsg is :Number of slots cannot be negative or 0!");
+                JOptionPane.showMessageDialog(this, bundle.getString("invalid.input.slots"));
+                logger.log(Level.FINE, "ErrorMsg is " + bundle.getString("invalid.input.slots"));
 
                 return;
             }
@@ -167,7 +181,7 @@ public class CompManager extends JDialog {
             logger.log(Level.FINE, "Updating computer with id:" + pc.getId() + " and slots :" + tmp);
             computerManager.updateComputer(pc);
         } catch (Exception ex) {
-            errorMsg.setText(ex.toString());
+            JOptionPane.showMessageDialog(this, bundle.getString("invalid.input"));
             logger.log(Level.SEVERE, ex.toString(), ex);
             ex.printStackTrace();
         }

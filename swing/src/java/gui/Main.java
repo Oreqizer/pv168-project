@@ -32,6 +32,8 @@ public class Main {
 
     public static BigDecimal parseBigDecimal(String str) throws ParseException {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+
+        if (str.matches(".*[a-zA-Z]+.*")) throw new IllegalArgumentException("Can't parse string! ");
         symbols.setGroupingSeparator(',');
         symbols.setDecimalSeparator('.');
         String pattern = "#,##0.0#";
@@ -48,7 +50,7 @@ public class Main {
         EventQueue.invokeLater( ()-> {
                     JFrame frame = new PcManager();
                     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    frame.setTitle("Faggotina");
+            frame.setTitle("PCManager");
                     frame.setVisible(true);
                 }
         );

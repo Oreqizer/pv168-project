@@ -5,6 +5,8 @@ import configurator.component.ComponentManager;
 
 import javax.swing.*;
 import java.math.BigDecimal;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,10 +20,12 @@ public class UpdateComponentDialog extends JDialog {
     private JTextField priceTextField;
     private JTextField heatTextField;
     private JTextField energyTextField;
-    private JLabel errorMsg;
+
 
     private static final Logger logger = Logger.getLogger(UpdateComponentDialog.class.getName());
 
+
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("languages", Locale.getDefault());
 
     private ComponentManager componentManager = Main.getComponentManager();
     private Component component;
@@ -33,13 +37,18 @@ public class UpdateComponentDialog extends JDialog {
         setContentPane(mainPane);
         pack();
         setResizable(false);
-
-
         component = componentManager.getComponent(id);
+        setupUI();
+        setVisible(true);
+    }
+
+    private void setupUI() {
         nameTextField.setText(component.getName());
         priceTextField.setText(component.getPrice() + "");
         heatTextField.setText(component.getHeat() + "");
         energyTextField.setText(component.getEnergy() + "");
+        updateBtn.setText(bundle.getString("button.update"));
+
 
         updateBtn.addActionListener(e -> {
 
@@ -47,9 +56,9 @@ public class UpdateComponentDialog extends JDialog {
                 BigDecimal price = Main.parseBigDecimal(priceTextField.getText());
 
                 if (price.compareTo(BigDecimal.ZERO) < 0) {
-                    logger.log(Level.FINE, "Error Msg is : Price cannot be negative number!");
+                    logger.log(Level.FINE, "Error Msg is : " + bundle.getString("invalid.input.price"));
+                    JOptionPane.showMessageDialog(this, bundle.getString("invalid.input.price"));
 
-                    errorMsg.setText("Price cannot be negative number!");
                     return;
                 }
                 logger.log(Level.FINE, "Updating component");
@@ -63,12 +72,10 @@ public class UpdateComponentDialog extends JDialog {
 
                 dispose();
             } catch (Exception e1) {
-                errorMsg.setText(e1.toString());
+                JOptionPane.showMessageDialog(this, bundle.getString("invalid.input") + " :" + e1.getLocalizedMessage());
                 logger.log(Level.SEVERE, e1.toString(), e1);
                 e1.printStackTrace();
             }
         });
-
-        setVisible(true);
     }
 }

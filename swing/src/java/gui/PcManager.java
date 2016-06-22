@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,8 +37,14 @@ public class PcManager extends JFrame {
     private JButton deleteAllComponentsButton;
     private JTable compTable;
     private JTable pcTable;
-    private JLabel errorMsg;
-
+    private JLabel slotLabel;
+    private JLabel nameLabel;
+    private JLabel priceLabel;
+    private JLabel heatlabel;
+    private JLabel enerbLabel;
+    private JLabel computerTableLabel;
+    private JLabel freeCompsLabel;
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("languages", Locale.getDefault());
 
 
     private String[] pcHeader = new String[]{"Id", "Slots", "Cooling", "Price", "Energy", "Components"};
@@ -98,8 +106,9 @@ public class PcManager extends JFrame {
             try {
                 int tmp = Integer.parseInt(pcSlotsField.getText());
                 if (tmp <= 0) {
-                    logger.log(Level.FINE, "errorMsg is Number of slots cannot be negative or 0!");
-                    errorMsg.setText("Number of slots cannot be negative or 0!");
+                    logger.log(Level.FINE, bundle.getString("invalid.input.slots"));
+                    JOptionPane.showMessageDialog(this, bundle.getString("invalid.input.slots"));
+
                     return;
                 }
 
@@ -110,7 +119,7 @@ public class PcManager extends JFrame {
 
                 refreshUI();
             } catch (Exception ex) {
-                errorMsg.setText(ex.toString());
+                JOptionPane.showMessageDialog(this, bundle.getString("invalid.input"));
                 logger.log(Level.SEVERE, ex.toString(), ex);
                 ex.printStackTrace();
             }
@@ -126,7 +135,7 @@ public class PcManager extends JFrame {
                     refreshUI();
                 }
             } catch (Exception e1) {
-                errorMsg.setText(e1.toString());
+                JOptionPane.showMessageDialog(this, bundle.getString("exception.delete"));
                 logger.log(Level.SEVERE, e1.toString(), e1);
                 e1.printStackTrace();
             }
@@ -138,7 +147,7 @@ public class PcManager extends JFrame {
                 logger.log(Level.FINE, "deleting all components from database");
                 computerManager.removeAllComputers();
             } catch (Exception e1) {
-                errorMsg.setText(e1.toString());
+                JOptionPane.showMessageDialog(this, bundle.getString("exception.delete"));
                 logger.log(Level.SEVERE, e1.toString(), e1);
                 e1.printStackTrace();
             }
@@ -154,9 +163,9 @@ public class PcManager extends JFrame {
                 BigDecimal tmp = Main.parseBigDecimal(componentPriceField.getText());
 
                 if (tmp.compareTo(BigDecimal.ZERO) < 0) {
-                    logger.log(Level.FINE, "ErrorMsg is Price cannot be negative number!");
+                    logger.log(Level.FINE, "ErrorMsg is : " + bundle.getString("invalid.input.price"));
 
-                    errorMsg.setText("Price cannot be negative number!");
+                    JOptionPane.showMessageDialog(this, bundle.getString("invalid.input.price"));
 
                     return;
                 }
@@ -170,7 +179,7 @@ public class PcManager extends JFrame {
 
                 refreshUI();
             } catch (Exception e1) {
-                errorMsg.setText(e1.toString());
+                JOptionPane.showMessageDialog(this, bundle.getString("invalid.input"));
                 logger.log(Level.SEVERE, e1.toString(), e1);
                 e1.printStackTrace();
             }
@@ -186,7 +195,7 @@ public class PcManager extends JFrame {
                     componentManager.removeComponentById((long) compTable.getModel().getValueAt(i, 0));
                     refreshUI();
                 } catch (Exception e1) {
-                    errorMsg.setText(e1.toString());
+                    JOptionPane.showMessageDialog(this, bundle.getString("exception.delete"));
                     logger.log(Level.SEVERE, e1.toString(), e1);
                     e1.printStackTrace();
                 }
@@ -201,7 +210,7 @@ public class PcManager extends JFrame {
                 componentManager.removeAllComponents();
                 refreshUI();
             } catch (Exception e1) {
-                errorMsg.setText(e1.toString());
+                JOptionPane.showMessageDialog(this, bundle.getString("exception.delete"));
                 logger.log(Level.SEVERE, e1.toString(), e1);
                 e1.printStackTrace();
             }
@@ -213,7 +222,7 @@ public class PcManager extends JFrame {
 
 
     private void refreshUI() {
-        try {
+
             logger.log(Level.FINE, "Refreshing UI");
 
             System.out.println("tableRefresh");
@@ -247,15 +256,13 @@ public class PcManager extends JFrame {
             compTable.setModel(dm);
             dm.fireTableDataChanged();
 
-            errorMsg.setText("");
-            System.out.println("tableRefreshEnds");
-        } catch (Exception e) {
-            errorMsg.setText(e.toString());
-            e.printStackTrace();
-        }
+
+        System.out.println("tableRefreshEnds");
     }
 
     private void createUIComponents() {
+
+
         DefaultTableModel dm = new DefaultTableModel();
         dm.setColumnIdentifiers(pcHeader);
         pcTable = new JTable(dm);
